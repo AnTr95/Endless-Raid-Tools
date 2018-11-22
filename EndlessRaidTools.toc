@@ -1,0 +1,39 @@
+## Interface: 80000
+## Title: Endless Raid Tools
+## Version: 8.15
+## Notes: Raid Tools
+## Author: Ant-Kazzak
+## SavedVariables: EnRT_InterruptEnabled
+## SavedVariables: EnRT_NextInterrupt
+## SavedVariables: EnRT_InnervateEnabled
+## SavedVariables: EnRT_PopupTextFontSize
+## SavedVariables: EnRT_PopupTextPosition
+## SavedVariables: EnRT_HTMEnabled
+## SavedVariablesPerCharacter: EnRT_CalendarNotificationEnabled
+## SavedVariablesPerCharacter: EnRT_ReadyCheckEnabled
+## SavedVariablesPerCharacter: EnRT_BonusRollBosses
+## SavedVariablesPerCharacter: EnRT_BonusRollEnabled
+## SavedVariables: EnRT_BonusRollCurrentRaid
+## SavedVariables: EnRT_MOTHEREnabled
+## SavedVariablesPerCharacter: EnRT_BonusRollBLPCount
+## SavedVariablesPerCharacter: EnRT_HTMUIPosition
+
+Localization\Localization.enUS.lua
+Core.lua
+Options\Options.lua
+Options\GeneralOptions.lua
+Popup.lua
+Modules\Interrupts.lua
+Modules\Innervate.lua
+Modules\CalendarNotification.lua
+Options\InnervateOptions.lua
+Options\InterruptOptions.lua
+Options\CalendarNotificationOptions.lua
+Modules\ReadyCheck.lua
+Options\ReadyCheckOptions.lua
+Modules\BonusRoll.lua
+Options\BonusRollOptions.lua
+Modules\MOTHER.lua
+Options\MOTHEROptions.lua
+Modules\HighTinkerMekkatorque.lua
+Options\HighTinkerMekkatorqueOptions.lua
