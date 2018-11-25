@@ -123,7 +123,6 @@ f:RegisterEvent("UNIT_EXITED_VEHICLE");
 f:RegisterEvent("ENCOUNTER_START");
 f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("UNIT_AURA");
-f:RegisterEvent("PLAYER_TARGET_CHANGED");
 
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_HTM") --MEKKATORQUE too long?
 
@@ -219,11 +218,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end);
 			EnRT_PopupHide();
 			count = 0;
-		end
-	elseif (event == "PLAYER_TARGET_CHANGED" and EnRT_HTMEnabled) then
-		local target = UnitName("target");
-		if (target == "Ant") then
-		else
 		end
 	elseif (event == "ENCOUNTER_START" and EnRT_HTMEnabled) then
 		local eID = ...;
