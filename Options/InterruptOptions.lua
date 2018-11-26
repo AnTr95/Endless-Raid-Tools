@@ -24,24 +24,24 @@ local raidDatabase = {
 	},
 };   
 local GUI = nil;
-local L = EnRTLocals
+local L = EnRTLocals;
 
-EnRT_InterruptOptions = CreateFrame("Frame", "EnRT_InterruptOptionsFrame", InterfaceOptionsFramePanelContainer)
-EnRT_InterruptOptions.name = "Interrupt Module"
-EnRT_InterruptOptions.parent = "|cFFFFFF00General Modules"
-EnRT_InterruptOptions:Hide()
+EnRT_InterruptOptions = CreateFrame("Frame", "EnRT_InterruptOptionsFrame", InterfaceOptionsFramePanelContainer);
+EnRT_InterruptOptions.name = "Interrupt Module";
+EnRT_InterruptOptions.parent = "|cFFFFFF00General Modules";
+EnRT_InterruptOptions:Hide();
 
-local title = EnRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-title:SetPoint("TOP", 0, -16)
-title:SetText(L.OPTIONS_TITLE)
+local title = EnRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
+title:SetPoint("TOP", 0, -16);
+title:SetText(L.OPTIONS_TITLE);
 	
-local tabinfo = EnRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-tabinfo:SetPoint("TOPLEFT", 16, -16)
-tabinfo:SetText(L.OPTIONS_INTERRUPT_TITLE)
+local tabinfo = EnRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
+tabinfo:SetPoint("TOPLEFT", 16, -16);
+tabinfo:SetText(L.OPTIONS_INTERRUPT_TITLE);
 
-local author = EnRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-author:SetPoint("TOPLEFT", 450, -20)
-author:SetText(L.OPTIONS_AUTHOR)
+local author = EnRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+author:SetPoint("TOPLEFT", 450, -20);
+author:SetText(L.OPTIONS_AUTHOR);
 
 local version = EnRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 version:SetPoint("TOPLEFT", author, "BOTTOMLEFT", 0, -10)
@@ -129,7 +129,7 @@ local function createRow()
 				info.checked = false;
 				info.menuList = raidName;
 				info.hasArrow = true;
-				UIDropDownMenu_AddButton(info)
+				UIDropDownMenu_AddButton(info);
 			end
 		elseif (menuList) then
 			-- Display a nested group .
