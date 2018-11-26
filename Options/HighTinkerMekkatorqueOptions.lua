@@ -1,4 +1,4 @@
-local L = PGFinderLocals
+local L = EnRTLocals
 
 EnRT_HighTinkerMekkatorqueOptions = CreateFrame("Frame", "EnRT_HighTinkerMekkatorqueOptionsFrame", InterfaceOptionsFramePanelContainer)
 EnRT_HighTinkerMekkatorqueOptions.name = L.OPTIONS_HIGHTINKERMEKKATORQUE_TITLE

@@ -1,4 +1,4 @@
-local L = PGFinderLocals
+local L = EnRTLocals
 
 EnRT_ReadyCheckOptions = CreateFrame("Frame", "EnRT_ReadyCheckOptionsFrame", InterfaceOptionsFramePanelContainer)
 EnRT_ReadyCheckOptions.name = "Ready Check Module"

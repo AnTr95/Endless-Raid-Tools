@@ -1,5 +1,5 @@
-PGFinderLocals = {}
-local L = PGFinderLocals
+EnRTLocals = {}
+local L = EnRTLocals
 local addon = ...
 
 L.OPTIONS_TITLE = "Endless Raid Tools"

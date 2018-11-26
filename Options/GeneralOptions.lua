@@ -1,4 +1,4 @@
-local L = PGFinderLocals
+local L = EnRTLocals
 
 EnRT_GeneralOptions = CreateFrame("Frame", "EnRT_GeneralOptionsFrame", InterfaceOptionsFramePanelContainer)
 EnRT_GeneralOptions.name = L.OPTIONS_GENERAL_TITLE

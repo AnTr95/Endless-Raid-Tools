@@ -1,4 +1,4 @@
-local L = PGFinderLocals
+local L = EnRTLocals
 
 EnRT_MOTHEROptions = CreateFrame("Frame", "EnRT_MOTHEROptionsFrame", InterfaceOptionsFramePanelContainer)
 EnRT_MOTHEROptions.name = L.OPTIONS_MOTHER_TITLE

@@ -1,5 +1,5 @@
 --Todo, hook blizzards bonus roll button and make it show until either button is pressed / times out by copying the bonus roll timer
-local L = PGFinderLocals
+local L = EnRTLocals
 local f = CreateFrame("Frame")
 local bossLex = {
 	[1] = "Taloc",

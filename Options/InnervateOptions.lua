@@ -1,4 +1,4 @@
-local L = PGFinderLocals
+local L = EnRTLocals
 
 EnRT_InnervateOptions = CreateFrame("Frame", "EnRT_InnervateOptionsFrame", InterfaceOptionsFramePanelContainer)
 EnRT_InnervateOptions.name = "Innervate Module"
