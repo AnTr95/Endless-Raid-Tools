@@ -16,12 +16,16 @@ local spellNames = {
 	171138, 
 	119910,
 }
+local inEncounter = false;
+local nextInterrupter = nil;
 local f = CreateFrame("Frame")
 --SLASH_ENDLESSINTERRUPT1 = "/endlessinterrupt"
 f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 C_ChatInfo.RegisterAddonMessagePrefix("EndlessInterrupt")
 f:RegisterEvent("CHAT_MSG_ADDON")
 f:RegisterEvent("PLAYER_LOGIN")
+f:RegisterEvent("ENCOUNTER_START")
+f:RegisterEvent("ENCOUNTER_END")
 local interruptNext = false
 --[[
 local function handler(msg, editbox)
@@ -34,32 +38,46 @@ local function handler(msg, editbox)
 	end
 end]]
 SlashCmdList["ENDLESSINTERRUPT"] = handler
+
 f:SetScript("OnEvent", function(self, event, ...)
-	if EnRT_InterruptEnabled and EnRT_NextInterrupt then
+	if event == "ENCOUNTER_START" and EnRT_InterruptEnabled then
+		inEncounter = true;
+		local eID = ...
+		for i = 1, #EnRT_NextInterrupt do
+			if (eID == EnRT_NextInterrupt[i].bossID) then
+				nextInterrupter = EnRT_NextInterrupt[i].NextInterrupter;
+			end
+		end
+	elseif event == "ENCOUNTER_END" and inEncounter and EnRT_InterruptEnabled then
+		inEncounter = false;
+		nextInterrupter = nil;
+	elseif indexSave and inEncounter and EnRT_InterruptEnabled then
 		if event == "UNIT_SPELLCAST_SUCCEEDED" then
 			local unit, _, spell = ...
 			if unit == "player" then
 				if Endless_Contains(spellNames, spell) then
 					if interruptNext then
-						EnRT_PopupHide()
-						interruptNext = false
+						EnRT_PopupHide();
+						interruptNext = false;
 					end
-					if UnitIsConnected(EnRT_NextInterrupt) and IsInGroup() and ((UnitInParty(EnRT_NextInterrupt) or UnitInRaid(EnRT_NextInterrupt))) then
-						C_ChatInfo.SendAddonMessage("EndlessInterrupt", UnitName("player"), "WHISPER", EnRT_NextInterrupt)
+					if nextInterrupter and UnitIsConnected(nextInterrupter) and IsInGroup() and ((UnitInParty(nextInterrupter) or UnitInRaid(nextInterrupter))) then
+						C_ChatInfo.SendAddonMessage("EndlessInterrupt", UnitName("player"), "WHISPER", nextInterrupter)
 					end
 				end
 			end
-		elseif event == "CHAT_MSG_ADDON" then
-			local prefix, msg, channel, sender = ...
-			sender = Ambiguate(sender, "short")
-			if prefix == "EndlessInterrupt" and ((UnitInParty(sender) or UnitInRaid(sender))) then
-				EnRT_PopupShow("NEXT INTERRUPT IS YOURS!", 7)
-				interruptNext = true
-			end
+		end
+	elseif event == "CHAT_MSG_ADDON" and EnRT_InterruptEnabled then
+		local prefix, msg, channel, sender = ...
+		sender = Ambiguate(sender, "short")
+		if prefix == "EndlessInterrupt" and ((UnitInParty(sender) or UnitInRaid(sender))) then
+			EnRT_PopupShow("NEXT INTERRUPT IS YOURS!", 7)
+			interruptNext = true;
 		end
 	end
 	if event == "PLAYER_LOGIN" then
 		if EnRT_InterruptEnabled == nil then EnRT_InterruptEnabled = true end
+		if (EnRT_NextInterrupt == nil) then EnRT_NextInterrupt = {}; end
+		if (type(EnRT_NextInterrupt)) == "string" then  EnRT_NextInterrupt = {}; end-- convert people from older version
 	end
 end)
 --[[
