@@ -51,7 +51,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif event == "ENCOUNTER_END" and inEncounter and EnRT_InterruptEnabled then
 		inEncounter = false;
 		nextInterrupter = nil;
-	elseif indexSave and inEncounter and EnRT_InterruptEnabled then
+	elseif nextInterrupter and inEncounter and EnRT_InterruptEnabled then
 		if event == "UNIT_SPELLCAST_SUCCEEDED" then
 			local unit, _, spell = ...
 			if unit == "player" then
