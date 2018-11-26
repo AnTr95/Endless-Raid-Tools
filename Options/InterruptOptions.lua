@@ -11,15 +11,15 @@ local raidDatabase = {
 		["No boss"] = 1,
 	},
 	["Battle of Dazar'alor"] = {
-		["Champion Of Light"] = 0,
-		["Grong, The Jungle Lord"] = 0,
-		["Jadefire Masters"] = 0,
-		["Opulence"] = 0,
-		["Conclave of the Chosen"] = 0,
-		["King Rastakhan"] = 0,
-		["High Tinker Mekkatorque"] = 0,
-		["Stormwall Blockade"] = 0,
-		["Lady Jaina Proudmore"] = 0,
+		["Champion Of Light"] = 2,
+		["Grong, The Jungle Lord"] = 3,
+		["Jadefire Masters"] = 4,
+		["Opulence"] = 5,
+		["Conclave of the Chosen"] = 6,
+		["King Rastakhan"] = 7,
+		["High Tinker Mekkatorque"] = 8,
+		["Stormwall Blockade"] = 9,
+		["Lady Jaina Proudmore"] = 10,
 		["No boss"] = 1,
 	},
 };   
@@ -116,7 +116,14 @@ local function createRow()
 		  -- Display the groups
 			for raidName, bossData in pairs(raidDatabase) do
 				info.text = raidName;
-				info.checked = false;
+				for bossName,bossID in pairs(raidDatabase[raidName]) do
+					if (bossID == EnRT_NextInterrupt[row].bossID) then 
+						info.checked = true; 
+						break
+					else 
+						info.checked = false;
+					end
+				end
 				info.menuList = raidName;
 				info.hasArrow = true;
 				UIDropDownMenu_AddButton(info);
@@ -146,7 +153,7 @@ showButtonRemove:SetText("-");
 showButtonRemove:SetSize(30, 25);
 showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -2);
 showButtonRemove:HookScript("OnClick", function(self)
-	if #EnRT_NextInterrupt > 1 then
+	if (#EnRT_NextInterrupt > 1) then
 		GUI[#EnRT_NextInterrupt].dropDown:Hide();
 		GUI[#EnRT_NextInterrupt].orderEdit:Hide(); 
 		GUI[#EnRT_NextInterrupt] = nil;  
@@ -161,7 +168,7 @@ showButtonAdd:SetText("+");
 showButtonAdd:SetSize(30, 25);
 showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -2);
 showButtonAdd:HookScript("OnClick", function(self)
-	if #EnRT_NextInterrupt < 9 then
+	if (#EnRT_NextInterrupt < 9) then
 		EnRT_NextInterrupt[#EnRT_NextInterrupt+1] = {bossID=1};
 		createRow();
 		showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -2-(#EnRT_NextInterrupt*40));

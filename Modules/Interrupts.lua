@@ -76,8 +76,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 	end
 	if event == "PLAYER_LOGIN" then
 		if EnRT_InterruptEnabled == nil then EnRT_InterruptEnabled = true end
-		if (EnRT_NextInterrupt == nil) then EnRT_NextInterrupt = {}; end
-		if (type(EnRT_NextInterrupt)) == "string" then  EnRT_NextInterrupt = {}; end-- convert people from older version
+		if (EnRT_NextInterrupt == nil) then EnRT_NextInterrupt = {[1]={}}; end
+		if (type(EnRT_NextInterrupt)) == "string" then  EnRT_NextInterrupt = {[1]={}}; end-- convert people from older version
 	end
 end)
 --[[
