@@ -103,16 +103,6 @@ local function createRow()
 	local dropDown = CreateFrame("FRAME", "EnRT_Interrupt_Dropdown" .. row, EnRT_InterruptOptions, "UIDropDownMenuTemplate");
 	dropDown:SetPoint("TOPLEFT", orderText, "TOPLEFT", 270, -12-((row-1)*40));
 
-	local function setChecked(self)
-		local bossID = self.arg2;
-		for i = 1, #EnRT_NextInterrupt do
-			if (bossID == EnRT_NextInterrupt[i].bossID) then
-				return true;
-			end
-		end
-		return false;
-	end
-
 	local function dropDown_OnClick (self, bossName, bossID, checked)
 		EnRT_NextInterrupt[row].bossID = bossID;
 		UIDropDownMenu_SetText(dropDown, "Boss: " .. bossName);
@@ -139,7 +129,7 @@ local function createRow()
 				info.text = bossName;
 				info.arg1 = bossName;
 				info.arg2 = bossID;
-				info.checked = setChecked;
+				info.checked = bossID == EnRT_NextInterrupt[row].bossID;
 				UIDropDownMenu_AddButton(info, level);
 			end
 		end
