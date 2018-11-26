@@ -1,4 +1,4 @@
-local L = PGFinderLocals
+local L = EnRTLocals;
 
 EnRT_BonusRollOptions = CreateFrame("Frame", "EnRT_BonusRollOptionsFrame", InterfaceOptionsFramePanelContainer)
 EnRT_BonusRollOptions.name = "Bonus Roll Module"

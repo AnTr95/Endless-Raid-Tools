@@ -1,4 +1,4 @@
-local L = PGFinderLocals
+local L = EnRTLocals;
 
 EnRT_CalendarNotificationOptions = CreateFrame("Frame", "EnRT_CalendarNotificationOptionsFrame", InterfaceOptionsFramePanelContainer)
 EnRT_CalendarNotificationOptions.name = L.OPTIONS_CALENDARNOTIFICATION_TITLE
