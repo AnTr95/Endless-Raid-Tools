@@ -51,6 +51,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif event == "ENCOUNTER_END" and inEncounter and EnRT_InterruptEnabled then
 		inEncounter = false;
 		nextInterrupter = nil;
+	elseif event == "CHAT_MSG_ADDON" and EnRT_InterruptEnabled then
+		local prefix, msg, channel, sender = ...
+		sender = Ambiguate(sender, "short")
+		if prefix == "EndlessInterrupt" and ((UnitInParty(sender) or UnitInRaid(sender))) then
+			EnRT_PopupShow("NEXT INTERRUPT IS YOURS!", 7)
+			interruptNext = true;
+		end
+	end
 	elseif nextInterrupter and inEncounter and EnRT_InterruptEnabled then
 		if event == "UNIT_SPELLCAST_SUCCEEDED" then
 			local unit, _, spell = ...
@@ -66,14 +74,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
-	elseif event == "CHAT_MSG_ADDON" and EnRT_InterruptEnabled then
-		local prefix, msg, channel, sender = ...
-		sender = Ambiguate(sender, "short")
-		if prefix == "EndlessInterrupt" and ((UnitInParty(sender) or UnitInRaid(sender))) then
-			EnRT_PopupShow("NEXT INTERRUPT IS YOURS!", 7)
-			interruptNext = true;
-		end
-	end
 	if event == "PLAYER_LOGIN" then
 		if EnRT_InterruptEnabled == nil then EnRT_InterruptEnabled = true end
 		if (EnRT_NextInterrupt == nil) then EnRT_NextInterrupt = {[1]={bossID=1}}; end
