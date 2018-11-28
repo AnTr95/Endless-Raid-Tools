@@ -58,7 +58,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 			EnRT_PopupShow("NEXT INTERRUPT IS YOURS!", 7)
 			interruptNext = true;
 		end
-	end
 	elseif nextInterrupter and inEncounter and EnRT_InterruptEnabled then
 		if event == "UNIT_SPELLCAST_SUCCEEDED" then
 			local unit, _, spell = ...
@@ -74,6 +73,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
+	end
 	if event == "PLAYER_LOGIN" then
 		if EnRT_InterruptEnabled == nil then EnRT_InterruptEnabled = true end
 		if (EnRT_NextInterrupt == nil) then EnRT_NextInterrupt = {[1]={bossID=1}}; end
