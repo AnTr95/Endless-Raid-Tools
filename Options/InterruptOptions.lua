@@ -23,6 +23,31 @@ local raidDatabase = {
 		["No boss"] = 1,
 	},
 };   
+local bossLex = {
+	["Uldir"] = {
+	[1] = "Taloc",
+	[2] = "MOTHER",
+	[3] = "Fetid Devourer",
+	[4] = "Zek'voz",
+	[5] = "Vectis",
+	[6] = "Zul",
+	[7] = "Mythrax",
+	[8] = "G'huun",
+	[9] = "No boss",
+	},
+	["Battle of Dazar'alor"] = {
+	[1] = "Champion Of Light",
+	[2] = "Grong, The Jungle Lord",
+	[3] = "Jadefire Masters",
+	[4] = "Opulence",
+	[5] = "Conclave of the Chosen",
+	[6] = "King Rastakhan",
+	[7] = "High Tinker Mekkatorque",
+	[8] = "Stormwall Blockade",
+	[9] = "Lady Jaina Proudmore",
+	[10] = "No boss",
+	},
+};
 local GUI = nil;
 local L = EnRTLocals;
 
@@ -131,8 +156,9 @@ local function createRow()
 		elseif (menuList) then
 			-- Display a nested group .
 			info.func = dropDown_OnClick;
-			local bossData = raidDatabase[menuList];
-			for bossName, bossID in pairs(bossData) do
+			local bossData = bossLex[menuList];
+			for bossNumber, bossName in ipairs(bossData) do
+				local bossID = raidDatabase[menuList][bossName];
 				info.text = bossName;
 				info.arg1 = bossName;
 				info.arg2 = bossID;
