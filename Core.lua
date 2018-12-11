@@ -22,6 +22,7 @@ end
 SlashCmdList["ENDLESSRAIDTOOLS"] = handler
 f:RegisterEvent("CHAT_MSG_ADDON")
 f:RegisterEvent("ADDON_LOADED")
+f:RegisterEvent("PLAYER_LOGIN");
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_VC")
 f:SetScript("OnEvent", function(self, event, ...)
 	if event == "CHAT_MSG_ADDON" then
@@ -46,10 +47,19 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif event == "ADDON_LOADED" and addon == ... then
 		if EnRT_PopupTextPosition ~= nil then
 			EnRT_PopupSetPosition(EnRT_PopupTextPosition.point, EnRT_PopupTextPosition.relativeTo, EnRT_PopupTextPosition.relativePoint, EnRT_PopupTextPosition.xOffset, EnRT_PopupTextPosition.yOffset)
-		elseif EnRT_PopupTextFontSize == nil then
+		end
+		if EnRT_PopupTextFontSize == nil then
 			EnRT_PopupTextFontSize = 28
 		end
+		if (EnRT_MinimapDegree) then EnRT_SetMinimapPoint(EnRT_MinimapDegree); end
+		if (EnRT_MinimapMode == nil) then EnRT_MinimapMode = "Always"; end
 		EnRT_PopupUpdateFontSize()
+	elseif (event == "PLAYER_LOGIN") then
+		if (EnRT_MinimapMode == "Always") then
+			EnRT_MinimapButton:Show();
+		else
+			EnRT_MinimapButton:Hide();
+		end
 	end
 end)
 function EnRT_FindMissingPlayers()

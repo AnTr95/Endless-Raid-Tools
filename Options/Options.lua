@@ -1,4 +1,4 @@
-local L = EnRTLocals
+local L = EnRTLocals;
 
 EnRT_Options = CreateFrame("Frame", "EnRT_OptionsFrame", InterefaceOptionsFramePanelContainer)
 EnRT_Options.name = "Endless Raid Tools"

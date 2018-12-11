@@ -1,8 +1,8 @@
 local f = CreateFrame("Frame");
 local inEncounter = false;
 local pendingAssignments = false;
-local shrunkPlayers = {};
-local intermissionPlayers = {};
+shrunkPlayers = {};
+intermissionPlayers = {};
 local myTarget = "";
 local master = "Ant";
 local count = 0;
@@ -132,7 +132,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (EnRT_HTMUIPosition) then setMainFramePosition(EnRT_HTMUIPosition.point, EnRT_HTMUIPosition.relativeTo, EnRT_HTMUIPosition.relativePoint, EnRT_HTMUIPosition.xOffset, EnRT_HTMUIPosition.yOffset); end
 	elseif (event == "UNIT_AURA" and EnRT_HTMEnabled) then
 		local unit = ...;
-		local plName = UnitName(unit);
+		local plName = GetUnitName(unit, true);
 		if (GetUnitName("player", true) == master) then
 			--284168
 			if (EnRT_UnitBuff(unit, GetSpellInfo(1459))) then
@@ -140,7 +140,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 					shrunkPlayers[#shrunkPlayers+1] = plName;
 					if (not pendingAssignments) then
 						pendingAssignments = true;
-						C_Timer.After(2, function()
+						C_Timer.After(1, function()
 							if (#shrunkPlayers <= 4) then
 								table.sort(shrunkPlayers, compareAlphabetically);
 								for i = 1, #shrunkPlayers do
@@ -150,17 +150,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 										C_ChatInfo.SendAddonMessage("EnRT_HTM", shrunkPlayers[i+1], "WHISPER", shrunkPlayers[i]);
 									end
 								end
-								pendingAssignments = false;
-							else
-								shrunkPlayers = {};
 							end
+							pendingAssignments = false;
 						end);
 					end
 				end
 			else
 				if (EnRT_Contains(shrunkPlayers, plName)) then
 					shrunkPlayers[EnRT_Contains(shrunkPlayers, plName)] = nil;
-					hideGUI();
 					targetText:SetText("Target: Waiting");
 				end
 			end
@@ -181,19 +178,20 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 		end
 	elseif (event == "UNIT_ENTERED_VEHICLE" and EnRT_HTMEnabled) then
-		showGUI();
-		local unit = ...;
-		if (UnitName("player") == master and #shrunkPlayers > 4) then
+		local unit, _, _, _, _, vID = ...;
+		if (UnitName("player") == master and #shrunkPlayers > 4 and vID == 61447) then
 			if (#intermissionPlayers == 0) then
 				sparkBots = 0;
 				for i = 1, 40 do
 					local np = "nameplate" .. i;
 					if (np) then
 						local guid = UnitGUID(np);
-						local type, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid = strsplit("-",guid);
+						if (guid) then
+							local type, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid = strsplit("-",guid);
 						--145924
-						if (tonumber(npcID) and tonumber(npcID) == 61081) then
-							sparkBots = sparkBots + 1;
+							if (tonumber(npcID) and tonumber(npcID) == 61081) then
+								sparkBots = sparkBots + 1;
+							end
 						end
 					end
 				end
@@ -208,6 +206,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 				sparkBots = sparkBots - 1;
 			end
+		end
+		if (UnitName(unit) == UnitName("player")) then
+			showGUI();
 		end
 	elseif (event == "UNIT_EXITED_VEHICLE" and EnRT_HTMEnabled) then
 		local unit = ...;
