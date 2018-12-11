@@ -11,15 +11,15 @@ local raidDatabase = {
 		["No boss"] = 1,
 	},
 	["Battle of Dazar'alor"] = {
-		["Champion Of Light"] = 2,
-		["Grong, The Jungle Lord"] = 3,
-		["Jadefire Masters"] = 4,
-		["Opulence"] = 5,
-		["Conclave of the Chosen"] = 6,
-		["King Rastakhan"] = 7,
-		["High Tinker Mekkatorque"] = 8,
-		["Stormwall Blockade"] = 9,
-		["Lady Jaina Proudmore"] = 10,
+		["Champion Of Light"] = 0,
+		["Grong, The Jungle Lord"] = 0,
+		["Jadefire Masters"] = 0,
+		["Opulence"] = 0,
+		["Conclave of the Chosen"] = 0,
+		["King Rastakhan"] = 0,
+		["High Tinker Mekkatorque"] = 0,
+		["Stormwall Blockade"] = 0,
+		["Lady Jaina Proudmore"] = 0,
 		["No boss"] = 1,
 	},
 };   
@@ -135,20 +135,22 @@ local function createRow()
 		CloseDropDownMenus();
 	end
 
+	local function setRaidChecked(row, raidName)
+		for bossName, bossID in pairs(raidDatabase[raidName]) do
+			if (bossID == EnRT_NextInterrupt[row].bossID) then 
+				return true;
+			end
+		end
+		return false;
+	end
+
 	local function Initalize_dropDown(self, level, menuList)
 		local info = UIDropDownMenu_CreateInfo()
 		if (level == 1) then
 		  -- Display the groups
 			for raidName, bossData in pairs(raidDatabase) do
 				info.text = raidName;
-				for bossName,bossID in pairs(raidDatabase[raidName]) do
-					if (bossID == EnRT_NextInterrupt[row].bossID) then 
-						info.checked = true; 
-						break
-					else 
-						info.checked = false;
-					end
-				end
+				info.checked = setRaidChecked(row, raidName);
 				info.menuList = raidName;
 				info.hasArrow = true;
 				UIDropDownMenu_AddButton(info);
