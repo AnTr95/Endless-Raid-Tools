@@ -1,5 +1,5 @@
 
-local L = PGFinderLocals
+local L = EnRTLocals
 
 EnRT_InterruptOptions = CreateFrame("Frame", "EnRT_InterruptOptionsFrame", InterfaceOptionsFramePanelContainer)
 EnRT_InterruptOptions.name = "Interrupt Module"
