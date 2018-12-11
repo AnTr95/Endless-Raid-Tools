@@ -58,9 +58,47 @@ popupToggleButton:HookScript("OnClick", function(self)
 	EnRT_PopupMove()
 end)
 
+local minimapModeText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontWhite");
+minimapModeText:SetText(L.OPTIONS_MINIMAP_MODE_TEXT);
+minimapModeText:SetPoint("TOPLEFT", 30, -250);
+
+local minimapStateMenu = CreateFrame("Button", nil, EnRT_GeneralOptions, "UIDropDownMenuTemplate");
+minimapStateMenu:SetPoint("TOPLEFT", 175, -240);
+
+local minimapStates = {"Always", "On Hover", "Never"};
+
+local function minimapState_OnClick(self)
+	UIDropDownMenu_SetSelectedID(minimapStateMenu, self:GetID());
+	local state = self:GetText();
+	EnRT_MinimapMode = state;
+	if (state == "Always") then
+		EnRT_MinimapButton:Show();
+	else
+		EnRT_MinimapButton:Hide();
+	end
+end
+
+local function Initialize_MinimapState(self, level)
+	local info = UIDropDownMenu_CreateInfo()
+	for k,v in pairs(minimapStates) do
+	  info = UIDropDownMenu_CreateInfo()
+	  info.text = v
+	  info.value = v
+	  info.func = minimapState_OnClick
+	  UIDropDownMenu_AddButton(info, level)
+	end
+end
+
+UIDropDownMenu_SetWidth(minimapStateMenu, 110)
+UIDropDownMenu_SetButtonWidth(minimapStateMenu, 110)
+UIDropDownMenu_JustifyText(minimapStateMenu, "CENTER")
+UIDropDownMenu_Initialize(minimapStateMenu, Initialize_MinimapState)
+
 EnRT_GeneralOptions:SetScript("OnShow", function(self)
 	fontSlider:SetValue(EnRT_PopupTextFontSize)
 	fontSizeText:SetText(EnRT_PopupTextFontSize)
+	Initialize_MinimapState();
+	UIDropDownMenu_SetSelectedName(minimapStateMenu, EnRT_MinimapMode);
 end)
 
 InterfaceOptions_AddCategory(EnRT_GeneralOptions)
