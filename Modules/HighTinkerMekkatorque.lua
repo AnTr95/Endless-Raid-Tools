@@ -4,7 +4,7 @@ local pendingAssignments = false;
 shrunkPlayers = {};
 intermissionPlayers = {};
 local myTarget = "";
-local master = "Ant";
+local master = "";
 local count = 0;
 sparkBots = 0;
 local htmData = {
@@ -222,7 +222,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "ENCOUNTER_START" and EnRT_HTMEnabled) then
 		local eID = ...;
-		if (eID == 0000) then
+		if (eID == 2276) then
 			master = EnRT_GetRaidLeader();
 			inEncounter = true;
 		end
