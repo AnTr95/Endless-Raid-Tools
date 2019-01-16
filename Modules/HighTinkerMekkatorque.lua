@@ -4,7 +4,7 @@ local pendingAssignments = false;
 shrunkPlayers = {};
 intermissionPlayers = {};
 local myTarget = "";
-local master = "Ant";
+local master = "";
 local count = 0;
 sparkBots = 0;
 local htmData = {
@@ -135,7 +135,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local plName = GetUnitName(unit, true);
 		if (GetUnitName("player", true) == master) then
 			--284168
-			if (EnRT_UnitBuff(unit, GetSpellInfo(1459))) then
+			if (EnRT_UnitDebuff(unit, GetSpellInfo(284168))) then
 				if (not EnRT_Contains(shrunkPlayers, plName)) then
 					shrunkPlayers[#shrunkPlayers+1] = plName;
 					if (not pendingAssignments) then
@@ -189,7 +189,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 						if (guid) then
 							local type, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid = strsplit("-",guid);
 						--145924
-							if (tonumber(npcID) and tonumber(npcID) == 61081) then
+							if (tonumber(npcID) and tonumber(npcID) == 145924) then
 								sparkBots = sparkBots + 1;
 							end
 						end
@@ -222,7 +222,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "ENCOUNTER_START" and EnRT_HTMEnabled) then
 		local eID = ...;
-		if (eID == 0000) then
+		if (eID == 2276) then
 			master = EnRT_GetRaidLeader();
 			inEncounter = true;
 		end
