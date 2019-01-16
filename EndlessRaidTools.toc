@@ -38,3 +38,5 @@ Modules\BonusRoll.lua
 Options\BonusRollOptions.lua
 Modules\MOTHER.lua
 Options\MOTHEROptions.lua
+Modules\HighTinkerMekkatorque.lua
+Options\HighTinkerMekkatorqueOptions.lua

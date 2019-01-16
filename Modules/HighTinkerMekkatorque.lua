@@ -1,12 +1,12 @@
 local f = CreateFrame("Frame");
 local inEncounter = false;
 local pendingAssignments = false;
-shrunkPlayers = {};
-intermissionPlayers = {};
+local shrunkPlayers = {};
+local intermissionPlayers = {};
 local myTarget = "";
 local master = "";
 local count = 0;
-sparkBots = 0;
+local sparkBots = 0;
 local htmData = {
 	[1] = {
 		text = "RED",

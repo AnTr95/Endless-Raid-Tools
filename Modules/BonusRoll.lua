@@ -17,7 +17,7 @@ local difficultyLex = {
 	[15] = 3,
 	[16] = 4,
 };
-EnRT_BR_GUI = {};
+local EnRT_BR_GUI = {};
 local bonusRolls = 0;
 local spent = 0;
 local isLockMode = false;
