@@ -130,7 +130,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		if (EnRT_HTMEnabled == nil) then EnRT_HTMEnabled = true; end
 		if (EnRT_HTMUIPosition) then setMainFramePosition(EnRT_HTMUIPosition.point, EnRT_HTMUIPosition.relativeTo, EnRT_HTMUIPosition.relativePoint, EnRT_HTMUIPosition.xOffset, EnRT_HTMUIPosition.yOffset); end
-	elseif (event == "UNIT_AURA" and EnRT_HTMEnabled) then
+	elseif (event == "UNIT_AURA" and EnRT_HTMEnabled and inEncounter) then
 		local unit = ...;
 		local plName = GetUnitName(unit, true);
 		if (GetUnitName("player", true) == master) then
@@ -162,7 +162,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
-	elseif (event == "CHAT_MSG_ADDON" and EnRT_HTMEnabled) then
+	elseif (event == "CHAT_MSG_ADDON" and EnRT_HTMEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "EnRT_HTM") then
 			if (tonumber(msg)) then
@@ -177,7 +177,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				showGUI();
 			end
 		end
-	elseif (event == "UNIT_ENTERED_VEHICLE" and EnRT_HTMEnabled) then
+	elseif (event == "UNIT_ENTERED_VEHICLE" and EnRT_HTMEnabled and inEncounter) then
 		local unit, _, _, _, _, vID = ...;
 		if (UnitName("player") == master and #shrunkPlayers > 4 and vID == 61447) then
 			if (#intermissionPlayers == 0) then
@@ -207,10 +207,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 				sparkBots = sparkBots - 1;
 			end
 		end
-		if (UnitName(unit) == UnitName("player")) then
+		if (UnitName(unit) == UnitName("player") and vID == 61447) then
 			showGUI();
 		end
-	elseif (event == "UNIT_EXITED_VEHICLE" and EnRT_HTMEnabled) then
+	elseif (event == "UNIT_EXITED_VEHICLE" and EnRT_HTMEnabled and inEncounter) then
 		local unit = ...;
 		if (UnitName(unit) == UnitName("player")) then
 			C_Timer.After(5, function() 
