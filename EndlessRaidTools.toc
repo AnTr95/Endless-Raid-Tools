@@ -1,6 +1,6 @@
 ## Interface: 80100
 ## Title: Endless Raid Tools
-## Version: 8.16
+## Version: 8.20
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: EnRT_InterruptEnabled
