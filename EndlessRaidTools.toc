@@ -1,6 +1,6 @@
 ## Interface: 80100
 ## Title: Endless Raid Tools
-## Version: 8.21
+## Version: 8.22
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: EnRT_InterruptEnabled
@@ -19,6 +19,7 @@
 ## SavedVariablesPerCharacter: EnRT_HTMUIPosition
 ## SavedVariablesPerCharacter: EnRT_MinimapMode
 ## SavedVariablesPerCharacter: EnRT_MinimapDegree
+## SavedVariables: EnRT_OpulenceEnabled
 
 Localization\Localization.enUS.lua
 Core.lua
@@ -40,3 +41,5 @@ Modules\MOTHER.lua
 Options\MOTHEROptions.lua
 Modules\HighTinkerMekkatorque.lua
 Options\HighTinkerMekkatorqueOptions.lua
+Modules\Opulence.lua
+Options\OpulenceOptions.lua

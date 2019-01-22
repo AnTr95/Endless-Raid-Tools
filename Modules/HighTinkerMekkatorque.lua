@@ -123,6 +123,7 @@ f:RegisterEvent("UNIT_EXITED_VEHICLE");
 f:RegisterEvent("ENCOUNTER_START");
 f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("UNIT_AURA");
+f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_HTM") --MEKKATORQUE too long?
 
@@ -162,6 +163,18 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
+	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and EnRT_HTMEnabled and inEncounter) then
+		local unit, _, spellID = ...;
+		if (UnitName(unit) == UnitName("player") and (spellID == 286152 or spellID == 286226 or spellID == 286219 or spellID == 286192 or spellID == 286215)) then
+			EnRT_PopupHide();
+			if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..msg]) then
+				ActionButton_HideOverlayGlow(_G["BT4Button"..msg])
+			elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..msg]) then
+				ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..msg])
+			else
+				ActionButton_HideOverlayGlow(_G["ActionButton"..msg])
+			end
+		end
 	elseif (event == "CHAT_MSG_ADDON" and EnRT_HTMEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "EnRT_HTM") then
@@ -172,6 +185,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 				msg = tonumber(msg);
 				count = count + 1;
 				EnRT_PopupShow(htmData[msg].color .. count .. ". " .. htmData[msg].text, 30);
+				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..msg]) then
+					ActionButton_ShowOverlayGlow(_G["BT4Button"..msg])
+				elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..msg]) then
+					ActionButton_ShowOverlayGlow(_G["ElvUI_Bar1Button"..msg])
+				else
+					ActionButton_ShowOverlayGlow(_G["ActionButton"..msg])
+				end
 			else
 				targetText:SetText("Target: " .. msg);
 				showGUI();
@@ -218,6 +238,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 				targetText:SetText("Target: Waiting...");
 			end);
 			EnRT_PopupHide();
+			if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..msg]) then
+				ActionButton_HideOverlayGlow(_G["BT4Button"..msg])
+			elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..msg]) then
+				ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..msg])
+			else
+				ActionButton_HideOverlayGlow(_G["ActionButton"..msg])
+			end
 			count = 0;
 		end
 	elseif (event == "ENCOUNTER_START" and EnRT_HTMEnabled) then
