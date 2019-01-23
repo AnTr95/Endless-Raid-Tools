@@ -7,6 +7,7 @@ local myTarget = "";
 local master = "";
 local count = 0;
 local sparkBots = 0;
+local glowNumber = 0;
 local htmData = {
 	[1] = {
 		text = "RED",
@@ -167,12 +168,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local unit, _, spellID = ...;
 		if (UnitName(unit) == UnitName("player") and (spellID == 286152 or spellID == 286226 or spellID == 286219 or spellID == 286192 or spellID == 286215)) then
 			EnRT_PopupHide();
-			if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..msg]) then
-				ActionButton_HideOverlayGlow(_G["BT4Button"..msg])
-			elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..msg]) then
-				ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..msg])
+			if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
+				ActionButton_HideOverlayGlow(_G["BT4Button"..glowNumber])
+			elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
+				ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..glowNumber])
 			else
-				ActionButton_HideOverlayGlow(_G["ActionButton"..msg])
+				ActionButton_HideOverlayGlow(_G["ActionButton"..glowNumber])
 			end
 		end
 	elseif (event == "CHAT_MSG_ADDON" and EnRT_HTMEnabled and inEncounter) then
@@ -184,13 +185,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 				msg = tonumber(msg);
 				count = count + 1;
+				glowNumber = msg;
 				EnRT_PopupShow(htmData[msg].color .. count .. ". " .. htmData[msg].text, 30);
-				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..msg]) then
-					ActionButton_ShowOverlayGlow(_G["BT4Button"..msg])
-				elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..msg]) then
-					ActionButton_ShowOverlayGlow(_G["ElvUI_Bar1Button"..msg])
+				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
+					ActionButton_ShowOverlayGlow(_G["BT4Button"..glowNumber])
+				elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
+					ActionButton_ShowOverlayGlow(_G["ElvUI_Bar1Button"..glowNumber])
 				else
-					ActionButton_ShowOverlayGlow(_G["ActionButton"..msg])
+					ActionButton_ShowOverlayGlow(_G["ActionButton"..glowNumber])
 				end
 			else
 				targetText:SetText("Target: " .. msg);
@@ -238,12 +240,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 				targetText:SetText("Target: Waiting...");
 			end);
 			EnRT_PopupHide();
-			if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..msg]) then
-				ActionButton_HideOverlayGlow(_G["BT4Button"..msg])
-			elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..msg]) then
-				ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..msg])
+			if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
+				ActionButton_HideOverlayGlow(_G["BT4Button"..glowNumber])
+			elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
+				ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..glowNumber])
 			else
-				ActionButton_HideOverlayGlow(_G["ActionButton"..msg])
+				ActionButton_HideOverlayGlow(_G["ActionButton"..glowNumber])
 			end
 			count = 0;
 		end
