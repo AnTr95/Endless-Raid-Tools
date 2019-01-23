@@ -174,7 +174,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			raid[raider].CD = spellIDs[spellID];
 			updateCooldowns();
 		end
-	elseif (event == "ENCOUNTER_START" and role == "HEALER" and inEncounter and EnRT_OpulenceEnabled) then
+	elseif (event == "ENCOUNTER_START" and role == "HEALER" and EnRT_OpulenceEnabled) then
 		local eID = ...;
 		if (eID == 2271) then
 			inEncounter = true;
