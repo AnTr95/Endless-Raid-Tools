@@ -155,8 +155,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local unit = ...;
 		if (UnitIsPlayer(unit)) then
 			local raider = UnitName(unit);
-			local tailwinds, icon, stacks = EnRT_UnitBuff(unit, GetSpellInfo(284573));
-			local soothing = EnRT_UnitBuff(unit, GetSpellInfo(290654));
+			local tailwinds, icon, stacks = EnRT_UnitDebuff(unit, GetSpellInfo(284573));
+			local soothing = EnRT_UnitDebuff(unit, GetSpellInfo(290654));
 			if (soothing) then
 				if (raid[raider].Stacks ~= 5) then
 					raid[raider].Stacks = 5;
