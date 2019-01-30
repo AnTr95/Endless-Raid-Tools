@@ -6,7 +6,16 @@ f:EnableMouse(true);
 f:RegisterForDrag("LeftButton");
 f:SetFrameLevel(3);
 f:SetScript("OnDragStart", f.StartMoving);
-f:SetScript("OnDragStop", f.StopMovingOrSizing);
+f:SetScript("OnDragStop", function(self)
+	local point, relativeTo, relativePoint, xOffset, yOffset = self:GetPoint(1)
+	EnRT_OpulenceUIPosition = {}
+	EnRT_OpulenceUIPosition.point = point
+	EnRT_OpulenceUIPosition.relativeTo = relativeTo
+	EnRT_OpulenceUIPosition.relativePoint = relativePoint
+	EnRT_OpulenceUIPosition.xOffset = xOffset
+	EnRT_OpulenceUIPosition.yOffset = yOffset
+	self:StopMovingOrSizing()
+end);
 f:Hide();
 
 local texture = f:CreateTexture();
@@ -94,6 +103,10 @@ local function spairs(t, order)
     end
 end
 
+local function setMainFramePosition(point, relativeTo, relativePoint, xOffset, yOffset)
+	f:SetPoint(point, relativeTo, relativePoint, xOffset, yOffset)
+end
+
 local function updateCooldowns()
 	local sbName = "Name:\n";
 	local sbStacks = "Stacks:\n";
@@ -113,7 +126,7 @@ local function updateCooldowns()
 	textCD:SetText(sbCD);
 end
 
-function initRaid()
+local function initRaid()
 	local size = 25;
 	if (role == "HEALER") then
 		for i = 1, GetNumGroupMembers() do
@@ -150,6 +163,7 @@ end);
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		if (EnRT_OpulenceEnabled == nil) then EnRT_OpulenceEnabled = true; end
+		if (EnRT_OpulenceUIPosition) then setMainFramePosition(EnRT_OpulenceUIPosition.point, EnRT_OpulenceUIPosition.relativeTo, EnRT_OpulenceUIPosition.relativePoint, EnRT_OpulenceUIPosition.xOffset, EnRT_OpulenceUIPosition.yOffset); end
 	elseif (event == "UNIT_AURA" and role == "HEALER" and inEncounter and EnRT_OpulenceEnabled) then
 		local unit = ...;
 		if (UnitIsPlayer(unit) and UnitGroupRolesAssigned(unit) == "DAMAGER") then
