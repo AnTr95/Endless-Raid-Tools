@@ -202,7 +202,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "UNIT_ENTERED_VEHICLE" and EnRT_HTMEnabled and inEncounter) then
 		local unit, _, _, _, _, vID = ...;
-		print(vID);
 		if (UnitName("player") == master and #shrunkPlayers > 4 and vID == 61447) then
 			if (#intermissionPlayers == 0) then
 				sparkBots = 0;
