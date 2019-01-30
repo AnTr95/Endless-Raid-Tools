@@ -20,13 +20,13 @@ textName:SetJustifyH("LEFT");
 textName:SetText("");
 
 local textStack = f:CreateFontString(nil, "ARTWORK", "GameFontNormal");
-textStack:SetPoint("TOPLEFT", 50, -10);
+textStack:SetPoint("TOPLEFT", 65, -10);
 textStack:SetJustifyV("TOP");
 textStack:SetJustifyH("LEFT");
 textStack:SetText("");
 
 local textCD = f:CreateFontString(nil, "ARTWORK", "GameFontNormal");
-textCD:SetPoint("TOPLEFT", 90, -10);
+textCD:SetPoint("TOPLEFT", 105, -10);
 textCD:SetJustifyV("TOP");
 textCD:SetJustifyH("LEFT");
 textCD:SetText("");
@@ -114,7 +114,6 @@ local function updateCooldowns()
 end
 
 function initRaid()
-	role = UnitGroupRolesAssigned("player");
 	local size = 25;
 	if (role == "HEALER") then
 		for i = 1, GetNumGroupMembers() do
@@ -153,7 +152,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (EnRT_OpulenceEnabled == nil) then EnRT_OpulenceEnabled = true; end
 	elseif (event == "UNIT_AURA" and role == "HEALER" and inEncounter and EnRT_OpulenceEnabled) then
 		local unit = ...;
-		if (UnitIsPlayer(unit)) then
+		if (UnitIsPlayer(unit) and UnitGroupRolesAssigned(unit) == "DAMAGER") then
 			local raider = UnitName(unit);
 			local tailwinds, icon, stacks = EnRT_UnitDebuff(unit, GetSpellInfo(284573));
 			local soothing = EnRT_UnitDebuff(unit, GetSpellInfo(290654));
@@ -174,9 +173,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 			raid[raider].CD = spellIDs[spellID];
 			updateCooldowns();
 		end
-	elseif (event == "ENCOUNTER_START" and role == "HEALER" and EnRT_OpulenceEnabled) then
+	elseif (event == "ENCOUNTER_START" and EnRT_OpulenceEnabled) then
 		local eID = ...;
-		if (eID == 2271) then
+		role = UnitGroupRolesAssigned("player");
+		if (eID == 2271 and role == "HEALER") then
 			inEncounter = true;
 			initRaid();
 			f:Show();
