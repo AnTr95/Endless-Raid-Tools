@@ -135,6 +135,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "UNIT_AURA" and EnRT_HTMEnabled and inEncounter) then
 		local unit = ...;
 		local plName = GetUnitName(unit, true);
+		
 		if (GetUnitName("player", true) == master) then
 			--284168
 			if (EnRT_UnitDebuff(unit, GetSpellInfo(284168))) then
@@ -158,7 +159,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 					end
 				end
 			else
-				if (EnRT_Contains(shrunkPlayers, plName)) then
+				if (EnRT_Contains(shrunkPlayers, plName) and not EnRT_UnitDebuff(unit, GetSpellInfo(286105))) then
 					shrunkPlayers[EnRT_Contains(shrunkPlayers, plName)] = nil;
 					targetText:SetText("Target: Waiting");
 				end
@@ -183,9 +184,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (EnRT_PopupIsShown()) then
 					EnRT_PopupHide();
 				end
+				glowNumber = msg; -- Before it gets converted to a number to be able to act as a reference in the global namespace
 				msg = tonumber(msg);
 				count = count + 1;
-				glowNumber = msg;
 				EnRT_PopupShow(htmData[msg].color .. count .. ". " .. htmData[msg].text, 30);
 				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
 					ActionButton_ShowOverlayGlow(_G["BT4Button"..glowNumber])

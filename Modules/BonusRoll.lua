@@ -8,7 +8,7 @@ local bossLex = {
 	[4] = "Opulence",
 	[5] = "Conclave of the Chosen",
 	[6] = "King Rastakhan",
-	[7] = "High Tinker Mekkatorque",
+	[7] = "Mekkatorque",
 	[8] = "Stormwall Blockade",
 	[9] = "Lady Jaina Proudmoore",
 };
