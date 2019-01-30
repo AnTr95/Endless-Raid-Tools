@@ -8,7 +8,7 @@ local bossLex = {
 	[4] = "Opulence",
 	[5] = "Conclave of the Chosen",
 	[6] = "King Rastakhan",
-	[7] = "Mekkatorque",
+	[7] = "High Tinker Mekkatorque",
 	[8] = "Stormwall Blockade",
 	[9] = "Lady Jaina Proudmoore",
 };
@@ -131,7 +131,7 @@ function EnRT_BR_ArrayInit()
 		["Opulence"] = {2271,0,0,0},
 		["Conclave of the Chosen"] = {2268,0,0,0},
 		["King Rastakhan"] = {2272,0,0,0},
-		["Mekkatorque"] = {2276,0,0,0},
+		["High Tinker Mekkatorque"] = {2276,0,0,0},
 		["Stormwall Blockade"] = {2280,0,0,0},
 		["Lady Jaina Proudmoore"] = {2281,0,0,0},
 	}
