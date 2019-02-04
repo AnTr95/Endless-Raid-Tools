@@ -59,7 +59,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif event == "ENCOUNTER_END" and EnRT_BonusRollEnabled then
 		local eID, eName, dID, raidSize, outcome = ...
-		print(eName)
 		if EnRT_Contains2DValue(EnRT_BonusRollBosses, 1, eID) and outcome == 1 then
 			local difficulty = select(3,GetInstanceInfo())
 			if difficultyLex[difficulty] and EnRT_BonusRollBosses[eName][difficultyLex[difficulty]] == 1 then
