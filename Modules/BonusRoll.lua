@@ -8,7 +8,7 @@ local bossLex = {
 	[4] = "Opulence",
 	[5] = "Conclave of the Chosen",
 	[6] = "King Rastakhan",
-	[7] = "High Tinker Mekkatorque",
+	[7] = "Mekkatorque",
 	[8] = "Stormwall Blockade",
 	[9] = "Lady Jaina Proudmoore",
 };
@@ -59,6 +59,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif event == "ENCOUNTER_END" and EnRT_BonusRollEnabled then
 		local eID, eName, dID, raidSize, outcome = ...
+		print(eName)
 		if EnRT_Contains2DValue(EnRT_BonusRollBosses, 1, eID) and outcome == 1 then
 			local difficulty = select(3,GetInstanceInfo())
 			if difficultyLex[difficulty] and EnRT_BonusRollBosses[eName][difficultyLex[difficulty]] == 1 then
@@ -131,7 +132,7 @@ function EnRT_BR_ArrayInit()
 		["Opulence"] = {2271,0,0,0},
 		["Conclave of the Chosen"] = {2268,0,0,0},
 		["King Rastakhan"] = {2272,0,0,0},
-		["High Tinker Mekkatorque"] = {2276,0,0,0},
+		["Mekkatorque"] = {2276,0,0,0},
 		["Stormwall Blockade"] = {2280,0,0,0},
 		["Lady Jaina Proudmoore"] = {2281,0,0,0},
 	}
@@ -244,7 +245,10 @@ end
 function EnRT_BR_CheckLatestRaid()
 	if (EnRT_BonusRollCurrentRaid ~= "Battle of Dazar'alor") then
 		EnRT_BonusRollCurrentRaid = "Battle of Dazar'alor"
-		EnRT_BR_ArrayInit()
+		EnRT_BR_ArrayInit();
+	end
+	if (EnRT_BonusRollBosses["High Tinker Mekkatorque"]) then
+		EnRT_BR_ArrayInit();
 	end
 end
 function EnRT_BR_CalculateSize()

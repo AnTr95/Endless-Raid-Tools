@@ -170,11 +170,17 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (UnitName(unit) == UnitName("player") and (spellID == 286152 or spellID == 286226 or spellID == 286219 or spellID == 286192 or spellID == 286215)) then
 			EnRT_PopupHide();
 			if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
-				ActionButton_HideOverlayGlow(_G["BT4Button"..glowNumber])
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["BT4Button"..i]);
+				end
 			elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
-				ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..glowNumber])
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..i]);
+				end
 			else
-				ActionButton_HideOverlayGlow(_G["ActionButton"..glowNumber])
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["ActionButton"..i]);
+				end
 			end
 		end
 	elseif (event == "CHAT_MSG_ADDON" and EnRT_HTMEnabled and inEncounter) then
@@ -189,11 +195,24 @@ f:SetScript("OnEvent", function(self, event, ...)
 				count = count + 1;
 				EnRT_PopupShow(htmData[msg].color .. count .. ". " .. htmData[msg].text, 30);
 				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
-					ActionButton_ShowOverlayGlow(_G["BT4Button"..glowNumber])
+					for i = 1, 5 do
+						ActionButton_HideOverlayGlow(_G["BT4Button"..i]);
+					end
 				elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
-					ActionButton_ShowOverlayGlow(_G["ElvUI_Bar1Button"..glowNumber])
+					for i = 1, 5 do
+						ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..i]);
+					end
 				else
-					ActionButton_ShowOverlayGlow(_G["ActionButton"..glowNumber])
+					for i = 1, 5 do
+						ActionButton_HideOverlayGlow(_G["ActionButton"..i]);
+					end
+				end
+				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
+					ActionButton_ShowOverlayGlow(_G["BT4Button"..glowNumber]);
+				elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
+					ActionButton_ShowOverlayGlow(_G["ElvUI_Bar1Button"..glowNumber]);
+				else
+					ActionButton_ShowOverlayGlow(_G["ActionButton"..glowNumber]);
 				end
 			else
 				targetText:SetText("Target: " .. msg);
@@ -201,8 +220,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 		end
 	elseif (event == "UNIT_ENTERED_VEHICLE" and EnRT_HTMEnabled and inEncounter) then
-		local unit, _, _, _, _, vID = ...;
-		if (UnitName("player") == master and #shrunkPlayers > 4 and vID == 61447) then
+		if (UnitName("player") == master and #shrunkPlayers > 4) then
 			if (#intermissionPlayers == 0) then
 				sparkBots = 0;
 				for i = 1, 40 do
@@ -212,7 +230,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 						if (guid) then
 							local type, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid = strsplit("-",guid);
 						--145924
-							if (tonumber(npcID) and tonumber(npcID) == 145924) then
+							if (tonumber(npcID) and tonumber(npcID) == 144942) then
 								sparkBots = sparkBots + 1;
 							end
 						end
@@ -230,7 +248,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				sparkBots = sparkBots - 1;
 			end
 		end
-		if (UnitName(unit) == UnitName("player") and vID == 61447) then
+		if (UnitName(unit) == UnitName("player")) then
 			showGUI();
 		end
 	elseif (event == "UNIT_EXITED_VEHICLE" and EnRT_HTMEnabled and inEncounter) then
@@ -242,11 +260,17 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end);
 			EnRT_PopupHide();
 			if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
-				ActionButton_HideOverlayGlow(_G["BT4Button"..glowNumber])
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["BT4Button"..i]);
+				end
 			elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
-				ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..glowNumber])
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..i]);
+				end
 			else
-				ActionButton_HideOverlayGlow(_G["ActionButton"..glowNumber])
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["ActionButton"..i]);
+				end
 			end
 			count = 0;
 		end
