@@ -220,6 +220,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 		end
 	elseif (event == "UNIT_ENTERED_VEHICLE" and EnRT_HTMEnabled and inEncounter) then
+		local unit = ...;
 		if (UnitName("player") == master and #shrunkPlayers > 4) then
 			if (#intermissionPlayers == 0) then
 				sparkBots = 0;
