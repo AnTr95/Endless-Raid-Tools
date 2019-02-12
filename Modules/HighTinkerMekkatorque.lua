@@ -173,6 +173,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 				for i = 1, 5 do
 					ActionButton_HideOverlayGlow(_G["BT4Button"..i]);
 				end
+			elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..glowNumber]) then
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..i]);
+				end
 			elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
 				for i = 1, 5 do
 					ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..i]);
@@ -198,6 +202,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 					for i = 1, 5 do
 						ActionButton_HideOverlayGlow(_G["BT4Button"..i]);
 					end
+				elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..glowNumber]) then
+					for i = 1, 5 do
+						ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..i]);
+					end
 				elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
 					for i = 1, 5 do
 						ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..i]);
@@ -209,6 +217,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
 					ActionButton_ShowOverlayGlow(_G["BT4Button"..glowNumber]);
+				elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..glowNumber]) then
+					ActionButton_ShowOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..glowNumber]);
 				elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
 					ActionButton_ShowOverlayGlow(_G["ElvUI_Bar1Button"..glowNumber]);
 				else
@@ -263,6 +273,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
 				for i = 1, 5 do
 					ActionButton_HideOverlayGlow(_G["BT4Button"..i]);
+				end
+			elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..glowNumber]) then
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..i]);
 				end
 			elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
 				for i = 1, 5 do
