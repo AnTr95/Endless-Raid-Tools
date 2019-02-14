@@ -183,7 +183,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			else
 				for i = 1, 5 do
-					ActionButton_HideOverlayGlow(_G["ActionButton"..i]);
+					ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..i]);
 				end
 			end
 		end
@@ -212,7 +212,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 					end
 				else
 					for i = 1, 5 do
-						ActionButton_HideOverlayGlow(_G["ActionButton"..i]);
+						ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..i]);
 					end
 				end
 				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
@@ -222,7 +222,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
 					ActionButton_ShowOverlayGlow(_G["ElvUI_Bar1Button"..glowNumber]);
 				else
-					ActionButton_ShowOverlayGlow(_G["ActionButton"..glowNumber]);
+					ActionButton_ShowOverlayGlow(_G["OverrideActionBarButton"..glowNumber]);
 				end
 			else
 				targetText:SetText("Target: " .. msg);
@@ -284,7 +284,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			else
 				for i = 1, 5 do
-					ActionButton_HideOverlayGlow(_G["ActionButton"..i]);
+					ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..i]);
 				end
 			end
 			count = 0;
