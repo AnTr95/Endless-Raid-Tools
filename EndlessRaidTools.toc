@@ -44,3 +44,4 @@ Modules\HighTinkerMekkatorque.lua
 Options\HighTinkerMekkatorqueOptions.lua
 Modules\Opulence.lua
 Options\OpulenceOptions.lua
+Modules\ResiduumSender.lua
