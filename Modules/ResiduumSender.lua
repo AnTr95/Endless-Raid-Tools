@@ -1,4 +1,4 @@
-local EnRT_Residuum = LibStub("AceAddon-3.0"):NewAddon("EnRT_Residuum", "AceTimer-3.0","AceComm-3.0");
+local EnRT_Residuum = LibStub("AceAddon-3.0"):NewAddon("EnRT_Residuum","AceSerializer-3.0","AceTimer-3.0","AceComm-3.0");
 local Gear = nil;
 local ResiduumList = {
 	Cloth = {},
@@ -12,17 +12,14 @@ local SendTable =  {
 	Leather = "",};
 function EnRT_Residuum:OnInitialize()
 	self:RegisterComm("EnRT_Residuum")
-	self:RegisterComm("EnRT_Resicloth")
-	self:RegisterComm("EnRT_Resileather")
-	self:RegisterComm("EnRT_Resiplate")
-	self:RegisterComm("EnRT_Resimail")
 end
 
 function GatherInfo(self,msg)
-	C_ChatInfo.SendAddonMessage("EnRT_Residuum","GatherInfo","RAID");
+	EnRT_Residuum:SendCommMessage("EnRT_Residuum","GatherInfo","RAID");
 	EnRT_Residuum:ScheduleTimer("TimerFeedback", 5);
 end
 function EnRT_Residuum:TimerFeedback()
+	--table.sort(ResiduumList.Cloth, function( a, b ) return a[1] > b[1] end )
 	for amount,players in pairs(ResiduumList.Cloth) do
 			SendTable.Cloth = SendTable.Cloth .. " "..amount.." "..players.." ";
 	end
@@ -39,7 +36,7 @@ function EnRT_Residuum:TimerFeedback()
 	SendChatMessage(SendTable.Cloth,"RAID")
 	SendChatMessage("MAIL","RAID")
 	SendChatMessage(SendTable.Mail,"RAID")
-	self:ScheduleTimer("ChatDelay", 2)
+	self:ScheduleTimer("ChatDelay", 1)
 end
 function EnRT_Residuum:ChatDelay()
 	SendChatMessage("LEATHER","RAID")
@@ -57,10 +54,9 @@ function EnRT_Residuum:ChatDelay()
 	Mail = {},
 	Leather = {},};
 end
---    /endlessresiduum
-
-SlashCmdList["ENDLESRESIDUUM"] = GatherInfo
-SLASH_ENDLESRESIDUUM1 = "/endlessresiduum"
+--    /enrtresi
+SlashCmdList["ENRTRESI"] = GatherInfo;
+SLASH_ENRTRESI1 = "/enrtresi";
 
 function EnRT_Residuum:OnCommReceived(prefix, Msg, distri, sender)
 	if (prefix == "EnRT_Residuum" and Msg == "GatherInfo")  then
@@ -75,38 +71,14 @@ function EnRT_Residuum:OnCommReceived(prefix, Msg, distri, sender)
 			elseif (classIndex == 4 or classIndex == 10 or classIndex == 11 or classIndex == 12) then
 				Gear = "Leather";
 		end
-		if (Gear == "Cloth") then
-				C_ChatInfo.SendAddonMessage("EnRT_Resicloth",Residuum,"WHISPER",sender);
-			elseif (Gear == "Leather") then
-				C_ChatInfo.SendAddonMessage("EnRT_Resileather",Residuum,"WHISPER",sender);
-			elseif (Gear == "Mail") then
-				C_ChatInfo.SendAddonMessage("EnRT_Resimail",Residuum,"WHISPER",sender);
-			elseif (Gear == "Plate") then
-				C_ChatInfo.SendAddonMessage("EnRT_Resiplate",Residuum,"WHISPER",sender);
-		end
-	elseif (prefix == "EnRT_Resicloth") then
-		if (ResiduumList.Cloth[Msg] == nil) then
-			ResiduumList.Cloth[Msg] = sender;
+			self:SendCommMessage("EnRT_Residuum",self:Serialize(Residuum,Gear),"WHISPER",sender);
+
+	elseif (prefix == "EnRT_Residuum") then
+		check,Residuum,Gear =self:Deserialize(Msg)
+		if (ResiduumList[Gear][Residuum] == nil) then
+			ResiduumList[Gear][Residuum] = sender;
 		else
-			ResiduumList.Cloth[Msg] = ResiduumList.Cloth[Msg] .." "..sender;
-		end
-	elseif (prefix == "EnRT_Resileather") then
-		if (ResiduumList.Leather[Msg] == nil) then
-			ResiduumList.Leather[Msg] = sender;
-		else
-			ResiduumList.Leather[Msg] = ResiduumList.Leather[Msg] .." "..sender;
-		end
-	elseif (prefix == "EnRT_Resiplate") then
-		if (ResiduumList.Plate[Msg] == nil) then
-				ResiduumList.Plate[Msg] = sender;
-			else
-				ResiduumList.Plate[Msg] = ResiduumList.Plate[Msg] .." "..sender;
-			end
-	elseif (prefix == "EnRT_Resimail") then
-		if (ResiduumList.Mail[Msg]) == nil then
-			ResiduumList.Mail[Msg] = sender;
-		else
-			ResiduumList.Mail[Msg] = ResiduumList.Mail[Msg] .." "..sender;
+			ResiduumList[Gear][Residuum] = ResiduumList[Gear][Residuum] .." "..sender;
 		end
 	end
 end
