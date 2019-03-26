@@ -54,14 +54,14 @@ f:SetBackdropColor(0,0,0,1);
 f:SetBackdropBorderColor(1,0,0,1);
 f:SetScript("OnDragStart", f.StartMoving);
 f:SetScript("OnDragStop", function(self)
-	local point, relativeTo, relativePoint, xOffset, yOffset = self:GetPoint(1)
-	EnRT_HTMUIPosition = {}
-	EnRT_HTMUIPosition.point = point
-	EnRT_HTMUIPosition.relativeTo = relativeTo
-	EnRT_HTMUIPosition.relativePoint = relativePoint
-	EnRT_HTMUIPosition.xOffset = xOffset
-	EnRT_HTMUIPosition.yOffset = yOffset
-	self:StopMovingOrSizing()
+	local point, relativeTo, relativePoint, xOffset, yOffset = self:GetPoint(1);
+	EnRT_HTMUIPosition = {};
+	EnRT_HTMUIPosition.point = point;
+	EnRT_HTMUIPosition.relativeTo = relativeTo;
+	EnRT_HTMUIPosition.relativePoint = relativePoint;
+	EnRT_HTMUIPosition.xOffset = xOffset;
+	EnRT_HTMUIPosition.yOffset = yOffset;
+	self:StopMovingOrSizing();
 end);
 f:Hide();
 
@@ -86,7 +86,7 @@ for i = 1, 5 do
 		insets = { left = 3, right = 4, top = 4, bottom = 5 }
 	});]]
 	button:SetScript("OnClick", function()
-		local target = UnitName("target");
+		local target = GetUnitName("target", true);
 		C_ChatInfo.SendAddonMessage("EnRT_HTM", i, "WHISPER", target);
 	end);
 end
@@ -124,9 +124,9 @@ f:RegisterEvent("UNIT_EXITED_VEHICLE");
 f:RegisterEvent("ENCOUNTER_START");
 f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("UNIT_AURA");
-f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 
-C_ChatInfo.RegisterAddonMessagePrefix("EnRT_HTM") --MEKKATORQUE too long?
+C_ChatInfo.RegisterAddonMessagePrefix("EnRT_HTM");
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
