@@ -11,6 +11,8 @@ local bossLex = {
 	[7] = "Mekkatorque",
 	[8] = "Stormwall Blockade",
 	[9] = "Lady Jaina Proudmoore",
+	[10] = "The Restless Cabal",
+	[11] = "Uu'nat",
 };
 local difficultyLex = {
 	[14] = 2,
@@ -51,7 +53,7 @@ f:RegisterEvent("SPELL_CONFIRMATION_PROMPT");
 f:RegisterEvent("CHAT_MSG_LOOT");
 f:SetScript("OnEvent", function(self, event, ...)
 	if event == "ZONE_CHANGED_NEW_AREA" and EnRT_BonusRollEnabled then
-		if GetZoneText() == EnRT_BonusRollCurrentRaid then
+		if (GetZoneText() == EnRT_BonusRollCurrentRaid or GetZoneText() == "Battle of Dazar'alor") then
 			bonusRolls = select(2,GetCurrencyInfo(currentCurrencyID))
 			if bonusRolls > 0 then
 				EnRT_BR_Settings:Show()
@@ -78,7 +80,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif event == "CHAT_MSG_LOOT" then
 		local message, arg2, arg3, arg4, pl = ...
-		if (message:find("You receive bonus loot:") and GetZoneText() == EnRT_BonusRollCurrentRaid) then
+		if (message:find("You receive bonus loot:") and (GetZoneText() == EnRT_BonusRollCurrentRaid) or GetZoneText() == "Battle of Dazar'alor") then
 			EnRT_BonusRollBLPCount = 0;
 		end
 	elseif event == "SPELL_CONFIRMATION_PROMPT" and EnRT_BonusRollEnabled then
@@ -93,7 +95,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif event == "PLAYER_LOGIN" then
 		if EnRT_BonusRollBosses == nil then EnRT_BR_ArrayInit() end
 		if EnRT_BonusRollEnabled == nil then EnRT_BonusRollEnabled = true end
-		if EnRT_BonusRollCurrentRaid == nil then EnRT_BonusRollCurrentRaid = "Battle of Dazar'alor" end
+		if EnRT_BonusRollCurrentRaid == nil then EnRT_BonusRollCurrentRaid = "Crucible of Storms" end
 		if EnRT_BonusRollBLPCount == nil then EnRT_BonusRollBLPCount = 0 end;
 		EnRT_BR_CheckLatestRaid()
 		EnRT_BR_GUIInit()
@@ -134,6 +136,8 @@ function EnRT_BR_ArrayInit()
 		["Mekkatorque"] = {2276,0,0,0},
 		["Stormwall Blockade"] = {2280,0,0,0},
 		["Lady Jaina Proudmoore"] = {2281,0,0,0},
+		["The Restless Cabal"] = {2269,0,0,0},
+		["Uu'nat"] = {2273,0,0,0},
 	}
 
 end
@@ -242,11 +246,8 @@ function EnRT_BR_UpdateCoinText()
 	EnRT_BR_GUI["coinText"]:SetText("Remaining Coins: "..bonusRolls-spent);
 end
 function EnRT_BR_CheckLatestRaid()
-	if (EnRT_BonusRollCurrentRaid ~= "Battle of Dazar'alor") then
-		EnRT_BonusRollCurrentRaid = "Battle of Dazar'alor"
-		EnRT_BR_ArrayInit();
-	end
-	if (EnRT_BonusRollBosses["High Tinker Mekkatorque"]) then
+	if (EnRT_BonusRollCurrentRaid ~= "Crucible of Storms") then
+		EnRT_BonusRollCurrentRaid = "Crucible of Storms"
 		EnRT_BR_ArrayInit();
 	end
 end
@@ -268,7 +269,7 @@ end)]]
 
 hooksecurefunc("AcceptSpellConfirmationPrompt", function(...)
 	local spellID = ...;
-	if (GetZoneText() == EnRT_BonusRollCurrentRaid) then
+	if (GetZoneText() == EnRT_BonusRollCurrentRaid or GetZoneText() == "Battle of Dazar'alor") then
 		EnRT_BonusRollBLPCount = EnRT_BonusRollBLPCount + 1;
 		--EnRT_BLPCountString:SetText("BLP: " .. EnRT_BonusRollBLPCount .. "/6");
 	end
