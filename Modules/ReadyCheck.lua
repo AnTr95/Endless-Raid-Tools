@@ -5,8 +5,6 @@ f:RegisterEvent("READY_CHECK_FINISHED")
 f:RegisterEvent("READY_CHECK")
 f:RegisterEvent("CHAT_MSG_RAID")
 f:RegisterEvent("CHAT_MSG_RAID_LEADER")
-f:RegisterEvent("CHAT_MSG_ADDON")
-C_ChatInfo.RegisterAddonMessagePrefix("EnRT_RC")
 f:SetPoint("CENTER")
 f:SetSize(200,200)
 f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", --Set the background and border textures
@@ -80,7 +78,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			for k, v in pairs(players) do 
 				if playerText == v then
 					playerText = ""
-					break --return??
+					break
 				end
 			end
 			local currentText = rcText:GetText() and rcText:GetText() .. playerText .. '\n' or playerText .. '\n'
@@ -130,32 +128,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if sender == UnitName("player") then
 			rcStatus = true
 		end
-	elseif event == "CHAT_MSG_ADDON" and EnRT_ReadyCheckEnabled and rcSender == UnitName("player") then
-		local prefix, msg, channel, sender = ...;
-		if prefix == "EnRT_RC" and msg == "afk" then
-			local players = {}
-			if rcText:GetText() then
-				for s in rcText:GetText():gmatch("[^\r\n]+") do
-	    			table.insert(players, s)
-				end
-			end
-			local playerText = string.format("|c%s%s", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, UnitName(sender))
-			for k, v in pairs(players) do 
-				if playerText == v then
-					playerText = ""
-					break
-				end
-			end
-			local currentText = rcText:GetText() and rcText:GetText() .. playerText .. '\n' or playerText .. '\n'
-			rcText:SetText(currentText)
-		end
 	elseif event == "READY_CHECK_FINISHED" and EnRT_ReadyCheckEnabled then
 		if not rcStatus and not f:IsShown() and select(2,GetInstanceInfo()) == "raid" then
 			f:Show()
 			rcButton:Show()
 			f:SetBackdropColor(0,0,0,0)
 			f:SetBackdropBorderColor(169,169,169,0)
-			C_ChatInfo.SendAddonMessage("EnRT_RC", "afk", "RAID")
 		end
 	elseif event == "PLAYER_LOGIN" then
 		if EnRT_ReadyCheckEnabled == nil then EnRT_ReadyCheckEnabled = true end
