@@ -22,6 +22,10 @@ local raidDatabase = {
 		["Lady Jaina Proudmore"] = 2281,
 		["No boss"] = 1,
 	},
+	["Crucible of Storms"] = {
+		["The Restless Cabal"] = 2269,
+		["Uu'nat"] = 2273,
+	},
 };   
 local bossLex = {
 	["Uldir"] = {
@@ -46,6 +50,11 @@ local bossLex = {
 		[8] = "Stormwall Blockade",
 		[9] = "Lady Jaina Proudmore",
 		[10] = "No boss",
+	},
+	["Crucible of Storms"] = {
+		[1] = "The Restless Cabal",
+		[2] = "Uu'nat",
+		[3] = "No boss",
 	},
 };
 local GUI = nil;

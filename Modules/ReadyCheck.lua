@@ -78,7 +78,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			for k, v in pairs(players) do 
 				if playerText == v then
 					playerText = ""
-					break
+					return
 				end
 			end
 			local currentText = rcText:GetText() and rcText:GetText() .. playerText .. '\n' or playerText .. '\n'
