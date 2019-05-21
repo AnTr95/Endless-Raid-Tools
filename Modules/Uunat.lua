@@ -13,7 +13,7 @@ local ticks = 0;
 local inEncounter = false;
 
 f:SetScript("OnUpdate", function(self, elapsed)
-	if (hasRelic and EnRT_UunatEnabled) then
+	if (hasRelic and EnRT_UunatEnabled and inEncounter) then
 		ticks = ticks + elapsed;
 		if (ticks > 1.5 and resonanceActive > 0) then
 			SendChatMessage(hasRelic, "YELL");
@@ -22,7 +22,7 @@ f:SetScript("OnUpdate", function(self, elapsed)
 		elseif (resonanceActive < 0) then
 			resonanceActive = 0;
 		end
-	elseif (yellText and EnRT_UunatEnabled) then
+	elseif (yellText and EnRT_UunatEnabled and inEncounter) then
 		ticks = ticks + elapsed;
 		if (ticks > 1.5) then
 			SendChatMessage(yellText, "YELL");
@@ -61,11 +61,19 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local eID = ...;
 		if (eID == 2273) then
 			inEncounter = true;
+			hasRelic = nil;
+			yellText = nil;
+			tikcs = 0;
+			resonanceActive = 0;
 		end
 	elseif (event == "ENCOUNTER_END" and EnRT_UunatEnabled) then
 		local eID = ...;
 		if (eID == 2273) then
 			inEncounter = false;
+			hasRelic = nil;
+			yellText = nil;
+			tikcs = 0;
+			resonanceActive = 0;
 		end
 	elseif (event == "PLAYER_LOGIN") then
 		if (EnRT_UunatEnabled == nil) then EnRT_UunatEnabled = true; end
