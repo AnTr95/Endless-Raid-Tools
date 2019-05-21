@@ -12,6 +12,10 @@
 ## SavedVariables: EnRT_BonusRollCurrentRaid
 ## SavedVariables: EnRT_MOTHEREnabled
 ## SavedVariables: EnRT_OpulenceEnabled
+## SavedVariables: EnRT_UunatEnabled
+## SavedVariables: EnRT_UunatStormMark
+## SavedVariables: EnRT_UunatOceanMark
+## SavedVariables: EnRT_UunatVoidMark
 ## SavedVariablesPerCharacter: EnRT_CalendarNotificationEnabled
 ## SavedVariablesPerCharacter: EnRT_ReadyCheckEnabled
 ## SavedVariablesPerCharacter: EnRT_BonusRollBosses
