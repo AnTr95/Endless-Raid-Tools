@@ -1,6 +1,6 @@
 ## Interface: 80100
 ## Title: Endless Raid Tools
-## Version: 8.34
+## Version: 8.35
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: EnRT_InterruptEnabled
@@ -44,3 +44,5 @@ Modules\HighTinkerMekkatorque.lua
 Options\HighTinkerMekkatorqueOptions.lua
 Modules\Opulence.lua
 Options\OpulenceOptions.lua
+Modules\Uunat.lua
+Options\UunatOptions.lua
