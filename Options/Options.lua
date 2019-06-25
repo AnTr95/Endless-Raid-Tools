@@ -42,7 +42,15 @@ InterfaceOptions_AddCategory(EnRT_UldirModules)
 EnRT_BoDModules = CreateFrame("Frame", "EnRT_BoDModulesFrame")
 EnRT_BoDModules.name = "|cFFFFFF00Battle of Dazar'alor Modules"
 EnRT_BoDModules.parent = "Endless Raid Tools"
-EnRT_BoDModules:SetScript("OnShow", function(EnRT_UldirModules)
+EnRT_BoDModules:SetScript("OnShow", function(EnRT_BoDModules)
 	InterfaceOptionsFrame_OpenToCategory(EnRT_HighTinkerMekkatorqueOptions)
 end)
 InterfaceOptions_AddCategory(EnRT_BoDModules)
+
+EnRT_CoSModules = CreateFrame("Frame", "EnRT_CoSModulesFrame")
+EnRT_CoSModules.name = "|cFFFFFF00Crucible of Storms Modules"
+EnRT_CoSModules.parent = "Endless Raid Tools"
+EnRT_CoSModules:SetScript("OnShow", function(EnRT_CoSModules)
+	InterfaceOptionsFrame_OpenToCategory(EnRT_Uunatptions)
+end)
+InterfaceOptions_AddCategory(EnRT_CoSModules)

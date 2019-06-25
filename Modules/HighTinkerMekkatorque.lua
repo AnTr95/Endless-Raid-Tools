@@ -1,12 +1,13 @@
 local f = CreateFrame("Frame");
 local inEncounter = false;
 local pendingAssignments = false;
-shrunkPlayers = {};
-intermissionPlayers = {};
+local shrunkPlayers = {};
+local intermissionPlayers = {};
 local myTarget = "";
-local master = "Ant";
+local master = "";
 local count = 0;
-sparkBots = 0;
+local sparkBots = 0;
+local glowNumber = 0;
 local htmData = {
 	[1] = {
 		text = "RED",
@@ -53,14 +54,14 @@ f:SetBackdropColor(0,0,0,1);
 f:SetBackdropBorderColor(1,0,0,1);
 f:SetScript("OnDragStart", f.StartMoving);
 f:SetScript("OnDragStop", function(self)
-	local point, relativeTo, relativePoint, xOffset, yOffset = self:GetPoint(1)
-	EnRT_HTMUIPosition = {}
-	EnRT_HTMUIPosition.point = point
-	EnRT_HTMUIPosition.relativeTo = relativeTo
-	EnRT_HTMUIPosition.relativePoint = relativePoint
-	EnRT_HTMUIPosition.xOffset = xOffset
-	EnRT_HTMUIPosition.yOffset = yOffset
-	self:StopMovingOrSizing()
+	local point, relativeTo, relativePoint, xOffset, yOffset = self:GetPoint(1);
+	EnRT_HTMUIPosition = {};
+	EnRT_HTMUIPosition.point = point;
+	EnRT_HTMUIPosition.relativeTo = relativeTo;
+	EnRT_HTMUIPosition.relativePoint = relativePoint;
+	EnRT_HTMUIPosition.xOffset = xOffset;
+	EnRT_HTMUIPosition.yOffset = yOffset;
+	self:StopMovingOrSizing();
 end);
 f:Hide();
 
@@ -85,7 +86,7 @@ for i = 1, 5 do
 		insets = { left = 3, right = 4, top = 4, bottom = 5 }
 	});]]
 	button:SetScript("OnClick", function()
-		local target = UnitName("target");
+		local target = GetUnitName("target", true);
 		C_ChatInfo.SendAddonMessage("EnRT_HTM", i, "WHISPER", target);
 	end);
 end
@@ -123,19 +124,21 @@ f:RegisterEvent("UNIT_EXITED_VEHICLE");
 f:RegisterEvent("ENCOUNTER_START");
 f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("UNIT_AURA");
+f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 
-C_ChatInfo.RegisterAddonMessagePrefix("EnRT_HTM") --MEKKATORQUE too long?
+C_ChatInfo.RegisterAddonMessagePrefix("EnRT_HTM");
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		if (EnRT_HTMEnabled == nil) then EnRT_HTMEnabled = true; end
 		if (EnRT_HTMUIPosition) then setMainFramePosition(EnRT_HTMUIPosition.point, EnRT_HTMUIPosition.relativeTo, EnRT_HTMUIPosition.relativePoint, EnRT_HTMUIPosition.xOffset, EnRT_HTMUIPosition.yOffset); end
-	elseif (event == "UNIT_AURA" and EnRT_HTMEnabled) then
+	elseif (event == "UNIT_AURA" and EnRT_HTMEnabled and inEncounter) then
 		local unit = ...;
 		local plName = GetUnitName(unit, true);
+		
 		if (GetUnitName("player", true) == master) then
 			--284168
-			if (EnRT_UnitBuff(unit, GetSpellInfo(1459))) then
+			if (EnRT_UnitDebuff(unit, GetSpellInfo(284168))) then
 				if (not EnRT_Contains(shrunkPlayers, plName)) then
 					shrunkPlayers[#shrunkPlayers+1] = plName;
 					if (not pendingAssignments) then
@@ -156,30 +159,79 @@ f:SetScript("OnEvent", function(self, event, ...)
 					end
 				end
 			else
-				if (EnRT_Contains(shrunkPlayers, plName)) then
+				if (EnRT_Contains(shrunkPlayers, plName) and not EnRT_UnitDebuff(unit, GetSpellInfo(286105))) then
 					shrunkPlayers[EnRT_Contains(shrunkPlayers, plName)] = nil;
 					targetText:SetText("Target: Waiting");
 				end
 			end
 		end
-	elseif (event == "CHAT_MSG_ADDON" and EnRT_HTMEnabled) then
+	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and EnRT_HTMEnabled and inEncounter) then
+		local unit, _, spellID = ...;
+		if (UnitName(unit) == UnitName("player") and (spellID == 286152 or spellID == 286226 or spellID == 286219 or spellID == 286192 or spellID == 286215)) then
+			EnRT_PopupHide();
+			if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["BT4Button"..i]);
+				end
+			elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..glowNumber]) then
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..i]);
+				end
+			elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..i]);
+				end
+			else
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..i]);
+				end
+			end
+		end
+	elseif (event == "CHAT_MSG_ADDON" and EnRT_HTMEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "EnRT_HTM") then
 			if (tonumber(msg)) then
 				if (EnRT_PopupIsShown()) then
 					EnRT_PopupHide();
 				end
+				glowNumber = msg; -- Before it gets converted to a number to be able to act as a reference in the global namespace
 				msg = tonumber(msg);
 				count = count + 1;
 				EnRT_PopupShow(htmData[msg].color .. count .. ". " .. htmData[msg].text, 30);
+				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
+					for i = 1, 5 do
+						ActionButton_HideOverlayGlow(_G["BT4Button"..i]);
+					end
+				elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..glowNumber]) then
+					for i = 1, 5 do
+						ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..i]);
+					end
+				elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
+					for i = 1, 5 do
+						ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..i]);
+					end
+				else
+					for i = 1, 5 do
+						ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..i]);
+					end
+				end
+				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
+					ActionButton_ShowOverlayGlow(_G["BT4Button"..glowNumber]);
+				elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..glowNumber]) then
+					ActionButton_ShowOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..glowNumber]);
+				elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
+					ActionButton_ShowOverlayGlow(_G["ElvUI_Bar1Button"..glowNumber]);
+				else
+					ActionButton_ShowOverlayGlow(_G["OverrideActionBarButton"..glowNumber]);
+				end
 			else
 				targetText:SetText("Target: " .. msg);
 				showGUI();
 			end
 		end
-	elseif (event == "UNIT_ENTERED_VEHICLE" and EnRT_HTMEnabled) then
-		local unit, _, _, _, _, vID = ...;
-		if (UnitName("player") == master and #shrunkPlayers > 4 and vID == 61447) then
+	elseif (event == "UNIT_ENTERED_VEHICLE" and EnRT_HTMEnabled and inEncounter) then
+		local unit = ...;
+		if (UnitName("player") == master and #shrunkPlayers > 4) then
 			if (#intermissionPlayers == 0) then
 				sparkBots = 0;
 				for i = 1, 40 do
@@ -189,7 +241,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 						if (guid) then
 							local type, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid = strsplit("-",guid);
 						--145924
-							if (tonumber(npcID) and tonumber(npcID) == 61081) then
+							if (tonumber(npcID) and tonumber(npcID) == 144942) then
 								sparkBots = sparkBots + 1;
 							end
 						end
@@ -210,7 +262,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (UnitName(unit) == UnitName("player")) then
 			showGUI();
 		end
-	elseif (event == "UNIT_EXITED_VEHICLE" and EnRT_HTMEnabled) then
+	elseif (event == "UNIT_EXITED_VEHICLE" and EnRT_HTMEnabled and inEncounter) then
 		local unit = ...;
 		if (UnitName(unit) == UnitName("player")) then
 			C_Timer.After(5, function() 
@@ -218,11 +270,28 @@ f:SetScript("OnEvent", function(self, event, ...)
 				targetText:SetText("Target: Waiting...");
 			end);
 			EnRT_PopupHide();
+			if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["BT4Button"..i]);
+				end
+			elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..glowNumber]) then
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..i]);
+				end
+			elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..glowNumber]) then
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..i]);
+				end
+			else
+				for i = 1, 5 do
+					ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..i]);
+				end
+			end
 			count = 0;
 		end
 	elseif (event == "ENCOUNTER_START" and EnRT_HTMEnabled) then
 		local eID = ...;
-		if (eID == 0000) then
+		if (eID == 2276) then
 			master = EnRT_GetRaidLeader();
 			inEncounter = true;
 		end

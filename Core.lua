@@ -89,6 +89,23 @@ function Endless_Contains(arr, value)
 	end
 	return false
 end
+--[[
+	Checking if a table contains a given value and if it does, what index is the value located at
+	param(arr) table
+	param(value) T - value to check exists
+	return boolean or integer / returns false if the table does not contain the value otherwise it returns the index of where the value is locatedd
+]]
+function EnRT_ContainsKey(arr, value)
+	if (value == nil or arr == nil) then
+		return false;
+	end
+	for k, v in pairs(arr) do
+		if (k == value) then
+			return true;
+		end
+	end
+	return false;
+end
 
 function EnRT_UnitBuff(unit, spellName)
 	if unit and spellName then

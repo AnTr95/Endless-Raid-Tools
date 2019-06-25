@@ -2,38 +2,41 @@
 local L = EnRTLocals;
 local f = CreateFrame("Frame")
 local bossLex = {
-	[1] = "Taloc",
-	[2] = "MOTHER",
-	[3] = "Fetid Devourer",
-	[4] = "Zek'voz",
-	[5] = "Vectis",
-	[6] = "Zul",
-	[7] = "Mythrax",
-	[8] = "G'huun",
-}
+	[1] = "Champion of the Light",
+	[2] = "Grong",
+	[3] = "Jadefire Masters",
+	[4] = "Opulence",
+	[5] = "Conclave of the Chosen",
+	[6] = "King Rastakhan",
+	[7] = "Mekkatorque",
+	[8] = "Stormwall Blockade",
+	[9] = "Lady Jaina Proudmoore",
+	[10] = "The Restless Cabal",
+	[11] = "Uu'nat",
+};
 local difficultyLex = {
 	[14] = 2,
 	[15] = 3,
 	[16] = 4,
-}
-local EnRT_BR_GUI = {}
-local bonusRolls = 0
-local spent = 0
-local isLockMode = false
+};
+local EnRT_BR_GUI = {};
+local bonusRolls = 0;
+local spent = 0;
+local isLockMode = false;
 local currentCurrencyID = 1580;
 local currentSpellID = 257902;
 
-EnRT_BR_Settings = CreateFrame("Frame")
-EnRT_BR_Settings:SetPoint("CENTER")
-EnRT_BR_Settings:SetSize(270, 270)
-EnRT_BR_Settings:SetFrameStrata("TOOLTIP")
+EnRT_BR_Settings = CreateFrame("Frame");
+EnRT_BR_Settings:SetPoint("CENTER");
+EnRT_BR_Settings:SetSize(270, 270);
+EnRT_BR_Settings:SetFrameStrata("TOOLTIP");
 EnRT_BR_Settings:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", --Set the background and border textures
 	edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
 	tile = true, tileSize = 16, edgeSize = 16, 
 	insets = { left = 4, right = 4, top = 4, bottom = 4 }
-})
-EnRT_BR_Settings:SetBackdropColor(0,0,0,1)
-EnRT_BR_Settings:Hide()
+});
+EnRT_BR_Settings:SetBackdropColor(0,0,0,1);
+EnRT_BR_Settings:Hide();
 
 local function initBLPText()
 	local BLPText = BonusRollFrame.PromptFrame.InfoFrame:CreateFontString("EnRT_BLPCountString", "ARTWORK", "GameFontNormal");
@@ -50,7 +53,7 @@ f:RegisterEvent("SPELL_CONFIRMATION_PROMPT");
 f:RegisterEvent("CHAT_MSG_LOOT");
 f:SetScript("OnEvent", function(self, event, ...)
 	if event == "ZONE_CHANGED_NEW_AREA" and EnRT_BonusRollEnabled then
-		if GetZoneText() == EnRT_BonusRollCurrentRaid then
+		if (GetZoneText() == EnRT_BonusRollCurrentRaid or GetZoneText() == "Battle of Dazar'alor") then
 			bonusRolls = select(2,GetCurrencyInfo(currentCurrencyID))
 			if bonusRolls > 0 then
 				EnRT_BR_Settings:Show()
@@ -77,7 +80,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif event == "CHAT_MSG_LOOT" then
 		local message, arg2, arg3, arg4, pl = ...
-		if (message:find("You receive bonus loot:") and GetZoneText() == EnRT_BonusRollCurrentRaid) then
+		if (message:find("You receive bonus loot:") and (GetZoneText() == EnRT_BonusRollCurrentRaid) or GetZoneText() == "Battle of Dazar'alor") then
 			EnRT_BonusRollBLPCount = 0;
 		end
 	elseif event == "SPELL_CONFIRMATION_PROMPT" and EnRT_BonusRollEnabled then
@@ -92,10 +95,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif event == "PLAYER_LOGIN" then
 		if EnRT_BonusRollBosses == nil then EnRT_BR_ArrayInit() end
 		if EnRT_BonusRollEnabled == nil then EnRT_BonusRollEnabled = true end
-		if EnRT_BonusRollCurrentRaid == nil then EnRT_BonusRollCurrentRaid = "Uldir" end
+		if EnRT_BonusRollCurrentRaid == nil then EnRT_BonusRollCurrentRaid = "Crucible of Storms" end
 		if EnRT_BonusRollBLPCount == nil then EnRT_BonusRollBLPCount = 0 end;
 		EnRT_BR_CheckLatestRaid()
 		EnRT_BR_GUIInit()
+		if (UnitFactionGroup("player") == "Alliance") then
+			bossLex[2] = "Jadefire Masters";
+			bossLex[3] = "Grong";
+		end
 	end
 end)
 
@@ -118,15 +125,19 @@ end
 function EnRT_BR_ArrayInit()
 	--2032,2048,2036,2050,2037,2054,2052,2038,2051 ToS
 	--2076,2074,2070,2064,2075,2082,2088,2069,2073,2063,2092 Antorus
+	--2265,2263,2266,2271,2268,2272,2276,2280,2281 BoD
 	EnRT_BonusRollBosses = {
-		["Taloc"] = {2144,0,0,0},
-		["MOTHER"] = {2141,0,0,0},
-		["Fetid Devourer"] = {2128,0,0,0},
-		["Zek'voz"] = {2136,0,0,0},
-		["Vectis"] = {2134,0,0,0},
-		["Zul"] = {2145,0,0,0},
-		["Mythrax"] = {2135,0,0,0},
-		["G'huun"] = {2122,0,0,0},
+		["Champion of the Light"] = {2265,0,0,0},
+		["Grong"] = {2263,0,0,0},
+		["Jadefire Masters"] = {2266,0,0,0},
+		["Opulence"] = {2271,0,0,0},
+		["Conclave of the Chosen"] = {2268,0,0,0},
+		["King Rastakhan"] = {2272,0,0,0},
+		["Mekkatorque"] = {2276,0,0,0},
+		["Stormwall Blockade"] = {2280,0,0,0},
+		["Lady Jaina Proudmoore"] = {2281,0,0,0},
+		["The Restless Cabal"] = {2269,0,0,0},
+		["Uu'nat"] = {2273,0,0,0},
 	}
 
 end
@@ -232,15 +243,12 @@ function EnRT_BR_Unlock()
 end
 function EnRT_BR_UpdateCoinText()
 	bonusRolls = select(2,GetCurrencyInfo(currentCurrencyID))
-	EnRT_BR_GUI["coinText"]:SetText("Remaining Coins: "..bonusRolls-spent)
+	EnRT_BR_GUI["coinText"]:SetText("Remaining Coins: "..bonusRolls-spent);
 end
 function EnRT_BR_CheckLatestRaid()
-	if EnRT_BonusRollCurrentRaid ~= "Uldir" then
-		EnRT_BonusRollCurrentRaid = "Uldir"
-		EnRT_BR_ArrayInit()
-	end
-	if EnRT_BonusRollBosses["Zek'voz, Herald of N'zoth"] then
-		EnRT_BR_ArrayInit()
+	if (EnRT_BonusRollCurrentRaid ~= "Crucible of Storms") then
+		EnRT_BonusRollCurrentRaid = "Crucible of Storms"
+		EnRT_BR_ArrayInit();
 	end
 end
 function EnRT_BR_CalculateSize()
@@ -261,7 +269,7 @@ end)]]
 
 hooksecurefunc("AcceptSpellConfirmationPrompt", function(...)
 	local spellID = ...;
-	if (GetZoneText() == EnRT_BonusRollCurrentRaid) then
+	if (GetZoneText() == EnRT_BonusRollCurrentRaid or GetZoneText() == "Battle of Dazar'alor") then
 		EnRT_BonusRollBLPCount = EnRT_BonusRollBLPCount + 1;
 		--EnRT_BLPCountString:SetText("BLP: " .. EnRT_BonusRollBLPCount .. "/6");
 	end

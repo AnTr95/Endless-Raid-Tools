@@ -11,16 +11,20 @@ local raidDatabase = {
 		["No boss"] = 1,
 	},
 	["Battle of Dazar'alor"] = {
-		["Champion Of Light"] = 0,
-		["Grong, The Jungle Lord"] = 0,
-		["Jadefire Masters"] = 0,
-		["Opulence"] = 0,
-		["Conclave of the Chosen"] = 0,
-		["King Rastakhan"] = 0,
-		["High Tinker Mekkatorque"] = 0,
-		["Stormwall Blockade"] = 0,
-		["Lady Jaina Proudmore"] = 0,
+		["Champion Of Light"] = 2265,
+		["Grong, The Jungle Lord"] = 2263,
+		["Jadefire Masters"] = 2266,
+		["Opulence"] = 2271,
+		["Conclave of the Chosen"] = 2268,
+		["King Rastakhan"] = 2272,
+		["High Tinker Mekkatorque"] = 2276,
+		["Stormwall Blockade"] = 2280,
+		["Lady Jaina Proudmore"] = 2281,
 		["No boss"] = 1,
+	},
+	["Crucible of Storms"] = {
+		["The Restless Cabal"] = 2269,
+		["Uu'nat"] = 2273,
 	},
 };   
 local bossLex = {
@@ -46,6 +50,11 @@ local bossLex = {
 		[8] = "Stormwall Blockade",
 		[9] = "Lady Jaina Proudmore",
 		[10] = "No boss",
+	},
+	["Crucible of Storms"] = {
+		[1] = "The Restless Cabal",
+		[2] = "Uu'nat",
+		[3] = "No boss",
 	},
 };
 local GUI = nil;
