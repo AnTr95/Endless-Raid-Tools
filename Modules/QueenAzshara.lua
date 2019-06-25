@@ -5,20 +5,20 @@ local master = "Ant";
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("CHAT_MSG_ADDON");
-f:RegisterEvent("ENCOUNTERT_START");
-f:RegisterEvent("ENCOUNTERT_END");
+f:RegisterEvent("ENCOUNTER_START");
+f:RegisterEvent("ENCOUNTER_END");
 
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_Azshara");
 
 local function initAssignments()
 	local debuffs = {
-		["soak"] = {};
-		["notsoak"] = {};
-		["alone"] = {};
-		["stack"] = {};
-		["move"] = {}
-		["stay"] = {};
-		["cansoak"] = {};
+		["soak"] = {},
+		["notsoak"] = {},
+		["alone"] = {},
+		["stack"] = {},
+		["move"] = {},
+		["stay"] = {},
+		["cansoak"] = {},
 	};
 	local assigned = {};
 	local mainSoaker = nil;
@@ -180,13 +180,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (prefix == "EnRT_Azshara" and EnRT_QueenAzsharaEnabled) then
 			EnRT_PopupShow(msg, 20); --change duration to debuff duration
 		end
-	elseif (event == "ENCOUNTERT_START" and EnRT_QueenAzsharaEnabled and inEncounter) then
+	elseif (event == "ENCOUNTER_START" and EnRT_QueenAzsharaEnabled and inEncounter) then
 		local eID = ...;
 		if (eID == 2299) then
 			master = EnRT_GetRaidLeader();
 			inEncounter = true;
 		end
-	elseif (event == "ENCOUNTERT_END" and EnRT_QueenAzsharaEnabled and inEncounter) then
+	elseif (event == "ENCOUNTER_END" and EnRT_QueenAzsharaEnabled and inEncounter) then
 		inEncounter = false;
 	end
 end);

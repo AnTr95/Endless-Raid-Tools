@@ -40,6 +40,10 @@ enabledButton:HookScript("OnClick", function(self)
 	end
 end);
 
+local enabledText = EnRT_QueenAzsharaOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
+enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
+enabledText:SetText(L.OPTIONS_ENABLED);
+
 
 EnRT_QueenAzsharaOptions:SetScript("OnShow", function(self)
 	enabledButton:SetChecked(EnRT_QueenAzsharaEnabled);
