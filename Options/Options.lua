@@ -51,6 +51,14 @@ EnRT_CoSModules = CreateFrame("Frame", "EnRT_CoSModulesFrame")
 EnRT_CoSModules.name = "|cFFFFFF00Crucible of Storms Modules"
 EnRT_CoSModules.parent = "Endless Raid Tools"
 EnRT_CoSModules:SetScript("OnShow", function(EnRT_CoSModules)
-	InterfaceOptionsFrame_OpenToCategory(EnRT_Uunatptions)
+	InterfaceOptionsFrame_OpenToCategory(EnRT_UunatOptions)
 end)
 InterfaceOptions_AddCategory(EnRT_CoSModules)
+
+EnRT_EPModules = CreateFrame("Frame", "EnRT_EPModulesFrame")
+EnRT_EPModules.name = "|cFFFFFF00The Eternal Palace Modules"
+EnRT_EPModules.parent = "Endless Raid Tools"
+EnRT_EPModules:SetScript("OnShow", function(EnRT_CoSModules)
+	InterfaceOptionsFrame_OpenToCategory(EnRT_QueenAzsharaOptions);
+end)
+InterfaceOptions_AddCategory(EnRT_EPModules)

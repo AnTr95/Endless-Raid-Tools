@@ -51,3 +51,4 @@ Options\OpulenceOptions.lua
 Modules\Uunat.lua
 Options\UunatOptions.lua
 Modules\QueenAzshara.lua
+Options\QueenAzsharaOptions.lua

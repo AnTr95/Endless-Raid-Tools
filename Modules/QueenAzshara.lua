@@ -82,6 +82,7 @@ local function initAssignments()
 			SetRaidMark(pl, aloneSoakers+2);
 			C_ChatInfo.SendAddonMessage("EnRT_Azshara", "{rt".. (aloneSoakers+2) .."} SOAKING ALONE {rt" .. (aloneSoakers+2) .. "}", "WHISPER", pl);
 			aloneSoakers = aloneSoakers + 1;
+			--Add yell soak alone
 		end
 	end
 	---------------------------------
