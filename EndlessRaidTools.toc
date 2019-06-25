@@ -1,6 +1,6 @@
-## Interface: 80100
+## Interface: 80200
 ## Title: Endless Raid Tools
-## Version: 8.16
+## Version: 8.18
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: EnRT_InterruptEnabled
@@ -40,3 +40,4 @@ Modules\MOTHER.lua
 Options\MOTHEROptions.lua
 Modules\HighTinkerMekkatorque.lua
 Options\HighTinkerMekkatorqueOptions.lua
+Modules\QueenAzshara.lua
