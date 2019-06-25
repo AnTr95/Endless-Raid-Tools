@@ -181,7 +181,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "ENCOUNTERT_START" and EnRT_QueenAzsharaEnabled and inEncounter) then
 		local eID = ...;
-		if (eID == 1) then
+		if (eID == 2299) then
 			master = EnRT_GetRaidLeader();
 			inEncounter = true;
 		end
