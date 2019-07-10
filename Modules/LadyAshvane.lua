@@ -51,7 +51,7 @@ local function checkDebuffs(pl)
 end
 
 local function sortAssignments()
-	if (UnitInRaid(debuffs[296942].name) < UnitInRaid(assignments[296939].name)) then
+	if (UnitInRaid(debuffs[296942].name) < UnitInRaid(debuffs[296939].name)) then
 		local temp = debuffs[296942].name;
 		debuffs[296942].name = debuffs[296939].name;
 		debuffs[296939].name = temp;
