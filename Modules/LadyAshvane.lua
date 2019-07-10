@@ -4,27 +4,33 @@ local madeAssignments = false;
 local debuffs = {
 	[296942] = {
 		["msg"] = "{cross} RED {cross}",
-		["name"] = "";
+		["name"] = "",
+		["mark"] = 7,
 	},
 	[296939] = {
 		["msg"] = "{diamond} PURPLE {diamond}",
 		["name"] = "",
+		["mark"] = 3,
 	},
 	[296940] = {
 		["msg"] = "{square} BLUE {square}",
 		["name"] = "",
+		["mark"] = 6,
 	},
 	[296943] = {
 		["msg"] = "{triangle} GREEN {triangle}",
 		["name"] = "",
+		["mark"] = 4,
 	},
 	[296938] = {
 		["msg"] = "{star} YELLOW {star}",
 		["name"] = "",
+		["mark"] = 1,
 	},
 	[296941] = {
 		["msg"] = "{circle} ORANGE {circle}",
 		["name"] = "",
+		["mark"] = 2,
 	},
 };
 local master = "";
@@ -68,9 +74,16 @@ local function sortAssignments()
 	end
 	for spellID, data in pairs(debuffs) do
 		C_ChatInfo.SendChatMessage("EnRT_LA", data.msg, "WHISPER", data.name);
+		SetRaidTarget(data.name, data.mark);
 		data.name = "";
 	end
-	C_Timer.After(10, function() madeAssignments = false; end);
+	C_Timer.After(10, function() 
+		madeAssignments = false;
+		for i = 1, GetNumGroupMembers() do
+			local raider = "raid" .. i;
+			SetRaidTarget(raider, 0);
+		end 
+	end);
 end
 
 f:SetScript("OnEvent", function(self, event, ...)
