@@ -25,7 +25,25 @@ local raidDatabase = {
 	["Crucible of Storms"] = {
 		["The Restless Cabal"] = 2269,
 		["Uu'nat"] = 2273,
+		["No boss"] = 1,
 	},
+	["The Eternal Palace"] = {
+		["Sivarra"] = 2298,
+		["Blackwater Behemoth"] = 2289,
+		["Radiance of Azshara"] = 2305,
+		["Lady Ashvane"] = 2304,
+		["Orgoza"] = 2303,
+		["Queen's Court"] = 2311,
+		["Za'qul"] = 2293,
+		["Queen Azshara"] = 2299,
+		["No boss"] = 1,
+	},
+};
+local raidLex = {
+	[1] = "Uldir",
+	[2] = "Battle of Dazar'alor",
+	[3] = "Crucible of Storms",
+	[4] = "The Eternal Palace",
 };   
 local bossLex = {
 	["Uldir"] = {
@@ -55,6 +73,17 @@ local bossLex = {
 		[1] = "The Restless Cabal",
 		[2] = "Uu'nat",
 		[3] = "No boss",
+	},
+	["The Eternal Palace"] = {
+		[1] = "Sivarra",
+		[2] = "Blackwater Behemoth",
+		[3] = "Radiance of Azshara",
+		[4] = "Lady Ashvane",
+		[5] = "Orgoza",
+		[6] = "Queen's Court",
+		[7] = "Za'qul",
+		[8] = "Queen Azshara",
+		[9] = "No boss",
 	},
 };
 local GUI = nil;
@@ -157,7 +186,8 @@ local function createRow()
 		local info = UIDropDownMenu_CreateInfo()
 		if (level == 1) then
 		  -- Display the groups
-			for raidName, bossData in pairs(raidDatabase) do
+		  	for i = 1, #raidLex do
+		  		local raidName = raidLex[i];
 				info.text = raidName;
 				info.checked = setRaidChecked(row, raidName);
 				info.menuList = raidName;
