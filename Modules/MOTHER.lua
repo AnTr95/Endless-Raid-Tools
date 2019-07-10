@@ -168,12 +168,3 @@ function EnRT_ContainsKey(arr, value)
 	end
 	return false
 end
-function EnRT_GetRaidLeader()
-	for i = 1, GetNumGroupMembers() do
-		local raider = "raid"..i
-		if select(2, GetRaidRosterInfo(i)) == 2 then
-			return GetUnitName(raider, true)
-		end
-	end
-	return ""
-end

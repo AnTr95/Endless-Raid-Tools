@@ -1,6 +1,6 @@
 local f = CreateFrame("Frame");
 local inEncounter = false;
-local master = "Ant";
+local master = "";
 
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("UNIT_AURA");

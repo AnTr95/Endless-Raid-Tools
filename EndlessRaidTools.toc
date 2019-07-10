@@ -1,6 +1,6 @@
 ## Interface: 80200
 ## Title: Endless Raid Tools
-## Version: 8.38
+## Version: 8.39
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: EnRT_InterruptEnabled
@@ -16,6 +16,8 @@
 ## SavedVariables: EnRT_UunatStormMark
 ## SavedVariables: EnRT_UunatOceanMark
 ## SavedVariables: EnRT_UunatVoidMark
+## SavedVariables: EnRT_LadyAshvaneEnabled
+## SavedVariables: EnRT_QueenAzsharaEnabled
 ## SavedVariablesPerCharacter: EnRT_CalendarNotificationEnabled
 ## SavedVariablesPerCharacter: EnRT_ReadyCheckEnabled
 ## SavedVariablesPerCharacter: EnRT_BonusRollBosses
@@ -50,5 +52,7 @@ Modules\Opulence.lua
 Options\OpulenceOptions.lua
 Modules\Uunat.lua
 Options\UunatOptions.lua
+Modules\LadyAshvane.lua
+Options\LadyAshvaneOptions.lua
 Modules\QueenAzshara.lua
 Options\QueenAzsharaOptions.lua
