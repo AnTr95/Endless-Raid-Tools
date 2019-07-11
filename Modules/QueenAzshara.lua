@@ -171,7 +171,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		if (EnRT_QueenAzsharaEnabled == nil) then EnRT_QueenAzsharaEnabled = true; end
 	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and EnRT_QueenAzsharaEnabled and inEncounter) then
-		local unit = target, guid, spellID;
+		local target, guid, spellID = ...;
 		if (GetUnitName("player", true) == master and spellID == 299250) then
 			initAssignments();
 		end

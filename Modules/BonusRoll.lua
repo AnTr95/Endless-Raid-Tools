@@ -77,7 +77,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "CHAT_MSG_LOOT") then
 		local message, arg2, arg3, arg4, pl = ...;
-		if (message:find("You receive bonus loot:") and (GetZoneText() == EnRT_BonusRollCurrentRaid) or GetZoneText() == "Battle of Dazar'alor") then
+		if (message:find("You receive bonus loot:") and (GetZoneText() == EnRT_BonusRollCurrentRaid) or GetZoneText() == "The Eternal Palace") then
 			EnRT_BonusRollBLPCount = 0;
 		end
 	elseif (event == "SPELL_CONFIRMATION_PROMPT" and EnRT_BonusRollEnabled) then
@@ -92,7 +92,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "PLAYER_LOGIN") then
 		if (EnRT_BonusRollBosses == nil) then EnRT_BR_ArrayInit() end;
 		if (EnRT_BonusRollEnabled == nil) then EnRT_BonusRollEnabled = true end;
-		if (EnRT_BonusRollCurrentRaid == nil) then EnRT_BonusRollCurrentRaid = "Crucible of Storms" end;
+		if (EnRT_BonusRollCurrentRaid == nil) then EnRT_BonusRollCurrentRaid = "The Eternal Palace" end;
 		if (EnRT_BonusRollBLPCount == nil) then EnRT_BonusRollBLPCount = 0 end;
 		EnRT_BR_CheckLatestRaid();
 		EnRT_BR_GUIInit();
