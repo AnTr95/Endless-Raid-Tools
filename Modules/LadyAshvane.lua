@@ -105,7 +105,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "CHAT_MSG_ADDON" and EnRT_LadyAshvaneEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "EnRT_Ashvane") then
-			EnRT_ShowPopup(msg, 10);
+			EnRT_PopupShow(msg, 10);
 		end
 	elseif (event == "ENCOUNTER_START" and EnRT_LadyAshvaneEnabled) then
 		local eID = ...;
