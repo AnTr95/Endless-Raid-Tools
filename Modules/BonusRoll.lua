@@ -2,7 +2,7 @@
 local L = EnRTLocals;
 local f = CreateFrame("Frame");
 local bossLex = {
-	[1] = "Sivara",
+	[1] = "Abyssal Commander Sivara",
 	[2] = "Blackwater Behemoth",
 	[3] = "Radiance of Azshara",
 	[4] = "Lady Ashvane",
@@ -21,7 +21,7 @@ local bonusRolls = 0;
 local spent = 0;
 local isLockMode = false;
 local currentCurrencyID = 1580;
-local currentSpellID = 257902;
+local currentSpellID = 259702;
 
 EnRT_BR_Settings = CreateFrame("Frame");
 EnRT_BR_Settings:SetPoint("CENTER");
@@ -50,7 +50,7 @@ f:RegisterEvent("SPELL_CONFIRMATION_PROMPT");
 f:RegisterEvent("CHAT_MSG_LOOT");
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "ZONE_CHANGED_NEW_AREA" and EnRT_BonusRollEnabled) then
-		if (GetZoneText() == EnRT_BonusRollCurrentRaid or GetZoneText() == "Battle of Dazar'alor") then
+		if (GetZoneText() == EnRT_BonusRollCurrentRaid) then
 			bonusRolls = select(2,GetCurrencyInfo(currentCurrencyID));
 			if (bonusRolls > 0) then
 				EnRT_BR_Settings:Show();
@@ -77,7 +77,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "CHAT_MSG_LOOT") then
 		local message, arg2, arg3, arg4, pl = ...;
-		if (message:find("You receive bonus loot:") and (GetZoneText() == EnRT_BonusRollCurrentRaid) or GetZoneText() == "The Eternal Palace") then
+		if (message:find("You receive bonus loot:") and GetZoneText() == EnRT_BonusRollCurrentRaid) then
 			EnRT_BonusRollBLPCount = 0;
 		end
 	elseif (event == "SPELL_CONFIRMATION_PROMPT" and EnRT_BonusRollEnabled) then
@@ -124,7 +124,7 @@ function EnRT_BR_ArrayInit()
 	--2076,2074,2070,2064,2075,2082,2088,2069,2073,2063,2092 Antorus
 	--2265,2263,2266,2271,2268,2272,2276,2280,2281 BoD
 	EnRT_BonusRollBosses = {
-		["Sivara"] = {2298,0,0,0},
+		["Abyssal Commander Sivara"] = {2298,0,0,0},
 		["Blackwater Behemoth"] = {2289,0,0,0},
 		["Radiance of Azshara"] = {2305,0,0,0},
 		["Lady Ashvane"] = {2304,0,0,0},
@@ -240,6 +240,9 @@ function EnRT_BR_UpdateCoinText()
 	EnRT_BR_GUI["coinText"]:SetText("Remaining Coins: "..bonusRolls-spent);
 end
 function EnRT_BR_CheckLatestRaid()
+	if (EnRT_BonusRollBosses["Sivara"]) then
+		EnRT_BR_ArrayInit();
+	end
 	if (EnRT_BonusRollCurrentRaid ~= "The Eternal Palace") then
 		EnRT_BonusRollCurrentRaid = "The Eternal Palace";
 		EnRT_BR_ArrayInit();
@@ -263,7 +266,7 @@ end)]]
 
 hooksecurefunc("AcceptSpellConfirmationPrompt", function(...)
 	local spellID = ...;
-	if (GetZoneText() == EnRT_BonusRollCurrentRaid or GetZoneText() == "The Eternal Palace") then
+	if (GetZoneText() == EnRT_BonusRollCurrentRaid) then
 		EnRT_BonusRollBLPCount = EnRT_BonusRollBLPCount + 1;
 		--EnRT_BLPCountString:SetText("BLP: " .. EnRT_BonusRollBLPCount .. "/6");
 	end
