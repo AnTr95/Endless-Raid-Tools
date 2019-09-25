@@ -87,7 +87,7 @@ local function checkDebuffs(pl)
 		local spellID = select(10, EnRT_UnitDebuff(pl, GetSpellInfo(296942)));
 		debuffs[spellID].name = pl;
 		if (madeAssignments == false) then
-			C_Timer.After(0.7, function() sortAssignments(); end);
+			C_Timer.After(0.5, function() sortAssignments(); end);
 			madeAssignments = true;
 		end
 	end
