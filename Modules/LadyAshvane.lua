@@ -87,8 +87,8 @@ local function checkDebuffs(pl)
 		local spellID = select(10, EnRT_UnitDebuff(pl, GetSpellInfo(296942)));
 		debuffs[spellID].name = pl;
 		if (madeAssignments == false) then
+			C_Timer.After(0.7, function() sortAssignments(); end);
 			madeAssignments = true;
-			C_Timer.After(0.5, function() sortAssignments(); end);
 		end
 	end
 end
@@ -111,6 +111,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local eID = ...;
 		if (eID == 2304) then
 			inEncounter = true;
+			madeAssignments = false;
 			master = EnRT_GetRaidLeader();
 		end
 	elseif (event == "ENCOUNTER_END" and EnRT_LadyAshvaneEnabled) then

@@ -267,7 +267,9 @@ end)]]
 hooksecurefunc("AcceptSpellConfirmationPrompt", function(...)
 	local spellID = ...;
 	if (GetZoneText() == EnRT_BonusRollCurrentRaid) then
+		print(EnRT_BonusRollBLPCount)
 		EnRT_BonusRollBLPCount = EnRT_BonusRollBLPCount + 1;
+		print(EnRT_BonusRollBLPCount)
 		--EnRT_BLPCountString:SetText("BLP: " .. EnRT_BonusRollBLPCount .. "/6");
 	end
 end);
