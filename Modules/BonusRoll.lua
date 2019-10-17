@@ -2,17 +2,18 @@
 local L = EnRTLocals;
 local f = CreateFrame("Frame")
 local bossLex = {
-	[1] = "Champion of the Light",
-	[2] = "Grong",
-	[3] = "Jadefire Masters",
-	[4] = "Opulence",
-	[5] = "Conclave of the Chosen",
-	[6] = "King Rastakhan",
-	[7] = "Mekkatorque",
-	[8] = "Stormwall Blockade",
-	[9] = "Lady Jaina Proudmoore",
-	[10] = "The Restless Cabal",
-	[11] = "Uu'nat",
+	[1] = "Wrathion",
+	[2] = "Maut",
+	[3] = "The Prophet Skitra",
+	[4] = "Dark Inquisitor Xanesh",
+	[5] = "The Hivemind",
+	[6] = "Shad'har",
+	[7] = "Drest'agath",
+	[8] = "Vexiona",
+	[9] = "Ra-den",
+	[10] = "Il'gynoth",
+	[11] = "Carapace of N'Zoth",
+	[12] = "N'Zoth",
 };
 local difficultyLex = {
 	[14] = 2,
@@ -126,18 +127,20 @@ function EnRT_BR_ArrayInit()
 	--2032,2048,2036,2050,2037,2054,2052,2038,2051 ToS
 	--2076,2074,2070,2064,2075,2082,2088,2069,2073,2063,2092 Antorus
 	--2265,2263,2266,2271,2268,2272,2276,2280,2281 BoD
+	--2329,2327,2334,2328,2333,2335,2343,2336,2331,2345,2337,2344 Nyalotha
 	EnRT_BonusRollBosses = {
-		["Champion of the Light"] = {2265,0,0,0},
-		["Grong"] = {2263,0,0,0},
-		["Jadefire Masters"] = {2266,0,0,0},
-		["Opulence"] = {2271,0,0,0},
-		["Conclave of the Chosen"] = {2268,0,0,0},
-		["King Rastakhan"] = {2272,0,0,0},
-		["Mekkatorque"] = {2276,0,0,0},
-		["Stormwall Blockade"] = {2280,0,0,0},
-		["Lady Jaina Proudmoore"] = {2281,0,0,0},
-		["The Restless Cabal"] = {2269,0,0,0},
-		["Uu'nat"] = {2273,0,0,0},
+		["Wrathion"] = {2329,0,0,0},
+		["Maut"] = {2327,0,0,0},
+		["The Prophet Skitra"] = {2334,0,0,0},
+		["Dark Inquisitor Xanesh"] = {2338,0,0,0},
+		["The Hivemind"] = {2333,0,0,0},
+		["Shad'har"] = {2335,0,0,0},
+		["Drest'agath"] = {2343,0,0,0},
+		["Vexiona"] = {2336,0,0,0},
+		["Ra-den"] = {2331,0,0,0},
+		["Il'gynoth"] = {2345,0,0,0},
+		["Carapace of N'Zoth"] = {2337,0,0,0},
+		["N'Zoth"] = {2344,0,0,0},
 	}
 
 end
@@ -269,7 +272,7 @@ end)]]
 
 hooksecurefunc("AcceptSpellConfirmationPrompt", function(...)
 	local spellID = ...;
-	if (GetZoneText() == EnRT_BonusRollCurrentRaid or GetZoneText() == "Battle of Dazar'alor") then
+	if (GetZoneText() == EnRT_BonusRollCurrentRaid or GetZoneText() == "Ny'alotha, the Waking City") then
 		EnRT_BonusRollBLPCount = EnRT_BonusRollBLPCount + 1;
 		--EnRT_BLPCountString:SetText("BLP: " .. EnRT_BonusRollBLPCount .. "/6");
 	end

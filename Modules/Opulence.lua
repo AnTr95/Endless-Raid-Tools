@@ -40,7 +40,7 @@ textCD:SetJustifyV("TOP");
 textCD:SetJustifyH("LEFT");
 textCD:SetText("");
 
-raid = {};
+local raid = {};
 local ticks = 0;
 local role = "";
 local spellIDs = {
