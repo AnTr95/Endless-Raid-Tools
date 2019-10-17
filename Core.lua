@@ -51,7 +51,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			EnRT_InfoBoxSetPosition(EnRT_InfoBoxTextPosition.point, EnRT_InfoBoxTextPosition.relativeTo, EnRT_InfoBoxTextPosition.relativePoint, EnRT_InfoBoxTextPosition.xOffset, EnRT_InfoBoxTextPosition.yOffset)
 		end
 		if EnRT_InfoBoxTextFontSize == nil then
-			EnRT_InfoBoxTextFontSize = 22
+			EnRT_InfoBoxTextFontSize = 14
 		end
 		if (EnRT_MinimapDegree) then EnRT_SetMinimapPoint(EnRT_MinimapDegree); end
 		if (EnRT_MinimapMode == nil) then EnRT_MinimapMode = "Always"; end

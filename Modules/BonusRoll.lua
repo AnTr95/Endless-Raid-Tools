@@ -141,7 +141,6 @@ function EnRT_BR_ArrayInit()
 	};
 end
 function EnRT_BR_GUIInit()
-	EnRT_BR_CalculateSize();
 	local diffs = {[1] = "N", [2] = "H", [3] = "M"};
 	local title = EnRT_BR_Settings:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
 	title:SetPoint("TOP", 0, -10);
@@ -204,6 +203,7 @@ function EnRT_BR_GUIInit()
 		EnRT_BR_Settings:Hide();
 	end);
 	EnRT_BR_GUI["closeButton"] = closeButton;
+	EnRT_BR_CalculateSize();
 end
 EnRT_BR_Settings:SetScript("OnShow", function(self)
 	spent = 0;
@@ -256,7 +256,16 @@ function EnRT_BR_CheckLatestRaid()
 end
 function EnRT_BR_CalculateSize()
 	local sum = 20 + 20 + (#bossLex*20) + 35 + 30; --Title + Difficulty + Bosses*20 + Coin Text + Save Button
-	EnRT_BR_Settings:SetSize(270, sum);
+	local longstr = 1;
+	for boss, data in pairs(EnRT_BR_GUI) do
+		if (EnRT_BR_GUI[boss]:GetObjectType() == "FontString") then
+			local strw = EnRT_BR_GUI[boss]:GetStringWidth();
+			if (strw > longstr) then
+				longstr = strw;
+			end
+		end
+	end
+	EnRT_BR_Settings:SetSize(115+longstr, sum);
 end
 
 BonusRollFrame.PromptFrame.InfoFrame:HookScript("OnHide", function()

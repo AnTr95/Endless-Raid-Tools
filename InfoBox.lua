@@ -1,6 +1,7 @@
 local f = CreateFrame("Frame");
-f:SetSize(120, 100);
-f:SetPoint("RIGHT");
+local timer = nil;
+f:SetSize(185, 150);
+f:SetPoint("TOPLEFT", 30, -150);
 f:SetMovable(true);
 f:EnableMouse(true);
 f:RegisterForDrag("LeftButton");
@@ -16,27 +17,35 @@ f:SetScript("OnDragStop", function(self)
 	EnRT_InfoBoxPosition.yOffset = yOffset;
 	self:StopMovingOrSizing();
 end);
+f:SetFrameStrata("TOOLTIP");
+f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", --Set the background and border textures
+	edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
+	tile = true, tileSize = 16, edgeSize = 16, 
+	insets = { left = 4, right = 4, top = 4, bottom = 4 }
+});
+f:SetBackdropColor(0.3,0.3,0.3,0.6);
+f:Show();
 
 local texture = f:CreateTexture();
 texture:SetTexture(0.5, 0.5, 0.5, 0.5);
 texture:SetAllPoints();
 
 local text = f:CreateFontString(nil, "ARTWORK", "GameFontNormal");
-text:SetPoint("TOPLEFT", 0, -10);
+text:SetPoint("TOPLEFT", 7, -10);
 text:SetJustifyV("TOP");
 text:SetJustifyH("LEFT");
+text:SetSpacing(8);
 text:SetText("");
 
-
-
 function EnRT_InfoBoxUpdateFontSize()
-	text:SetFont("Fonts\\FRIZQT__.TTF", EnRT_InfoBoxTextFontSize);
+	text:SetFont("Fonts\\ARIALN.TTF", EnRT_InfoBoxTextFontSize, "OUTLINE");
 end
 --TO:DO Create instances of text so multiple texts can be shown at the same time (1 way would be to create an array and keep all visible texts there)
 function EnRT_InfoBoxShow(message, sec)
 	text:SetText(message);
+	f:SetSize(15+text:GetStringWidth(), 15 +text:GetStringHeight());
 	f:Show();
-	local timer = C_Timer.NewTimer(sec, function()
+	timer = C_Timer.NewTimer(sec, function()
 		f:Hide();
 	end);
 	return timer;
@@ -59,6 +68,9 @@ function EnRT_InfoBoxMove()
 end
 
 function EnRT_InfoBoxHide()
+	if (timer) then
+		timer:Cancel();
+	end
 	f:Hide();
 end
 

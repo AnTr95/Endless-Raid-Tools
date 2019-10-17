@@ -29,11 +29,11 @@ info:SetWordWrap(true)
 
 local fontOptionsText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 fontOptionsText:SetPoint("TOPLEFT", 30, -155)
-fontOptionsText:SetText("Popup Text Settings")
+fontOptionsText:SetText(L.OPTIONS_POPUPSETTINGS_TEXT);
 
 local fontText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 fontText:SetPoint("TOPLEFT", 30, -180)
-fontText:SetText("Font Size:")
+fontText:SetText(L.OPTIONS_FONTSIZE_TEXT)
 
 local fontSizeText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 fontSizeText:SetPoint("TOPLEFT", fontText, "TOPLEFT", 65, -27)
@@ -50,20 +50,33 @@ fontSlider:SetScript("OnValueChanged", function(self)
 	EnRT_PopupUpdateFontSize()
 end)
 
-local popupToggleButton = CreateFrame("Button", "EnRT_PopupToggleButton", EnRT_GeneralOptions, "UIPanelButtonTemplate")
-popupToggleButton:SetSize(150, 35)
-popupToggleButton:SetPoint("TOPLEFT", fontText, "TOPLEFT", 160, 0)
-popupToggleButton:SetText("Move Popup Text")
+local popupToggleButton = CreateFrame("Button", "EnRT_PopupToggleButton", EnRT_GeneralOptions, "UIPanelButtonTemplate");
+popupToggleButton:SetSize(150, 35);
+popupToggleButton:SetPoint("TOPLEFT", fontText, "TOPLEFT", 160, 0);
+popupToggleButton:SetText(L.OPTIONS_FONTSLIDER_BUTTON_TEXT);
 popupToggleButton:HookScript("OnClick", function(self)
-	EnRT_PopupMove()
+	EnRT_PopupMove();
 end)
+
+
+local infoBoxText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
+infoBoxText:SetPoint("TOPLEFT", 30, -250);
+infoBoxText:SetText(L.OPTIONS_INFOBOXSETTINGS_TEXT);
+
+local infoBoxToggleButton = CreateFrame("Button", "EnRT_InfoBoxToggleButton", EnRT_GeneralOptions, "UIPanelButtonTemplate");
+infoBoxToggleButton:SetSize(150, 35);
+infoBoxToggleButton:SetPoint("TOPLEFT", infoBoxText, "TOPLEFT", 0, -25);
+infoBoxToggleButton:SetText(L.OPTIONS_INFOBOX_BUTTON_TEXT);
+infoBoxToggleButton:HookScript("OnClick", function(self)
+	EnRT_InfoBoxMove();
+end);
 
 local minimapModeText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontWhite");
 minimapModeText:SetText(L.OPTIONS_MINIMAP_MODE_TEXT);
-minimapModeText:SetPoint("TOPLEFT", 30, -250);
+minimapModeText:SetPoint("TOPLEFT", 30, -345);
 
 local minimapStateMenu = CreateFrame("Button", nil, EnRT_GeneralOptions, "UIDropDownMenuTemplate");
-minimapStateMenu:SetPoint("TOPLEFT", 175, -240);
+minimapStateMenu:SetPoint("TOPLEFT", 175, -335);
 
 local minimapStates = {"Always", "On Hover", "Never"};
 

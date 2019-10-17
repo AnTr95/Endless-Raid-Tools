@@ -58,7 +58,15 @@ InterfaceOptions_AddCategory(EnRT_CoSModules)
 EnRT_EPModules = CreateFrame("Frame", "EnRT_EPModulesFrame")
 EnRT_EPModules.name = "|cFFFFFF00The Eternal Palace Modules"
 EnRT_EPModules.parent = "Endless Raid Tools"
-EnRT_EPModules:SetScript("OnShow", function(EnRT_CoSModules)
+EnRT_EPModules:SetScript("OnShow", function(EnRT_EPModules)
 	InterfaceOptionsFrame_OpenToCategory(EnRT_QueenAzsharaOptions);
 end)
 InterfaceOptions_AddCategory(EnRT_EPModules)
+
+EnRT_NyalothaModules = CreateFrame("Frame", "EnRT_NyalothaModulesFrame")
+EnRT_NyalothaModules.name = "|cFFFFFF00Ny'alotha, the Waking City Modules"
+EnRT_NyalothaModules.parent = "Endless Raid Tools"
+EnRT_NyalothaModules:SetScript("OnShow", function(EnRT_NyalothaModules)
+	InterfaceOptionsFrame_OpenToCategory(EnRT_MautOptions);
+end)
+InterfaceOptions_AddCategory(EnRT_NyalothaModules)
