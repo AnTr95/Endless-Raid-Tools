@@ -1,6 +1,6 @@
-## Interface: 80205
+## Interface: 80300
 ## Title: Endless Raid Tools
-## Version: 8.44
+## Version: 8.45
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: EnRT_InterruptEnabled
@@ -34,6 +34,7 @@ Options\Options.lua
 Options\GeneralOptions.lua
 Options\Minimap.lua
 Popup.lua
+InfoBox.lua
 Modules\Interrupts.lua
 Modules\Innervate.lua
 Modules\CalendarNotification.lua
@@ -56,3 +57,4 @@ Modules\LadyAshvane.lua
 Options\LadyAshvaneOptions.lua
 Modules\QueenAzshara.lua
 Options\QueenAzsharaOptions.lua
+Modules\Maut.lua

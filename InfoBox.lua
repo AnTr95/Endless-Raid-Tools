@@ -16,7 +16,6 @@ f:SetScript("OnDragStop", function(self)
 	EnRT_InfoBoxPosition.yOffset = yOffset;
 	self:StopMovingOrSizing();
 end);
-f:Hide();
 
 local texture = f:CreateTexture();
 texture:SetTexture(0.5, 0.5, 0.5, 0.5);

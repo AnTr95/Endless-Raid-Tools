@@ -4,13 +4,13 @@ local f = CreateFrame("Frame");
 local bossLex = {
 	[1] = "Wrathion",
 	[2] = "Maut",
-	[3] = "The Prophet Skitra",
+	[3] = "Prophet Skitra",
 	[4] = "Dark Inquisitor Xanesh",
 	[5] = "The Hivemind",
-	[6] = "Shad'har",
+	[6] = "Shad'har the Insatiable",
 	[7] = "Drest'agath",
 	[8] = "Vexiona",
-	[9] = "Ra-den",
+	[9] = "Ra-Den the Despoiled",
 	[10] = "Il'gynoth",
 	[11] = "Carapace of N'Zoth",
 	[12] = "N'Zoth",
@@ -20,7 +20,7 @@ local difficultyLex = {
 	[15] = 3,
 	[16] = 4,
 };
-local EnRT_BR_GUI = {};
+EnRT_BR_GUI = {};
 local bonusRolls = 0;
 local spent = 0;
 local isLockMode = false;
@@ -101,10 +101,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (EnRT_BonusRollBLPCount == nil) then EnRT_BonusRollBLPCount = 0 end;
 		EnRT_BR_CheckLatestRaid();
 		EnRT_BR_GUIInit();
-		if (UnitFactionGroup("player") == "Alliance") then
-			bossLex[2] = "Jadefire Masters";
-			bossLex[3] = "Grong";
-		end
 	end
 end)
 
@@ -132,13 +128,13 @@ function EnRT_BR_ArrayInit()
 	EnRT_BonusRollBosses = {
 		["Wrathion"] = {2329,0,0,0},
 		["Maut"] = {2327,0,0,0},
-		["The Prophet Skitra"] = {2334,0,0,0},
+		["Prophet Skitra"] = {2334,0,0,0},
 		["Dark Inquisitor Xanesh"] = {2338,0,0,0},
 		["The Hivemind"] = {2333,0,0,0},
-		["Shad'har"] = {2335,0,0,0},
+		["Shad'har the Insatiable"] = {2335,0,0,0},
 		["Drest'agath"] = {2343,0,0,0},
 		["Vexiona"] = {2336,0,0,0},
-		["Ra-den"] = {2331,0,0,0},
+		["Ra-Den the Despoiled"] = {2331,0,0,0},
 		["Il'gynoth"] = {2345,0,0,0},
 		["Carapace of N'Zoth"] = {2337,0,0,0},
 		["N'Zoth"] = {2344,0,0,0},

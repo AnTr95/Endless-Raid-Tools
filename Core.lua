@@ -8,10 +8,6 @@ local function handler(msg, editbox)
 	local arg = string.lower(msg)
 	if arg ~= nil and arg == "vc" then
 		C_ChatInfo.SendAddonMessage("EnRT_VC", "vc", "RAID")
-	elseif arg ~= nil and arg == "mistress" then
-		EnRT_PopupMove()
-	elseif arg ~= nil and arg == "maiden" then
-		EnRT_PopupMove()
 	else
 		InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralModules)
 		if not EnRT_GeneralModules:IsVisible() then
@@ -51,9 +47,16 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if EnRT_PopupTextFontSize == nil then
 			EnRT_PopupTextFontSize = 28
 		end
+		if EnRT_InfoBoxTextPosition ~= nil then
+			EnRT_InfoBoxSetPosition(EnRT_InfoBoxTextPosition.point, EnRT_InfoBoxTextPosition.relativeTo, EnRT_InfoBoxTextPosition.relativePoint, EnRT_InfoBoxTextPosition.xOffset, EnRT_InfoBoxTextPosition.yOffset)
+		end
+		if EnRT_InfoBoxTextFontSize == nil then
+			EnRT_InfoBoxTextFontSize = 22
+		end
 		if (EnRT_MinimapDegree) then EnRT_SetMinimapPoint(EnRT_MinimapDegree); end
 		if (EnRT_MinimapMode == nil) then EnRT_MinimapMode = "Always"; end
 		EnRT_PopupUpdateFontSize()
+		EnRT_InfoBoxUpdateFontSize()
 	elseif (event == "PLAYER_LOGIN") then
 		if (EnRT_MinimapMode == "Always") then
 			EnRT_MinimapButton:Show();
