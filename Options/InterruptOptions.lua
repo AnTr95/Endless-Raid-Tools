@@ -38,12 +38,27 @@ local raidDatabase = {
 		["Queen Azshara"] = 2299,
 		["No boss"] = 1,
 	},
+	["Ny'alotha, the Waking City"] = {
+		["Wrathion"] = 2329,
+		["Maut"] = 2327,
+		["The Prophet Skitra"] = 2334,
+		["Dark Inquisitor Xanesh"] = 2338,
+		["The Hivemind"] = 2333,
+		["Shad'har"] = 2335,
+		["Drest'agath"] = 2343,
+		["Vexiona"] = 2336,
+		["Ra-den"] = 2331,
+		["Il'gynoth"] = 2345,
+		["Carapace of N'Zoth"] = 2337,
+		["N'Zoth"] = 2344,
+	},
 };
 local raidLex = {
 	[1] = "Uldir",
 	[2] = "Battle of Dazar'alor",
 	[3] = "Crucible of Storms",
 	[4] = "The Eternal Palace",
+	[5] = "Ny'alotha, the Waking City",
 };   
 local bossLex = {
 	["Uldir"] = {
@@ -84,6 +99,20 @@ local bossLex = {
 		[7] = "Za'qul",
 		[8] = "Queen Azshara",
 		[9] = "No boss",
+	},
+	["Ny'alotha, the Waking City"] = {
+		[1] = "Wrathion",
+		[2] = "Maut",
+		[3] = "The Prophet Skitra",
+		[4] = "Dark Inquisitor Xanesh",
+		[5] = "The Hivemind",
+		[6] = "Shad'har",
+		[7] = "Drest'agath",
+		[8] = "Vexiona",
+		[9] = "Ra-den",
+		[10] = "Il'gynoth",
+		[11] = "Carapace of N'Zoth",
+		[12] = "N'Zoth",
 	},
 };
 local GUI = nil;
