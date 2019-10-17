@@ -62,6 +62,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "ENCOUNTER_END" and EnRT_BonusRollEnabled) then
 		local eID, eName, dID, raidSize, outcome = ...;
+		print(eName)
 		if (EnRT_Contains2DValue(EnRT_BonusRollBosses, 1, eID) and outcome == 1) then
 			local difficulty = select(3,GetInstanceInfo());
 			if (difficultyLex[difficulty] and EnRT_BonusRollBosses[eName][difficultyLex[difficulty]] == 1) then
@@ -96,7 +97,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "PLAYER_LOGIN") then
 		if (EnRT_BonusRollBosses == nil) then EnRT_BR_ArrayInit() end;
 		if (EnRT_BonusRollEnabled == nil) then EnRT_BonusRollEnabled = true end;
-		if (EnRT_BonusRollCurrentRaid == nil) then EnRT_BonusRollCurrentRaid = "The Eternal Palace" end;
+		if (EnRT_BonusRollCurrentRaid == nil) then EnRT_BonusRollCurrentRaid = "Ny'alotha, the Waking City" end;
 		if (EnRT_BonusRollBLPCount == nil) then EnRT_BonusRollBLPCount = 0 end;
 		EnRT_BR_CheckLatestRaid();
 		EnRT_BR_GUIInit();
@@ -248,11 +249,12 @@ function EnRT_BR_UpdateCoinText()
 	EnRT_BR_GUI["coinText"]:SetText("Remaining Coins: "..bonusRolls-spent);
 end
 function EnRT_BR_CheckLatestRaid()
+	--[[ Array RESET
 	if (EnRT_BonusRollBosses["Sivara"]) then
 		EnRT_BR_ArrayInit();
-	end
-	if (EnRT_BonusRollCurrentRaid ~= "The Eternal Palace") then
-		EnRT_BonusRollCurrentRaid = "The Eternal Palace";
+	end]]
+	if (EnRT_BonusRollCurrentRaid ~= "Ny'alotha, the Waking City") then
+		EnRT_BonusRollCurrentRaid = "Ny'alotha, the Waking City";
 		EnRT_BR_ArrayInit();
 	end
 end
