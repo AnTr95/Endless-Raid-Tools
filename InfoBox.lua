@@ -24,7 +24,7 @@ f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", --Set the ba
 	insets = { left = 4, right = 4, top = 4, bottom = 4 }
 });
 f:SetBackdropColor(0.3,0.3,0.3,0.6);
-f:Show();
+f:Hide();
 
 local texture = f:CreateTexture();
 texture:SetTexture(0.5, 0.5, 0.5, 0.5);

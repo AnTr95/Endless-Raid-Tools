@@ -18,6 +18,8 @@
 ## SavedVariables: EnRT_UunatVoidMark
 ## SavedVariables: EnRT_LadyAshvaneEnabled
 ## SavedVariables: EnRT_QueenAzsharaEnabled
+## SavedVariables: EnRT_MautEnabled
+## SavedVariables: EnRT_ProphetSkitraEnabled
 ## SavedVariablesPerCharacter: EnRT_CalendarNotificationEnabled
 ## SavedVariablesPerCharacter: EnRT_ReadyCheckEnabled
 ## SavedVariablesPerCharacter: EnRT_BonusRollBosses
@@ -27,6 +29,7 @@
 ## SavedVariablesPerCharacter: EnRT_MinimapMode
 ## SavedVariablesPerCharacter: EnRT_MinimapDegree
 ## SavedVariablesPerCharacter: EnRT_OpulenceUIPosition
+## SavedVariablesPerCharacter: EnRT_InfoBoxPosition
 
 Localization\Localization.enUS.lua
 Core.lua
@@ -59,3 +62,5 @@ Modules\QueenAzshara.lua
 Options\QueenAzsharaOptions.lua
 Modules\Maut.lua
 Options\MautOptions.lua
+Modules\ProphetSkitra.lua
+Options\ProphetSkitraOptions.lua

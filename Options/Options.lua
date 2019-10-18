@@ -20,6 +20,10 @@ local version = EnRT_Options:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 version:SetPoint("TOPLEFT", author, "BOTTOMLEFT", 0, -10)
 version:SetText(L.OPTIONS_VERSION)
 
+EnRT_Options:SetScript("OnShow", function(EnRT_OptionsFrame)
+	InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralOptions);
+end);
+
 InterfaceOptions_AddCategory(EnRT_Options)
 
 EnRT_GeneralModules = CreateFrame("Frame", "EnRT_GeneralModulesFrame")
