@@ -90,7 +90,9 @@ local function updateText()
 	if (assignmentComplete) then
 		local text = "";
 		for pl, data in pairs(debuffedPlayers) do
-			text = text .. data.state .. data.healer .. " -> " .. pl .. "\n";
+			local pla = Ambiguate(pl, "short");
+			local healer = Ambiguate(data.healer, "short");
+			text = text .. data.state .. healer .. " -> " .. pla .. "\n";
 		end
 		C_ChatInfo.SendAddonMessage("EnRT_Maut", text, "RAID");
 	end

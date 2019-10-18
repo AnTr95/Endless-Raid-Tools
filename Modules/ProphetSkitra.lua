@@ -6,29 +6,7 @@ local twistedID = GetSpellInfo(307785);
 local plMind = "";
 local player = GetUnitName("player");
 local raid = {};
-local images = {};
-
-local npcIDs = {
-    [157620] = true,
-    [157238] = true,
-    [149890] = true,
-    [1] = false,
-    [1] = false,
-    [1] = false,
-    [1] = false,
-    [1] = false,
-};
-
-local marksLex = {
-    [1] = "STAR",
-    [2] = "CIRCLE",
-    [3] = "DIAMOND",
-    [4] = "TRIANGLE",
-    [5] = "MOON",
-    [6] = "SQUARE",
-    [7] = "CROSS",
-    [8] = "SKULL",
-};
+local guids = {};
 
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("ENCOUNTER_START");
@@ -44,7 +22,7 @@ function EnRT_FindBoss(user)
         for i = 1, GetNumGroupMembers() do
             local raider = "raid"..i;
             local reciever = user and user or raider;
-            if (raid[GetUnitName(raider, true)] ~= plMind) then
+            if (raid[GetUnitName(raider, true)] ~= raid[player]) then
                 C_ChatInfo.SendAddonMessage("EnRT_Skitra", "scan", "WHISPER", reciever);
                 break;
             end
@@ -53,22 +31,22 @@ function EnRT_FindBoss(user)
 end
 
 function EnRT_PSMark()
-    local marks = 1;
+    local maxDistance = GetCVar("nameplateMaxDistance");
+    SetCVar("nameplateMaxDistance", 100);
     for i = 1, 40 do
         local unit = "nameplate"..i;
         if (UnitExists(unit)) then
             local guid = UnitGUID(unit);
             local type, zero, serverID, instanceID, zoneUID, npcID, spawnID = strsplit("-",guid);
             print(npcID);
-            if (npcIDs[tonumber(npcID)]) then
-                if (GetRaidTargetIndex(unit) == nil) then 
-                    SetRaidTarget(unit, marks);
-                    images[guid] = marks;
-                    marks = marks + 1;
+            if (npcID == 157620) then
+                if(not EnRT_Contains(guids, guid)) then
+                    guids[#guids+1] = guid;
                 end
             end
         end
     end
+    SetCVar("nameplateMaxDistance", maxDistance);
     EnRT_FindBoss();
 end
 
@@ -78,13 +56,14 @@ f:SetScript("OnEvent", function(self, event, ...)
     elseif (event == "UNIT_AURA" and inEncounter and EnRT_ProphetSkitraEnabled) then
         local unit = ...;
         local playerName = GetUnitName(unit, true);
+        --[[
         if (player == GetUnitName(unit)) then
             if (EnRT_UnitDebuff(unit, cloudedID) and plMind ~= "clouded") then
                 plMind = "clouded";
             elseif (EnRT_UnitDebuff(unit, twistedID) and plMind ~= "twisted") then
                 plMind = "twisted";
             end
-        end
+        end]]
         if (player == master) then
             if (EnRT_UnitDebuff(unit, cloudedID) and raid[playerName] ~= "clouded") then
                 raid[playerName] = "clouded";
@@ -96,31 +75,38 @@ f:SetScript("OnEvent", function(self, event, ...)
         local prefix, msg, channel, sender = ...;
         if (prefix == "EnRT_Skitra") then
             if (msg == "scan") then
+                local maxDistance = GetCVar("nameplateMaxDistance");
+                SetCVar("nameplateMaxDistance", 100);
                 for i = 1, 40 do
                     local unit = "nameplate"..i;
                     if (UnitExists(unit)) then
                         local guid = UnitGUID(unit);
                         local type, zero, serverID, instanceID, zoneUID, npcID, spawnID = strsplit("-",guid);
                         print(npcID);
-                        if (npcIDs[tonumber(npcID)] and GetRaidTargetIndex(unit)) then
+                        if (npcID == 157620) then
                             C_ChatInfo.SendAddonMessage("EnRT_Skitra", guid, "WHISPER", master);
                         end
                     end
                 end
+                SetCVar("nameplateMaxDistance", maxDistance);
             else
-                local mark = images[tonumber(msg)];
-                SendChatMessage("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. mark .. ":24\124t" .. "BOSS FOUND" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. mark .. ":24\124t", "RAID_WARNING");
-                for i = 1, 40 do
-                    local unit = "nameplate"..i;
-                    if (UnitExists(unit)) then
-                        local guid = UnitGUID(unit);
-                        local type, zero, serverID, instanceID, zoneUID, npcID, spawnID = strsplit("-",guid);
-                        print(npcID);
-                        if (npcIDs[tonumber(npcID)] and images[guid] ~= mark) then
-                            SetRaidTarget(unit, 0);
-                            images = {};
+                if (EnRT_Contains(guids, guid)) then
+                    SendChatMessage("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. mark .. ":24\124t" .. "BOSS FOUND" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. mark .. ":24\124t", "RAID_WARNING");
+                    local maxDistance = GetCVar("nameplateMaxDistance");
+                    SetCVar("nameplateMaxDistance", 100);
+                    for i = 1, 40 do
+                        local unit = "nameplate"..i;
+                        if (UnitExists(unit)) then
+                            local guid = UnitGUID(unit);
+                            local type, zero, serverID, instanceID, zoneUID, npcID, spawnID = strsplit("-",guid);
+                            print(npcID);
+                            if (npcID == 157620 and msg == guid) then
+                                SetRaidTarget(unit, 8);
+                                guids = {};
+                            end
                         end
                     end
+                    SetCVar("nameplateMaxDistance", maxDistance);
                 end
             end
         end
@@ -134,10 +120,10 @@ f:SetScript("OnEvent", function(self, event, ...)
         if (eID == 2334 and EnRT_ProphetSkitraEnabled) then
             inEncounter = true;
             master = EnRT_GetRaidLeader();
-        end
-        for i = 1, GetNumGroupMembers() do
-            local raider = "raid"..i;
-            raid[GetUnitName(raider, true)] = "";
+            for i = 1, GetNumGroupMembers() do
+                local raider = "raid"..i;
+                raid[GetUnitName(raider, true)] = "";
+            end
         end
     elseif (event == "ENCOUNTER_END" and inEncounter and EnRT_ProphetSkitraEnabled) then
          inEncounter = false;
