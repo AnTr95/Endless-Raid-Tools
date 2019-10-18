@@ -14,6 +14,7 @@ local RED = "\124cFFFF0000";
 local GREEN = "\124cFF00FF00";
 local assignmentComplete = false;
 local state = "";
+local healers = {};
 
 for i = 1, 8 do
 	local t = {};
@@ -51,20 +52,21 @@ f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("CHAT_MSG_ADDON");
 f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
-C_ChatInfo.RegisterAddonMessagePrefix("EnRT_MAUT")
+C_ChatInfo.RegisterAddonMessagePrefix("EnRT_Maut");
 
 local function initHealers()
 	for i = 1, GetNumGroupMembers() do
 		local raider = "raid"..i;
+		local healer = GetUnitName(raider, true);
 		if (UnitIsConnected(raider) and UnitIsVisible(raider)) then
 			if (UnitGroupRolesAssigned(raider) == "HEALER") then
-				healers[raider] = true;
+				healers[healer] = true;
 			end
 		end
 	end
 end
 
-local function assignDispels()
+local function initAssignments()
 	--Healers dispels themselves
 	for pl, data in pairs(debuffedPlayers) do
 		if (EnRT_Contains(healers, pl)) then
@@ -81,15 +83,16 @@ local function assignDispels()
 		end
 	end
 	assignmentComplete = true;
+	updateText();
 end
 
 local function updateText()
 	if (assignmentComplete) then
 		local text = "";
 		for pl, data in pairs(debuffedPlayers) do
-			text = text .. data.state .. pl .. " -> " .. data.healer .. "\n";
+			text = text .. data.state .. data.healer .. " -> " .. pl .. "\n";
 		end
-		C_ChatInfo.SendAddonMessage("EnRT_MAUT", text, "RAID");
+		C_ChatInfo.SendAddonMessage("EnRT_Maut", text, "RAID");
 	end
 end
 
@@ -112,10 +115,10 @@ local function mautRangeCheck(self, elapsed)
 			end
 			if (safe and UnitIsConnected(master) and EnRT_UnitDebuff(player, GetSpellInfo(314992)) and state ~= "GREEN") then
 				state = "GREEN";
-				C_ChatInfo.SendAddonMessage("EnRT_MAUT", "true", "WHISPER", master);
+				C_ChatInfo.SendAddonMessage("EnRT_Maut", "true", "WHISPER", master);
 			elseif (not safe and UnitIsConnected(master) and EnRT_UnitDebuff(player, GetSpellInfo(314992)) and state ~= "RED") then
 				state = "RED";
-				C_ChatInfo.SendAddonMessage("EnRT_MAUT", "false", "WHISPER", master);
+				C_ChatInfo.SendAddonMessage("EnRT_Maut", "false", "WHISPER", master);
 			end
 			ticks = 0;
 		end
@@ -142,7 +145,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 					end
 				end
 			end
-		elseif (EnRT_ContainsKey(debuffedPlayers, unit)) then
+		elseif (EnRT_ContainsKey(debuffedPlayers, unitName)) then
 			healers[debuffedPlayers[unitName].healer] = true;
 			marks[debuffedPlayers[unitName].mark].unused = true;
 			debuffedPlayers[unitName] = nil;
@@ -159,14 +162,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and EnRT_MautEnabled and inEncounter) then
 		local target, guid, spellID = ...;
 		if (player == master and spellID == 314992) then
-			initAssignments();
-			C_Timer.After(0.3, function()
-				assignDispels();
+			C_Timer.After(0.2, function()
+				initAssignments();
 			end);
 		end
 	elseif (event == "CHAT_MSG_ADDON" and EnRT_MautEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
-		if (prefix == "EnRT_MAUT" and player == master) then
+		if (prefix == "EnRT_Maut" and player == master) then
 			sender = Ambiguate(sender, "short");
 			if (msg == "true") then
 				if (EnRT_ContainsKey(debuffedPlayers, sender) and debuffedPlayers[sender].state == RED) then
@@ -193,13 +195,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 			inEncounter = true;
 			initHealers();
 			master = EnRT_GetRaidLeader();
-			f:Show();
 			assignmentComplete = false;
 		end
-	elseif (event == "ENCOUNTER_END") then
-		if (eID == 2327 and EnRT_MautEnabled) then
-			inEncounter = false;
-			--remove data + clear marks
-		end
+	elseif (event == "ENCOUNTER_END" and inEncounter and EnRT_MautEnabled) then
+		inEncounter = false;
+		healers = {};
+		debuffedPlayers = {};
+		assignmentComplete = false;
 	end
 end);

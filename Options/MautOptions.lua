@@ -8,6 +8,7 @@ EnRT_MautOptions:Hide();
 local title = EnRT_MautOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
 title:SetPoint("TOP", 0, -16);
 title:SetText(L.OPTIONS_TITLE);
+
 local tabinfo = EnRT_MautOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
 tabinfo:SetPoint("TOPLEFT", 16, -16);
 tabinfo:SetText(L.OPTIONS_MAUT_TITLE);
@@ -42,7 +43,6 @@ end);
 local enabledText = EnRT_MautOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
 enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
-
 
 EnRT_MautOptions:SetScript("OnShow", function(self)
 	enabledButton:SetChecked(EnRT_MautEnabled);
