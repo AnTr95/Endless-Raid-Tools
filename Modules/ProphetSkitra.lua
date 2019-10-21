@@ -7,6 +7,7 @@ local plMind = "";
 local player = GetUnitName("player");
 local raid = {};
 local guids = {};
+local timer = nil;
 
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("ENCOUNTER_START");
@@ -24,7 +25,6 @@ function EnRT_FindBoss(user)
             local reciever = user and user or raider;
             if (raid[GetUnitName(raider, true)] ~= raid[player]) then
                 C_ChatInfo.SendAddonMessage("EnRT_Skitra", "scan", "WHISPER", reciever);
-                break;
             end
         end  
     end
@@ -90,30 +90,48 @@ f:SetScript("OnEvent", function(self, event, ...)
                 end
                 SetCVar("nameplateMaxDistance", maxDistance);
             else
-                if (EnRT_Contains(guids, guid)) then
-                    SendChatMessage("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. mark .. ":24\124t" .. "BOSS FOUND" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. mark .. ":24\124t", "RAID_WARNING");
-                    local maxDistance = GetCVar("nameplateMaxDistance");
-                    SetCVar("nameplateMaxDistance", 100);
-                    for i = 1, 40 do
-                        local unit = "nameplate"..i;
-                        if (UnitExists(unit)) then
-                            local guid = UnitGUID(unit);
-                            local type, zero, serverID, instanceID, zoneUID, npcID, spawnID = strsplit("-",guid);
-                            print(npcID);
-                            if (npcID == 157620 and msg == guid) then
-                                SetRaidTarget(unit, 8);
-                                guids = {};
+                if(raid[GetUnitName(sender, true)] == raid[player]) then
+                    if(not EnRT_Contains(guids, msg)) then
+                        guids[#guids+1] = msg;
+                    end
+                elseif(raid[GetUnitName(sender, true)] ~= raid[player]) then
+                    if (EnRT_Contains(guids, msg)) then
+                        SendChatMessage("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:24\124t" .. "EnRT: BOSS FOUND" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:24\124t", "RAID_WARNING");
+                        local maxDistance = GetCVar("nameplateMaxDistance");
+                        SetCVar("nameplateMaxDistance", 100);
+                        for i = 1, 40 do
+                            local unit = "nameplate"..i;
+                            if (UnitExists(unit)) then
+                                local guid = UnitGUID(unit);
+                                local type, zero, serverID, instanceID, zoneUID, npcID, spawnID = strsplit("-",guid);
+                                print(npcID);
+                                if (npcID == 157620 and msg == guid) then
+                                    SetRaidTarget(unit, 8);
+                                    guids = {};
+                                    if (timer) then
+                                        timer:Cancel();
+                                        timer = nil;
+                                    end
+                                end
                             end
                         end
+                        SetCVar("nameplateMaxDistance", maxDistance);
                     end
-                    SetCVar("nameplateMaxDistance", maxDistance);
                 end
             end
         end
     elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and inEncounter and EnRT_ProphetSkitraEnabled) then
         local target, guid, spellID = ...;
         if (spellID == 307725 and player == master) then
-            EnRT_PSMark();
+            timer = C_Timer.NewTicker(0.5, function() 
+                EnRT_PSMark() 
+            end);
+            C_Timer.After(10, function()
+                if (timer) then
+                    timer:Cancel();
+                    timer = nil;
+                end
+            end);
         end
     elseif (event == "ENCOUNTER_START" and EnRT_ProphetSkitraEnabled) then
         local eID = ...;
