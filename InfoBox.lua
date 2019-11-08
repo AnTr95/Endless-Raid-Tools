@@ -2,8 +2,8 @@ local f = CreateFrame("Frame");
 local timer = nil;
 f:SetSize(185, 150);
 f:SetPoint("TOPLEFT", 30, -150);
-f:SetMovable(true);
-f:EnableMouse(true);
+f:SetMovable(false);
+f:EnableMouse(false);
 f:RegisterForDrag("LeftButton");
 f:SetFrameLevel(3);
 f:SetScript("OnDragStart", f.StartMoving);
@@ -43,11 +43,13 @@ end
 --TO:DO Create instances of text so multiple texts can be shown at the same time (1 way would be to create an array and keep all visible texts there)
 function EnRT_InfoBoxShow(message, sec)
 	text:SetText(message);
-	f:SetSize(15+text:GetStringWidth(), 15 +text:GetStringHeight());
+	f:SetSize(15 + text:GetStringWidth(), 15 + text:GetStringHeight());
 	f:Show();
-	timer = C_Timer.NewTimer(sec, function()
-		f:Hide();
-	end);
+	if (sec) then
+		timer = C_Timer.NewTimer(sec, function()
+			f:Hide();
+		end);
+	end
 	return timer;
 end
 
@@ -72,6 +74,10 @@ function EnRT_InfoBoxHide()
 		timer:Cancel();
 	end
 	f:Hide();
+end
+
+function EnRT_InfoBoxGetSize()
+	return f:GetSize();
 end
 
 function EnRT_InfoBoxSetPosition(point, relativeTo, relativePoint, xOffset, yOffset)

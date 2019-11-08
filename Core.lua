@@ -149,3 +149,6 @@ function EnRT_GetRaidLeader()
 	end
 	return ""
 end
+
+function sortTableByValue(tbl)
+end

@@ -18,7 +18,7 @@ f:RegisterEvent("CHAT_MSG_ADDON");
 
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_Skitra");
 
-function EnRT_FindBoss(user)
+local function EnRT_FindBoss(user)
     if (player == master) then
         for i = 1, GetNumGroupMembers() do
             local raider = "raid"..i;
@@ -30,7 +30,7 @@ function EnRT_FindBoss(user)
     end
 end
 
-function EnRT_PSMark()
+local function EnRT_PSMark()
     local maxDistance = GetCVar("nameplateMaxDistance");
     SetCVar("nameplateMaxDistance", 100);
     for i = 1, 40 do
@@ -96,7 +96,7 @@ f:SetScript("OnEvent", function(self, event, ...)
                     end
                 elseif(raid[GetUnitName(sender, true)] ~= raid[player]) then
                     if (EnRT_Contains(guids, msg)) then
-                        SendChatMessage("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:24\124t" .. "EnRT: BOSS FOUND" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:24\124t", "RAID_WARNING");
+                        SendChatMessage("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_8:24\124t" .. "EnRT: BOSS FOUND" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_8:24\124t", "RAID_WARNING");
                         local maxDistance = GetCVar("nameplateMaxDistance");
                         SetCVar("nameplateMaxDistance", 100);
                         for i = 1, 40 do

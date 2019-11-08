@@ -1,4 +1,5 @@
 local f = CreateFrame("Frame")
+local timer = nil;
 f:SetPoint("TOP", 0, -75)
 f:SetSize(1080, 300)
 f:SetMovable(false)
@@ -27,9 +28,13 @@ function EnRT_PopupUpdateFontSize()
 end
 --TO:DO Create instances of text so multiple texts can be shown at the same time (1 way would be to create an array and keep all visible texts there)
 function EnRT_PopupShow(message, sec)
+	if (timer) then
+		timer:Cancel();
+		timer = nil;
+	end
 	text:SetText(message)
 	f:Show()
-	local timer = C_Timer.NewTimer(sec, function()
+	timer = C_Timer.NewTimer(sec, function()
 		f:Hide()
 	end)
 	return timer
@@ -49,6 +54,10 @@ function EnRT_PopupMove()
 	end)
 end
 function EnRT_PopupHide()
+	if (timer) then
+		timer:Cancel();
+		timer = nil;
+	end
 	f:Hide()
 end
 function EnRT_PopupSetPosition(point, relativeTo, relativePoint, xOffset, yOffset)

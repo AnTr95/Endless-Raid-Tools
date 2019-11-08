@@ -55,3 +55,5 @@ L.OPTIONS_MAUT_TITLE = "Maut Module";
 L.OPTIONS_MAUT_INFO = "Marks players with Drain Essence debuffs and have them run to the world markers that are pre placed. An infobox shows up assigning healers to dispel and prioritizes healers to dispel themselves before assining the rest. Once players are 8 yards away from the raid their text will turn green in the infobox. Infobox position can be changed during the fight and in the general options.";
 L.OPTIONS_PROPHETSKITRA_TITLE = "Prophet Skitra Module";
 L.OPTIONS_PROPHETSKITRA_INFO = "Marks all images on the raid leaders realm and then has one other raid member scan for any marks in their realm. When an image with a mark is found all others marks are cleared and the mark is announced in raid warning.";
+L.OPTIONS_ILGYNOTH_TITLE = "Il'gynoth Module";
+L.OPTIONS_ILGYNOTH_INFO = "WIP";
