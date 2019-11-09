@@ -22,11 +22,12 @@ version:SetPoint("TOPLEFT", author, "BOTTOMLEFT", 0, -10)
 version:SetText(L.OPTIONS_VERSION)
 
 local info = EnRT_HighTinkerMekkatorqueOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-info:SetPoint("TOPLEFT", 220, -10)
-info:SetSize(350, 200)
+info:SetPoint("TOPLEFT", 220, -60)
+info:SetSize(350, 600)
 info:SetText(L.OPTIONS_HIGHTINKERMEKKATORQUE_INFO)
 info:SetWordWrap(true)
 info:SetJustifyH("LEFT");
+info:SetJustifyV("TOP");
 
 local enabledButton = CreateFrame("CheckButton", "EnRT_HTMEnabledCheckButton", EnRT_HighTinkerMekkatorqueOptions, "UICheckButtonTemplate")
 enabledButton:SetSize(26, 26)
