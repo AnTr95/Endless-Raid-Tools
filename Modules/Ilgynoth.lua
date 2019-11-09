@@ -179,9 +179,7 @@ end
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		if (EnRT_IlgynothEnabled == nil) then EnRT_IlgynothEnabled = true; end
-	elseif (event == "CHAT_MSG_ADDON") then
-		--ToDo
-	elseif (event == "UNIT_AURA") then
+	elseif (event == "UNIT_AURA" and inEncounter and EnRT_IlgynothEnabled) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
 		if (EnRT_UnitDebuff(unit, curseID)) then
@@ -206,20 +204,20 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		elseif (EnRT_ContainsKey(cursed, unitName)) then
-			cursed[unitName] = nil;
 			if (player == master and cursed[unitName].Mark ~= "") then
 				SetRaidTarget(unitName, 0);
 				marks[cursed[unitName].Mark] = true;
 				cursed[unitName].Mark = "";
 			end
+			cursed[unitName] = nil;
 			updateCurses();
 			if (#cursed == 0) then
 				EnRT_InfoBoxHide();
 			end
 		end
-	elseif (event == "RAID_TARGET_UPDATE") then
+	elseif (event == "RAID_TARGET_UPDATE" and inEncounter and EnRT_IlgynothEnabled) then
 		updateCurses();
-	elseif (event == "ENCOUNTER_START") then
+	elseif (event == "ENCOUNTER_START"and EnRT_IlgynothEnabled) then
 		local eID = ...;
 		local difficulty = select(3, GetInstanceInfo());
 		if (eID == 2345 and difficulty == 16) then
@@ -228,7 +226,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			initMarks();
 			inEncounter = true;
 		end
-	elseif (event == "ENCOUNTER_END") then
+	elseif (event == "ENCOUNTER_END" and EnRT_IlgynothEnabled) then
 		if (inEncounter) then
 			cursed = {};
 			master = "";

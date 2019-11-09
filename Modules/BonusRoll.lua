@@ -3,17 +3,17 @@ local L = EnRTLocals;
 local f = CreateFrame("Frame");
 local bossLex = {
 	[1] = "Wrathion",
-	[2] = "Maut",
+	[2] = "Obsidian Destroyer",
 	[3] = "Prophet Skitra",
 	[4] = "Dark Inquisitor Xanesh",
 	[5] = "The Hivemind",
 	[6] = "Shad'har the Insatiable",
 	[7] = "Drest'agath",
 	[8] = "Vexiona",
-	[9] = "Ra-Den the Despoiled",
-	[10] = "Il'gynoth",
+	[9] = "Ra-den the Despoiled",
+	[10] = "Il'gynoth, Corruption Reborn",
 	[11] = "Carapace of N'Zoth",
-	[12] = "N'Zoth",
+	[12] = "N'Zoth, the Corruptor",
 };
 local difficultyLex = {
 	[14] = 2,
@@ -127,17 +127,17 @@ function EnRT_BR_ArrayInit()
 	--2329,2327,2334,2328,2333,2335,2343,2336,2331,2345,2337,2344 Nyalotha
 	EnRT_BonusRollBosses = {
 		["Wrathion"] = {2329,0,0,0},
-		["Maut"] = {2327,0,0,0},
+		["Obsidian Destroyer"] = {2327,0,0,0},
 		["Prophet Skitra"] = {2334,0,0,0},
 		["Dark Inquisitor Xanesh"] = {2338,0,0,0},
 		["The Hivemind"] = {2333,0,0,0},
 		["Shad'har the Insatiable"] = {2335,0,0,0},
 		["Drest'agath"] = {2343,0,0,0},
 		["Vexiona"] = {2336,0,0,0},
-		["Ra-Den the Despoiled"] = {2331,0,0,0},
-		["Il'gynoth"] = {2345,0,0,0},
+		["Ra-den the Despoiled"] = {2331,0,0,0},
+		["Il'gynoth, Corruption Reborn"] = {2345,0,0,0},
 		["Carapace of N'Zoth"] = {2337,0,0,0},
-		["N'Zoth"] = {2344,0,0,0},
+		["N'Zoth, the Corruptor"] = {2344,0,0,0},
 	};
 end
 function EnRT_BR_GUIInit()
