@@ -22,15 +22,39 @@ local RED = "\124cFFFF0000";
 local YELLOW = "\124cFFFFFF00";
 local GREEN = "\124cFF00FF00";
 
-local rcButton = CreateFrame("Button", "EnRT_ReadyCheckButton", f, "UIPanelButtonTemplate")
-rcButton:SetPoint("CENTER")
-rcButton:SetSize(200,80)
-rcButton:SetText("I AM READY!")
+local blizzFixFrame = CreateFrame("Frame", "$parentDetails"); -- UIGoldBorderButtonTemplate is using $parentDetails pointing to a frame called the parents name of the button followed by Details which is undefined in blizzcode.
+blizzFixFrame:SetPoint("CENTER", f, "CENTER");
+
+local rcButton = CreateFrame("Button", "EnRT_ReadyCheckButton", f, "UIGoldBorderButtonTemplate");
+rcButton:SetPoint("CENTER");
+rcButton:SetSize(200,45);
+rcButton:SetText("I am ready now!");
+
+local ag = rcButton:CreateAnimationGroup();
+ag:SetLooping("REPEAT");
+
+local aniFade = ag:CreateAnimation("Alpha");
+aniFade:SetDuration(2);
+aniFade:SetToAlpha(0.6);
+aniFade:SetFromAlpha(1);
+aniFade:SetOrder(1);
+
+local aniAppear = ag:CreateAnimation("Alpha");
+aniAppear:SetDuration(1.5);
+aniAppear:SetToAlpha(1);
+aniAppear:SetFromAlpha(0.6);
+aniAppear:SetOrder(2);
+
 rcButton:SetScript("OnClick", function(self)
 	SendChatMessage("EnRT: I am ready now!", "RAID")
 	rcStatus = true
 	f:Hide()
+	ag:Stop();
 	rcButton:Hide()
+end)
+
+rcButton:SetScript("OnShow", function (self)
+	ag:Play();
 end)
 
 local rcCloseButton = CreateFrame("Button", "EnRT_ReadyCheckCloseButton", f, "UIPanelButtonTemplate")
@@ -42,6 +66,7 @@ rcCloseButton:SetScript("OnClick", function(self)
 	rcText:SetText("")
 	rcText:Hide()
 	rcButton:Hide()
+	ag:Stop();
 	f:Hide()
 end)
 rcCloseButton:Hide()
@@ -72,6 +97,10 @@ local function updateConsumables()
 	runeIcon = runeIcon and runeIcon or 519379;
 
 	local blizzText = ReadyCheckFrameText:GetText();
+	if (blizzText:find("%-")) then
+		local head, tail, name = blizzText:find("([^-]*)");
+		blizzText = name .. " initiated a ready check";
+	end
 	local currTime = GetTime();
 	flaskTime = flaskTime and math.floor((tonumber(flaskTime)-currTime)/60) or nil;
 	if (flaskTime) then
@@ -85,8 +114,7 @@ local function updateConsumables()
 	else
 		flaskTime = RED .. "Missing ";
 	end
-	ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T"..flaskIcon .. ":16\124t " .. flaskTime .. "\124T" .. foodIcon .. ":16\124t " .. (food and (GREEN .. "Check ") or (RED .. "Missing ")) .. "\124T" .. runeIcon .. ":16\124t " .. (rune and (GREEN .. "Check ") or (RED .."Missing "))); 
-	--print(("%d=%s, %s, %.2f minutes left."):format(i,name,icon,(etime-GetTime())/60))
+	ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T"..flaskIcon .. ":16\124t " .. flaskTime .. "\124T" .. foodIcon .. ":16\124t " .. (food and (GREEN .. "Check ") or (RED .. "Missing ")) .. "\124T" .. runeIcon .. ":16\124t " .. (rune and (GREEN .. "Check") or (RED .."Missing"))); 
 end
 
 f:SetScript("OnEvent", function(self, event, ...)
@@ -125,7 +153,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 			rcText:SetText(currentText)
 		end
 		--Reciever part
-		if select(2,GetInstanceInfo()) == "raid" and playerIndex == id and not response then --Inside a raid instance, the player answered the invites is the player and response was not ready
+		--if select(2,GetInstanceInfo()) == "raid" and 
+		if playerIndex == id and not response then --Inside a raid instance, the player answered the invites is the player and response was not ready
 			f:Show()
 			rcButton:Show()
 			f:SetBackdropColor(0,0,0,0)
