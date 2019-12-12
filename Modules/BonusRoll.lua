@@ -3,7 +3,7 @@ local L = EnRTLocals;
 local f = CreateFrame("Frame");
 local bossLex = {
 	[1] = "Wrathion",
-	[2] = "Obsidian Destroyer",
+	[2] = "Maut",
 	[3] = "Prophet Skitra",
 	[4] = "Dark Inquisitor Xanesh",
 	[5] = "The Hivemind",
@@ -127,7 +127,7 @@ function EnRT_BR_ArrayInit()
 	--2329,2327,2334,2328,2333,2335,2343,2336,2331,2345,2337,2344 Nyalotha
 	EnRT_BonusRollBosses = {
 		["Wrathion"] = {2329,0,0,0},
-		["Obsidian Destroyer"] = {2327,0,0,0},
+		["Maut"] = {2327,0,0,0},
 		["Prophet Skitra"] = {2334,0,0,0},
 		["Dark Inquisitor Xanesh"] = {2338,0,0,0},
 		["The Hivemind"] = {2333,0,0,0},

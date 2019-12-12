@@ -14,8 +14,14 @@ f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", --Set the ba
 })
 f:SetBackdropColor(0,0,0,0)
 f:SetBackdropBorderColor(169,169,169,0)
+
 local rcStatus = false
 local rcSender = ""
+local flasks = {298839,298836,298837,298841,251836, 251837, 251839, 251838};
+local RED = "\124cFFFF0000";
+local YELLOW = "\124cFFFFFF00";
+local GREEN = "\124cFF00FF00";
+
 local rcButton = CreateFrame("Button", "EnRT_ReadyCheckButton", f, "UIPanelButtonTemplate")
 rcButton:SetPoint("CENTER")
 rcButton:SetSize(200,80)
@@ -46,9 +52,43 @@ rcText:SetWordWrap(true)
 rcText:SetPoint("TOP", 0, -10)
 rcText:SetJustifyV("TOP")
 rcText:SetText("")
+
 rcText:Hide()
 rcButton:Hide()
 f:Hide()
+
+local function updateConsumables()
+	local flask, flaskIcon, _, _, _, flaskTime = EnRT_UnitBuff("player", GetSpellInfo(298839));
+	for i = 1, #flasks do
+		flask, flaskIcon, _, _, _, flaskTime = EnRT_UnitBuff("player", GetSpellInfo(flasks[i]));
+		if (flask) then
+			break;
+		end
+	end
+	local food, foodIcon, _, _, _, foodTime = EnRT_UnitBuff("player", GetSpellInfo(297039)); -- Random Well Fed Buff
+	local rune, runeIcon, _, _, _, runeTime = EnRT_UnitBuff("player", GetSpellInfo(270058));
+	flaskIcon = flaskIcon and flaskIcon or 134877;
+	foodIcon = foodIcon and foodIcon or 136000;
+	runeIcon = runeIcon and runeIcon or 519379;
+
+	local blizzText = ReadyCheckFrameText:GetText();
+	local currTime = GetTime();
+	flaskTime = flaskTime and math.floor((tonumber(flaskTime)-currTime)/60) or nil;
+	if (flaskTime) then
+		if (flaskTime > 15) then
+			flaskTime = GREEN .. flaskTime .. " min ";
+		elseif (flaskTime <= 15 and flaskTime > 8) then
+			flaskTime = YELLOW .. flaskTime .. " min ";
+		elseif (flaskTime <= 8) then
+			flaskTime = RED .. flaskTime .. " min ";
+		end
+	else
+		flaskTime = RED .. "Missing ";
+	end
+	ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T"..flaskIcon .. ":16\124t " .. flaskTime .. "\124T" .. foodIcon .. ":16\124t " .. (food and (GREEN .. "Check ") or (RED .. "Missing ")) .. "\124T" .. runeIcon .. ":16\124t " .. (rune and (GREEN .. "Check ") or (RED .."Missing "))); 
+	--print(("%d=%s, %s, %.2f minutes left."):format(i,name,icon,(etime-GetTime())/60))
+end
+
 f:SetScript("OnEvent", function(self, event, ...)
 	if event == "READY_CHECK_CONFIRM" and EnRT_ReadyCheckEnabled then
 		local id, response = ...
@@ -128,6 +168,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if sender == UnitName("player") then
 			rcStatus = true
 		end
+		updateConsumables();
 	elseif event == "READY_CHECK_FINISHED" and EnRT_ReadyCheckEnabled then
 		if not rcStatus and not f:IsShown() and select(2,GetInstanceInfo()) == "raid" then
 			f:Show()
