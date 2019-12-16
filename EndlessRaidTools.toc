@@ -18,9 +18,6 @@
 ## SavedVariables: EnRT_UunatVoidMark
 ## SavedVariables: EnRT_LadyAshvaneEnabled
 ## SavedVariables: EnRT_QueenAzsharaEnabled
-## SavedVariables: EnRT_MautEnabled
-## SavedVariables: EnRT_ProphetSkitraEnabled
-## SavedVariables: EnRT_IlgynothEnabled
 ## SavedVariablesPerCharacter: EnRT_CalendarNotificationEnabled
 ## SavedVariablesPerCharacter: EnRT_ReadyCheckEnabled
 ## SavedVariablesPerCharacter: EnRT_BonusRollBosses
@@ -61,9 +58,3 @@ Modules\LadyAshvane.lua
 Options\LadyAshvaneOptions.lua
 Modules\QueenAzshara.lua
 Options\QueenAzsharaOptions.lua
-Modules\Maut.lua
-Options\MautOptions.lua
-Modules\ProphetSkitra.lua
-Options\ProphetSkitraOptions.lua
-Modules\Ilgynoth.lua
-Options\IlgynothOptions.lua

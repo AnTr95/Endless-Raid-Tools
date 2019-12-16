@@ -21,6 +21,7 @@ local flasks = {298839,298836,298837,298841,251836, 251837, 251839, 251838};
 local RED = "\124cFFFF0000";
 local YELLOW = "\124cFFFFFF00";
 local GREEN = "\124cFF00FF00";
+local raiders = {};
 
 local blizzFixFrame = CreateFrame("Frame", "$parentDetails"); -- UIGoldBorderButtonTemplate is using $parentDetails pointing to a frame called the parents name of the button followed by Details which is undefined in blizzcode.
 blizzFixFrame:SetPoint("CENTER", f, "CENTER");
@@ -57,27 +58,25 @@ rcButton:SetScript("OnShow", function (self)
 	ag:Play();
 end)
 
-local rcCloseButton = CreateFrame("Button", "EnRT_ReadyCheckCloseButton", f, "UIPanelButtonTemplate")
-rcCloseButton:SetPoint("BOTTOM", 0, 10)
-rcCloseButton:SetSize(35,20)
-rcCloseButton:SetText("Close")
-rcCloseButton:SetScript("OnClick", function(self)
-	rcCloseButton:Hide()
-	rcText:SetText("")
-	rcText:Hide()
-	rcButton:Hide()
-	ag:Stop();
-	f:Hide()
-end)
-rcCloseButton:Hide()
-
-
-rcText = f:CreateFontString("nil", "ARTWORK", "GameFontHighlight")
+local rcText = f:CreateFontString("nil", "ARTWORK", "GameFontHighlight")
 rcText:SetWordWrap(true)
 rcText:SetPoint("TOP", 0, -10)
 rcText:SetJustifyV("TOP")
 rcText:SetText("")
 
+local rcCloseButton = CreateFrame("Button", "EnRT_ReadyCheckCloseButton", f, "UIPanelButtonTemplate")
+rcCloseButton:SetPoint("BOTTOM", 0, 10)
+rcCloseButton:SetSize(60,25)
+rcCloseButton:SetText("Close")
+rcCloseButton:SetScript("OnClick", function(self)
+	rcCloseButton:Hide()
+	rcText:SetText("")
+	rcText:Hide()
+	rcButton:Hide();
+	f:Hide();
+end)
+
+rcCloseButton:Hide()
 rcText:Hide()
 rcButton:Hide()
 f:Hide()
@@ -123,38 +122,32 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local player = UnitName("player")
 		local playerIndex = EnRT_GetRaidMemberIndex(player)
 		--Sender part
-		if rcSender ~= UnitName(id) and rcSender == UnitName("player") and not response and select(2,GetInstanceInfo()) == "raid" and UnitIsVisible(id) then
-			if not rcText:IsShown() then 
-				rcText:Show()
-			end
-			if not rcCloseButton:IsShown() then
-				rcCloseButton:Show()
-			end
-			if not f:IsShown() then
-				f:Show()
-				f:SetBackdropColor(0,0,0,1)
-				f:SetBackdropBorderColor(169,169,169,1)
-			end
-			local playerTargeted = UnitName(id)
-			local players = {}
-			if rcText:GetText() then
-				for s in rcText:GetText():gmatch("[^\r\n]+") do
-	    			table.insert(players, s)
+		if rcSender == UnitName("player") and select(2,GetInstanceInfo()) == "raid" and UnitIsVisible(id) then
+			local playerTargeted = GetUnitName(id, true);
+			raiders[playerTargeted] = response;
+			if (not response) then
+				if not rcText:IsShown() then 
+					rcText:Show()
+				end
+				if not rcCloseButton:IsShown() then
+					rcCloseButton:Show()
+				end
+				if not f:IsShown() then
+					f:Show()
+					f:SetBackdropColor(0,0,0,1)
+					f:SetBackdropBorderColor(169,169,169,1)
+				end
+
+				local playerText = string.format("|c%s%s", RAID_CLASS_COLORS[select(2, UnitClass(playerTargeted))].colorStr, UnitName(playerTargeted))
+				if (rcText:GetText() == nil) then
+					rcText:SetText(playerText .. '\n');
+				elseif (not rcText:GetText():match(playerText)) then
+					rcText:SetText(rcText:GetText() .. playerText .. '\n');
 				end
 			end
-			local playerText = string.format("|c%s%s", RAID_CLASS_COLORS[select(2, UnitClass(playerTargeted))].colorStr, UnitName(playerTargeted))
-			for k, v in pairs(players) do 
-				if playerText == v then
-					playerText = ""
-					return
-				end
-			end
-			local currentText = rcText:GetText() and rcText:GetText() .. playerText .. '\n' or playerText .. '\n'
-			rcText:SetText(currentText)
 		end
 		--Reciever part
-		--if select(2,GetInstanceInfo()) == "raid" and 
-		if playerIndex == id and not response then --Inside a raid instance, the player answered the invites is the player and response was not ready
+		if select(2,GetInstanceInfo()) == "raid" and playerIndex == id and not response then --Inside a raid instance, the player answered the invites is the player and response was not ready
 			f:Show()
 			rcButton:Show()
 			f:SetBackdropColor(0,0,0,0)
@@ -195,15 +188,51 @@ f:SetScript("OnEvent", function(self, event, ...)
 		rcStatus = false
 		rcSender = sender
 		if sender == UnitName("player") then
+			raiders = {};
+			for i = 1, GetNumGroupMembers() do
+				local raiderName = GetUnitName("raid"..i);
+				if (UnitIsVisible(raiderName)) then
+					raiders[raiderName] = 0;
+				end
+			end
+			raiders[rcSender] = true;
 			rcStatus = true
 		end
-		updateConsumables();
+		if (sender ~= UnitName("player")) then
+			updateConsumables();
+		end
 	elseif event == "READY_CHECK_FINISHED" and EnRT_ReadyCheckEnabled then
 		if not rcStatus and not f:IsShown() and select(2,GetInstanceInfo()) == "raid" then
 			f:Show()
 			rcButton:Show()
 			f:SetBackdropColor(0,0,0,0)
 			f:SetBackdropBorderColor(169,169,169,0)
+		end
+		if (rcSender == UnitName("player") and select(2, GetInstanceInfo()) == "raid") then
+			for raider, response in pairs(raiders) do
+				if (response == 0) then
+					if not rcText:IsShown() then 
+						rcText:Show()
+					end
+
+					if not rcCloseButton:IsShown() then
+						rcCloseButton:Show()
+					end
+
+					if not f:IsShown() then
+						f:Show()
+						f:SetBackdropColor(0,0,0,1)
+						f:SetBackdropBorderColor(169,169,169,1)
+					end
+
+					local playerText = string.format("|c%s%s", RAID_CLASS_COLORS[select(2, UnitClass(raider))].colorStr, Ambiguate(raider, "short"));
+					if (rcText:GetText() == nil) then
+						rcText:SetText(playerText .. '\n');
+					elseif (not rcText:GetText():match(playerText)) then
+						rcText:SetText(rcText:GetText() .. playerText .. '\n');
+					end
+				end
+			end
 		end
 	elseif event == "PLAYER_LOGIN" then
 		if EnRT_ReadyCheckEnabled == nil then EnRT_ReadyCheckEnabled = true end
