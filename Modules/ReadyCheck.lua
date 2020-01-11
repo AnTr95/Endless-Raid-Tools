@@ -190,7 +190,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if sender == UnitName("player") then
 			raiders = {};
 			for i = 1, GetNumGroupMembers() do
-				local raiderName = GetUnitName("raid"..i);
+				local raiderName = GetUnitName("raid"..i, true);
 				if (UnitIsVisible(raiderName)) then
 					raiders[raiderName] = 0;
 				end
