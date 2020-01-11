@@ -67,6 +67,7 @@ EnRT_EPModules:SetScript("OnShow", function(EnRT_EPModules)
 end)
 InterfaceOptions_AddCategory(EnRT_EPModules)
 
+--[[
 EnRT_NyalothaModules = CreateFrame("Frame", "EnRT_NyalothaModulesFrame")
 EnRT_NyalothaModules.name = "|cFFFFFF00Ny'alotha, the Waking City Modules"
 EnRT_NyalothaModules.parent = "Endless Raid Tools"
@@ -74,3 +75,4 @@ EnRT_NyalothaModules:SetScript("OnShow", function(EnRT_NyalothaModules)
 	InterfaceOptionsFrame_OpenToCategory(EnRT_MautOptions);
 end)
 InterfaceOptions_AddCategory(EnRT_NyalothaModules)
+]]

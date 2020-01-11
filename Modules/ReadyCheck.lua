@@ -1,4 +1,4 @@
-local f = CreateFrame("Frame")
+local f = CreateFrame("Frame","TestFrame")
 f:RegisterEvent("READY_CHECK_CONFIRM")
 f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("READY_CHECK_FINISHED")
@@ -26,24 +26,31 @@ local raiders = {};
 local blizzFixFrame = CreateFrame("Frame", "$parentDetails"); -- UIGoldBorderButtonTemplate is using $parentDetails pointing to a frame called the parents name of the button followed by Details which is undefined in blizzcode.
 blizzFixFrame:SetPoint("CENTER", f, "CENTER");
 
+local rcButtonText = f:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+rcButtonText:SetText("I am ready now!");
+rcButtonText:SetPoint("CENTER");
+local font = select(1, rcButtonText:GetFont());
+rcButtonText:SetFont(font, 13);
+
 local rcButton = CreateFrame("Button", "EnRT_ReadyCheckButton", f, "UIGoldBorderButtonTemplate");
 rcButton:SetPoint("CENTER");
-rcButton:SetSize(200,45);
+rcButton:SetSize(180,45);
 rcButton:SetText("I am ready now!");
+rcButton:SetFontString(rcButtonText);
 
 local ag = rcButton:CreateAnimationGroup();
 ag:SetLooping("REPEAT");
 
 local aniFade = ag:CreateAnimation("Alpha");
 aniFade:SetDuration(2);
-aniFade:SetToAlpha(0.6);
+aniFade:SetToAlpha(0.5);
 aniFade:SetFromAlpha(1);
 aniFade:SetOrder(1);
 
 local aniAppear = ag:CreateAnimation("Alpha");
 aniAppear:SetDuration(1.5);
 aniAppear:SetToAlpha(1);
-aniAppear:SetFromAlpha(0.6);
+aniAppear:SetFromAlpha(0.5);
 aniAppear:SetOrder(2);
 
 rcButton:SetScript("OnClick", function(self)
@@ -55,7 +62,9 @@ rcButton:SetScript("OnClick", function(self)
 end)
 
 rcButton:SetScript("OnShow", function (self)
-	ag:Play();
+	if(EnRT_ReadyCheckFlashing) then
+		ag:Play();
+	end
 end)
 
 local rcText = f:CreateFontString("nil", "ARTWORK", "GameFontHighlight")
@@ -122,9 +131,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local player = UnitName("player")
 		local playerIndex = EnRT_GetRaidMemberIndex(player)
 		--Sender part
-		if rcSender == UnitName("player") and select(2,GetInstanceInfo()) == "raid" and UnitIsVisible(id) then
+		if rcSender == UnitName("player") and select(2,GetInstanceInfo()) == "raid" and UnitExists(id) then
 			local playerTargeted = GetUnitName(id, true);
 			raiders[playerTargeted] = response;
+			print("Pl: " .. playerTargeted .. "answered: " .. tostring(response))
 			if (not response) then
 				if not rcText:IsShown() then 
 					rcText:Show()
@@ -191,7 +201,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			raiders = {};
 			for i = 1, GetNumGroupMembers() do
 				local raiderName = GetUnitName("raid"..i, true);
-				if (UnitIsVisible(raiderName)) then
+				if (UnitExists(raiderName)) then
 					raiders[raiderName] = 0;
 				end
 			end
@@ -210,6 +220,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 		if (rcSender == UnitName("player") and select(2, GetInstanceInfo()) == "raid") then
 			for raider, response in pairs(raiders) do
+				print("Pl: " .. raider .. "Response: " .. tostring(response))
 				if (response == 0) then
 					if not rcText:IsShown() then 
 						rcText:Show()
@@ -236,6 +247,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif event == "PLAYER_LOGIN" then
 		if EnRT_ReadyCheckEnabled == nil then EnRT_ReadyCheckEnabled = true end
+		if EnRT_ReadyCheckFlashing == nil then EnRT_ReadyCheckFlashing = false end
 	end
 end)
 

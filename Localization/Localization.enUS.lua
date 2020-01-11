@@ -57,3 +57,4 @@ L.OPTIONS_PROPHETSKITRA_TITLE = "Prophet Skitra Module";
 L.OPTIONS_PROPHETSKITRA_INFO = "Marks all images on the raid leaders realm and then has one other raid member scan for any marks in their realm. When an image with a mark is found all others marks are cleared and the mark is announced in raid warning.";
 L.OPTIONS_ILGYNOTH_TITLE = "Il'gynoth Module";
 L.OPTIONS_ILGYNOTH_INFO = "WIP";
+L.OPTIONS_READYCHECK_FLASHING = "Flash EnRT Ready Check Button \nWarning for those sensitive to pulsating light.";

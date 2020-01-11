@@ -44,9 +44,27 @@ local enabledText = EnRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "Gam
 enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7)
 enabledText:SetText(L.OPTIONS_ENABLED)
 
+local flashingButton = CreateFrame("CheckButton", "EnRT_ReadyCheckFlashingCheckButton", EnRT_ReadyCheckOptions, "UICheckButtonTemplate")
+flashingButton:SetSize(26, 26)
+flashingButton:SetPoint("TOPLEFT", 30, -120)
+flashingButton:HookScript("OnClick", function(self)
+	if self:GetChecked() then
+		EnRT_ReadyCheckFlashing = true
+		PlaySound(856)
+	else
+		EnRT_ReadyCheckFlashing = false
+		PlaySound(857)
+	end
+end)
+
+local flashingText = EnRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+flashingText:SetPoint("TOPLEFT", flashingButton, "TOPLEFT", 30, -7)
+flashingText:SetText(L.OPTIONS_READYCHECK_FLASHING)
+
 
 EnRT_ReadyCheckOptions:SetScript("OnShow", function(self)
 	enabledButton:SetChecked(EnRT_ReadyCheckEnabled)
+	flashingButton:SetChecked(EnRT_ReadyCheckFlashing)
 end)
 
 InterfaceOptions_AddCategory(EnRT_ReadyCheckOptions)

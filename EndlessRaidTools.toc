@@ -18,6 +18,7 @@
 ## SavedVariables: EnRT_UunatVoidMark
 ## SavedVariables: EnRT_LadyAshvaneEnabled
 ## SavedVariables: EnRT_QueenAzsharaEnabled
+## SavedVariables: EnRT_ReadyCheckFlashing
 ## SavedVariablesPerCharacter: EnRT_CalendarNotificationEnabled
 ## SavedVariablesPerCharacter: EnRT_ReadyCheckEnabled
 ## SavedVariablesPerCharacter: EnRT_BonusRollBosses

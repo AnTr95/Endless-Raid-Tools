@@ -48,9 +48,9 @@ local raidDatabase = {
 		["Drest'agath"] = 2343,
 		["Vexiona"] = 2336,
 		["Ra-Den the Despoiled"] = 2331,
-		["Il'gynoth"] = 2345,
+		["Il'gynoth, Corruption Reborn"] = 2345,
 		["Carapace of N'Zoth"] = 2337,
-		["N'Zoth"] = 2344,
+		["N'Zoth, the Corruptor"] = 2344,
 		["No boss"] = 1,
 	},
 };
@@ -111,9 +111,9 @@ local bossLex = {
 		[7] = "Drest'agath",
 		[8] = "Vexiona",
 		[9] = "Ra-Den the Despoiled",
-		[10] = "Il'gynoth",
+		[10] = "Il'gynoth, Corruption Reborn",
 		[11] = "Carapace of N'Zoth",
-		[12] = "N'Zoth",
+		[12] = "N'Zoth, the Corruptor",
 		[13] = "No boss",
 
 	},
