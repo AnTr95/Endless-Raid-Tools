@@ -134,7 +134,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if rcSender == UnitName("player") and select(2,GetInstanceInfo()) == "raid" and UnitExists(id) then
 			local playerTargeted = GetUnitName(id, true);
 			raiders[playerTargeted] = response;
-			print("Pl: " .. playerTargeted .. "answered: " .. tostring(response))
 			if (not response) then
 				if not rcText:IsShown() then 
 					rcText:Show()
@@ -220,7 +219,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 		if (rcSender == UnitName("player") and select(2, GetInstanceInfo()) == "raid") then
 			for raider, response in pairs(raiders) do
-				print("Pl: " .. raider .. "Response: " .. tostring(response))
 				if (response == 0) then
 					if not rcText:IsShown() then 
 						rcText:Show()
