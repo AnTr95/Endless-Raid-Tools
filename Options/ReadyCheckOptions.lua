@@ -60,11 +60,30 @@ end)
 local flashingText = EnRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 flashingText:SetPoint("TOPLEFT", flashingButton, "TOPLEFT", 30, -7)
 flashingText:SetText(L.OPTIONS_READYCHECK_FLASHING)
+flashingText:SetJustifyH("LEFT");
+
+local consumableButton = CreateFrame("CheckButton", "EnRT_ConsumableCheckEnabledCheckButton", EnRT_ReadyCheckOptions, "UICheckButtonTemplate")
+consumableButton:SetSize(26, 26)
+consumableButton:SetPoint("TOPLEFT", 30, -170)
+consumableButton:HookScript("OnClick", function(self)
+	if self:GetChecked() then
+		EnRT_ConsumableCheckEnabled = true
+		PlaySound(856)
+	else
+		EnRT_ConsumableCheckEnabled = false
+		PlaySound(857)
+	end
+end)
+
+local consumableText = EnRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+consumableText:SetPoint("TOPLEFT", consumableButton, "TOPLEFT", 30, -7)
+consumableText:SetText(L.OPTIONS_READYCHECK_CONSUMABLECHECK)
 
 
 EnRT_ReadyCheckOptions:SetScript("OnShow", function(self)
 	enabledButton:SetChecked(EnRT_ReadyCheckEnabled)
 	flashingButton:SetChecked(EnRT_ReadyCheckFlashing)
+	consumableButton:SetChecked(EnRT_ConsumableCheckEnabled)
 end)
 
 InterfaceOptions_AddCategory(EnRT_ReadyCheckOptions)

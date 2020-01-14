@@ -207,7 +207,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			raiders[rcSender] = true;
 			rcStatus = true
 		end
-		if (sender ~= UnitName("player")) then
+		if (sender ~= UnitName("player") and EnRT_ConsumableCheckEnabled) then
 			updateConsumables();
 		end
 	elseif event == "READY_CHECK_FINISHED" and EnRT_ReadyCheckEnabled then
@@ -246,6 +246,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif event == "PLAYER_LOGIN" then
 		if EnRT_ReadyCheckEnabled == nil then EnRT_ReadyCheckEnabled = true end
 		if EnRT_ReadyCheckFlashing == nil then EnRT_ReadyCheckFlashing = false end
+		if EnRT_ConsumableCheckEnabled == nil then EnRT_ConsumableCheckEnabled = true end
 	end
 end)
 

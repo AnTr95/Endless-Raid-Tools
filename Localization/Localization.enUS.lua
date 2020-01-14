@@ -58,3 +58,4 @@ L.OPTIONS_PROPHETSKITRA_INFO = "Marks all images on the raid leaders realm and t
 L.OPTIONS_ILGYNOTH_TITLE = "Il'gynoth Module";
 L.OPTIONS_ILGYNOTH_INFO = "WIP";
 L.OPTIONS_READYCHECK_FLASHING = "Flash EnRT Ready Check Button \nWarning for those sensitive to pulsating light.";
+L.OPTIONS_READYCHECK_CONSUMABLECHECK = "Enable Consumable Check"
