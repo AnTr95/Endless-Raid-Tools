@@ -19,6 +19,7 @@
 ## SavedVariables: EnRT_LadyAshvaneEnabled
 ## SavedVariables: EnRT_QueenAzsharaEnabled
 ## SavedVariables: EnRT_ReadyCheckFlashing
+## SavedVariables: EnRT_RadenEnabled
 ## SavedVariablesPerCharacter: EnRT_ConsumableCheckEnabled
 ## SavedVariablesPerCharacter: EnRT_CalendarNotificationEnabled
 ## SavedVariablesPerCharacter: EnRT_ReadyCheckEnabled
@@ -60,3 +61,4 @@ Modules\LadyAshvane.lua
 Options\LadyAshvaneOptions.lua
 Modules\QueenAzshara.lua
 Options\QueenAzsharaOptions.lua
+Modules\Raden.lua
