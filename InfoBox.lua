@@ -55,6 +55,7 @@ end
 
 function EnRT_InfoBoxUpdate(message)
 	text:SetText(message);
+	f:SetSize(15 + text:GetStringWidth(), 15 + text:GetStringHeight());
 end
 
 function EnRT_InfoBoxMove()

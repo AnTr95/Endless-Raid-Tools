@@ -59,3 +59,7 @@ L.OPTIONS_ILGYNOTH_TITLE = "Il'gynoth Module";
 L.OPTIONS_ILGYNOTH_INFO = "WIP";
 L.OPTIONS_READYCHECK_FLASHING = "Flash EnRT Ready Check Button \nWarning for those sensitive to pulsating light.";
 L.OPTIONS_READYCHECK_CONSUMABLECHECK = "Enable Consumable Check"
+L.OPTIONS_RADEN_TITLE = "Ra-den Module";
+L.OPTIONS_RADEN_INFO = "Module for Ra-den Mythic only. Everyone that has this module enabled can see the 3 people affected by Corrupted Existence and shows how much incoming heals they are getting excluding from the player. From a healers perspective they can see if other healers are currently healing the targets to know if it is safe to heal them. For other players that are non healers they will see all healing made to those targets.";
+L.OPTIONS_RADEN_RED = "Amount of missing HP for red text.";
+L.OPTIONS_RADEN_YELLOW = "Amount of missing HP for yellow text.";

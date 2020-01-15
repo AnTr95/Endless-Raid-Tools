@@ -1,4 +1,4 @@
-local f = CreateFrame("Frame","TestFrame")
+local f = CreateFrame("Frame")
 f:RegisterEvent("READY_CHECK_CONFIRM")
 f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("READY_CHECK_FINISHED")
@@ -15,7 +15,7 @@ f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", --Set the ba
 f:SetBackdropColor(0,0,0,0)
 f:SetBackdropBorderColor(169,169,169,0)
 
-local rcStatus = false
+local rcStatus = false;
 local rcSender = ""
 local flasks = {298839,298836,298837,298841,251836, 251837, 251839, 251838};
 local RED = "\124cFFFF0000";
