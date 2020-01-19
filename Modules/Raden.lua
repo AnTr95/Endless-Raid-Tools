@@ -67,8 +67,9 @@ local function updateTargetText()
 		else
 			color = GREEN;
 		end
-		msg = msg .. color .. Ambiguate(pl, "short") .. " - " .. heals .. "\n";
-	end
+		local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pl))].colorStr, Ambiguate(pl, "short"));
+		msg = msg .. name .. WHITE .. " - " .. color .. heals .. "\n";
+	end	
 	EnRT_InfoBoxUpdate(msg);
 end
 
@@ -131,7 +132,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local caster = ...;
 	elseif (event == "UNIT_AURA" and EnRT_RadenEnabled and inEncounter) then
 		local unit = ...;
-		if (EnRT_UnitDeBuff(unit, GetSpellInfo(316065)) and not EnRT_ContainsKey(debuffed, GetUnitName(unit, true))) then
+		if (EnRT_UnitDebuff(unit, GetSpellInfo(316065)) and not EnRT_ContainsKey(debuffed, GetUnitName(unit, true))) then
 			debuffed[GetUnitName(unit, true)] = checkInitTargets(unit);
 			if (not EnRT_InfoBoxIsShown()) then
 				EnRT_InfoBoxShow("Player - Incoming Heals (excl. yours):\n", 30);

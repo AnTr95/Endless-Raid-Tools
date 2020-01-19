@@ -131,7 +131,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local player = UnitName("player")
 		local playerIndex = EnRT_GetRaidMemberIndex(player)
 		--Sender part
-		if rcSender == UnitName("player") and select(2,GetInstanceInfo()) == "raid" and UnitExists(id) then
+		if rcSender == UnitName("player") and select(2,GetInstanceInfo()) == "raid" and UnitIsVisible(id) then
 			local playerTargeted = GetUnitName(id, true);
 			raiders[playerTargeted] = response;
 			if (not response) then
@@ -149,7 +149,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 
 				local playerText = string.format("|c%s%s", RAID_CLASS_COLORS[select(2, UnitClass(playerTargeted))].colorStr, UnitName(playerTargeted))
 				if (rcText:GetText() == nil) then
-					rcText:SetText(playerText .. '\n');
+					rcText:SetText("Players not ready or afk: \n" .. playerText .. '\n');
 				elseif (not rcText:GetText():match(playerText)) then
 					rcText:SetText(rcText:GetText() .. playerText .. '\n');
 				end
@@ -182,7 +182,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 						currentText = currentText .. v .. '\n'
 					end
 				end
-				if currentText == "" then
+				if currentText == "Players not ready or afk: \n" then
 					rcText:SetText("")
 					rcText:Hide()
 					f:Hide()
@@ -200,7 +200,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			raiders = {};
 			for i = 1, GetNumGroupMembers() do
 				local raiderName = GetUnitName("raid"..i, true);
-				if (UnitExists(raiderName)) then
+				if (UnitIsVisible(raiderName)) then
 					raiders[raiderName] = 0;
 				end
 			end
@@ -236,7 +236,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 
 					local playerText = string.format("|c%s%s", RAID_CLASS_COLORS[select(2, UnitClass(raider))].colorStr, Ambiguate(raider, "short"));
 					if (rcText:GetText() == nil) then
-						rcText:SetText(playerText .. '\n');
+						rcText:SetText("Players not ready or afk: \n" .. playerText .. '\n');
 					elseif (not rcText:GetText():match(playerText)) then
 						rcText:SetText(rcText:GetText() .. playerText .. '\n');
 					end

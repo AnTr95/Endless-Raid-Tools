@@ -45,6 +45,9 @@ function EnRT_InfoBoxShow(message, sec)
 	text:SetText(message);
 	f:SetSize(15 + text:GetStringWidth(), 15 + text:GetStringHeight());
 	f:Show();
+	if (timer) then
+		timer:Cancel();
+	end
 	if (sec) then
 		timer = C_Timer.NewTimer(sec, function()
 			f:Hide();
