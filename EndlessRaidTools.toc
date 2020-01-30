@@ -1,6 +1,6 @@
 ## Interface: 80300
 ## Title: Endless Raid Tools
-## Version: 8.46
+## Version: 8.49
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: EnRT_InterruptEnabled
@@ -9,7 +9,6 @@
 ## SavedVariables: EnRT_PopupTextFontSize
 ## SavedVariables: EnRT_PopupTextPosition
 ## SavedVariables: EnRT_HTMEnabled
-## SavedVariables: EnRT_BonusRollCurrentRaid
 ## SavedVariables: EnRT_MOTHEREnabled
 ## SavedVariables: EnRT_OpulenceEnabled
 ## SavedVariables: EnRT_UunatEnabled
@@ -21,6 +20,8 @@
 ## SavedVariables: EnRT_ReadyCheckFlashing
 ## SavedVariables: EnRT_RadenEnabled
 ## SavedVariables: EnRT_RadenColors
+## SavedVarialbes: EnRT_MautEnabled
+## SavedVariablesPerCharacter: EnRT_BonusRollCurrentRaid
 ## SavedVariablesPerCharacter: EnRT_ConsumableCheckEnabled
 ## SavedVariablesPerCharacter: EnRT_CalendarNotificationEnabled
 ## SavedVariablesPerCharacter: EnRT_ReadyCheckEnabled
@@ -64,3 +65,5 @@ Modules\QueenAzshara.lua
 Options\QueenAzsharaOptions.lua
 Modules\Raden.lua
 Options\RadenOptions.lua
+Modules\Maut.lua
+Options\MautOptions.lua

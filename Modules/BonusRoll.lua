@@ -244,10 +244,9 @@ function EnRT_BR_UpdateCoinText()
 	EnRT_BR_GUI["coinText"]:SetText("Remaining Coins: "..bonusRolls-spent);
 end
 function EnRT_BR_CheckLatestRaid()
-	--[[ Array RESET
-	if (EnRT_BonusRollBosses["Sivara"]) then
+	if (EnRT_BonusRollBosses["N'Zoth, the Corruptor"] == nil) then
 		EnRT_BR_ArrayInit();
-	end]]
+	end
 	if (EnRT_BonusRollCurrentRaid ~= "Ny'alotha, the Waking City") then
 		EnRT_BonusRollCurrentRaid = "Ny'alotha, the Waking City";
 		EnRT_BR_ArrayInit();
