@@ -5,6 +5,7 @@ f:RegisterEvent("READY_CHECK_FINISHED")
 f:RegisterEvent("READY_CHECK")
 f:RegisterEvent("CHAT_MSG_RAID")
 f:RegisterEvent("CHAT_MSG_RAID_LEADER")
+f:RegisterEvent("UNIT_AURA");
 f:SetPoint("CENTER")
 f:SetSize(200,200)
 f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", --Set the background and border textures
@@ -22,7 +23,16 @@ local RED = "\124cFFFF0000";
 local YELLOW = "\124cFFFFFF00";
 local GREEN = "\124cFF00FF00";
 local raiders = {};
-
+local buffSpellIDs = {
+	["MAGE"] = 1459, 
+	["PRIEST"] = 21562, 
+	["WARRIOR"] = 6673,
+};
+local buffIconIDs = {
+	["MAGE"] = 135932, 
+	["PRIEST"] = 135987, 
+	["WARRIOR"] = 132333,
+};
 local blizzFixFrame = CreateFrame("Frame", "$parentDetails"); -- UIGoldBorderButtonTemplate is using $parentDetails pointing to a frame called the parents name of the button followed by Details which is undefined in blizzcode.
 blizzFixFrame:SetPoint("CENTER", f, "CENTER");
 
@@ -108,6 +118,9 @@ local function updateConsumables()
 	if (blizzText:find("%-")) then
 		local head, tail, name = blizzText:find("([^-]*)");
 		blizzText = name .. " initiated a ready check";
+	else
+		local head, tail, name = blizzText:find("([^%s]*)");
+		blizzText = name .. " initiated a ready check";
 	end
 	local currTime = GetTime();
 	flaskTime = flaskTime and math.floor((tonumber(flaskTime)-currTime)/60) or nil;
@@ -122,7 +135,41 @@ local function updateConsumables()
 	else
 		flaskTime = RED .. "Missing ";
 	end
-	ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T"..flaskIcon .. ":16\124t " .. flaskTime .. "\124T" .. foodIcon .. ":16\124t " .. (food and (GREEN .. "Check ") or (RED .. "Missing ")) .. "\124T" .. runeIcon .. ":16\124t " .. (rune and (GREEN .. "Check") or (RED .."Missing"))); 
+	local class = select(2, UnitClass("player"));
+	if (class == "MAGE" or class == "PRIEST" or class == "WARRIOR") then
+		ReadyCheckFrameText:SetSize(280, 55.47);
+		local count = 0;
+		local total = 0;
+		local unit = nil;
+		if (IsInRaid()) then
+			for i = 1, GetNumGroupMembers() do
+				unit = "raid"..i;
+				if (UnitIsVisible(unit)) then
+					total = total + 1;
+					if (EnRT_UnitBuff(unit, GetSpellInfo(buffSpellIDs[class]))) then
+						count = count + 1;
+					end
+				end
+			end
+		elseif (IsInGroup()) then
+			for i = 1, GetNumGroupMembers()-1 do
+				unit = "party"..i;
+				if (UnitIsVisible(unit)) then
+					total = total + 1;
+					if (EnRT_UnitBuff(unit, GetSpellInfo(buffSpellIDs[class]))) then
+						count = count + 1;
+					end
+				end
+			end
+			total = total + 1;
+			if (EnRT_UnitBuff("player", GetSpellInfo(buffSpellIDs[class]))) then
+				count = count + 1;
+			end
+		end
+		ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T"..flaskIcon .. ":16\124t" .. flaskTime .. "\124T" .. foodIcon .. ":16\124t" .. (food and (GREEN .. "Check ") or (RED .. "Missing ")) .. "\124T" .. runeIcon .. ":16\124t" .. (rune and (GREEN .. "Check ") or (RED .."Missing ")) .. "\124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" ..total) or (RED .. count .. "/" .. total)));
+	else
+		ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T"..flaskIcon .. ":16\124t " .. flaskTime .. "\124T" .. foodIcon .. ":16\124t " .. (food and (GREEN .. "Check ") or (RED .. "Missing ")) .. "\124T" .. runeIcon .. ":16\124t " .. (rune and (GREEN .. "Check ") or (RED .."Missing "))); 
+	end
 end
 
 f:SetScript("OnEvent", function(self, event, ...)
@@ -164,6 +211,11 @@ f:SetScript("OnEvent", function(self, event, ...)
 		elseif playerIndex == id and response then
 			rcStatus = true
 		end
+	elseif (event == "UNIT_AURA" and EnRT_ReadyCheckEnabled and ReadyCheckFrame:IsShown()) then
+		local unit = ...;
+		if (UnitInRaid(unit)) then
+			updateConsumables();
+		end
 	elseif (event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER") and EnRT_ReadyCheckEnabled and rcText:IsShown() then
 		if rcSender == UnitName("player") then
 			local msg, sender = ...
@@ -196,6 +248,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local sender = ...
 		rcStatus = false
 		rcSender = sender
+		if (sender ~= UnitName("player")) then
+			updateConsumables();
+		end
 		if sender == UnitName("player") then
 			raiders = {};
 			for i = 1, GetNumGroupMembers() do
@@ -206,9 +261,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 			raiders[rcSender] = true;
 			rcStatus = true
-		end
-		if (sender ~= UnitName("player") and EnRT_ConsumableCheckEnabled) then
-			updateConsumables();
 		end
 	elseif event == "READY_CHECK_FINISHED" and EnRT_ReadyCheckEnabled then
 		if not rcStatus and not f:IsShown() and select(2,GetInstanceInfo()) == "raid" then
