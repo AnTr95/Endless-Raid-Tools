@@ -137,7 +137,7 @@ local function updateConsumables()
 	end
 	local class = select(2, UnitClass("player"));
 	if (class == "MAGE" or class == "PRIEST" or class == "WARRIOR") then
-		ReadyCheckFrameText:SetSize(280, 55.47);
+		ReadyCheckFrameText:SetSize(280, 40);
 		local count = 0;
 		local total = 0;
 		local unit = nil;
@@ -213,7 +213,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "UNIT_AURA" and EnRT_ReadyCheckEnabled and ReadyCheckFrame:IsShown()) then
 		local unit = ...;
-		if (UnitInRaid(unit)) then
+		if (UnitInRaid(unit) or UnitInParty(unit)) then
 			updateConsumables();
 		end
 	elseif (event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER") and EnRT_ReadyCheckEnabled and rcText:IsShown() then
@@ -248,7 +248,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local sender = ...
 		rcStatus = false
 		rcSender = sender
-		if (sender ~= UnitName("player")) then
+		if (sender ~= UnitName("player") and EnRT_ConsumableCheckEnabled) then
 			updateConsumables();
 		end
 		if sender == UnitName("player") then
