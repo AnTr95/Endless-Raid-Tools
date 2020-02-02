@@ -1,44 +1,79 @@
-local f = CreateFrame("Frame")
-local addon = ...
-SLASH_ENDLESSRAIDTOOLS1 = "/endlessraidtools"
-SLASH_ENDLESSRAIDTOOLS2 = "/enrt"
-local playersChecked = {}
-local initCheck = false
+local f = CreateFrame("Frame");
+local addon = ...; -- The name of the addon folder
+local version = GetAddOnMetadata(addon, "Version");
+local recievedOutOfDateMessage = false;
+local FRIEND_ONLINE = ERR_FRIEND_ONLINE_SS:match("%s(.+)") -- Converts "[%s] has come online". to "has come online".
+SLASH_ENDLESSRAIDTOOLS1 = "/endlessraidtools";
+SLASH_ENDLESSRAIDTOOLS2 = "/enrt";
+local playersChecked = {};
+local initCheck = false;
 local function handler(msg, editbox)
-	local arg = string.lower(msg)
-	if arg ~= nil and arg == "vc" then
-		C_ChatInfo.SendAddonMessage("EnRT_VC", "vc", "RAID")
+	local arg = string.lower(msg);
+	if (arg ~= nil and arg == "vc") then
+		C_ChatInfo.SendAddonMessage("EnRT_VC", "vc", "RAID");
 	else
-		InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralOptions)
-		if not EnRT_GeneralOptions:IsVisible() then
-			InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralOptions)
+		InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralOptions);
+		if (not EnRT_GeneralOptions:IsVisible()) then
+			InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralOptions);
 		end
 	end
 end
-SlashCmdList["ENDLESSRAIDTOOLS"] = handler
-f:RegisterEvent("CHAT_MSG_ADDON")
-f:RegisterEvent("ADDON_LOADED")
+SlashCmdList["ENDLESSRAIDTOOLS"] = handler;
+f:RegisterEvent("CHAT_MSG_ADDON");
+f:RegisterEvent("ADDON_LOADED");
 f:RegisterEvent("PLAYER_LOGIN");
+f:RegisterEvent("GROUP_ROSTER_UPDATE");
+f:RegisterEvent("CHAT_MSG_SYSTEM");
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_VC")
 f:SetScript("OnEvent", function(self, event, ...)
 	if event == "CHAT_MSG_ADDON" then
 		local prefix, msg, channel, sender = ...
-		if prefix == "EnRT_VC" then
-			if msg == "vc" then
-				C_ChatInfo.SendAddonMessage("EnRT_VC", GetAddOnMetadata(addon, "Version"), "WHISPER", sender)
-			else
-				if not initCheck then
-					initCheck = true
-					C_Timer.After(2, function() 
-						EnRT_FindMissingPlayers()
-						playersChecked = {}
-						initCheck = false
-					end)
+		if (prefix == "EnRT_VC" and UnitName("player") ~= Ambiguate(sender, "short")) then
+			if (msg == "vc") then
+				C_ChatInfo.SendAddonMessage("EnRT_VC", version, "WHISPER", sender);
+			elseif (msg:find("vco") and not recievedOutOfDateMessage and UnitName("player") ~= Ambiguate(sender, "short")) then
+				local head, tail, ver = msg:find("^(vco%-)");
+				if (tonumber(ver) ~= nil) then
+					if (tonumber(ver) > tonumber(version)) then
+						DEFAULT_CHAT_FRAME:AddMessage("|cFFFFFF00" .. L.WARNING_OUTOFDATEMESSAGE);
+						recievedOutOfDateMessage = true;
+					end
 				end
-				sender = Ambiguate(sender, "short")
-				playersChecked[#playersChecked+1] = sender
-				print(sender .. "-" .. msg)
+			elseif (tonumber(msg)) then
+				if (not initCheck) then
+					initCheck = true;
+					C_Timer.After(2, function() 
+						EnRT_FindMissingPlayers();
+						playersChecked = {};
+						initCheck = false;
+					end);
+				end
+				sender = Ambiguate(sender, "short");
+				playersChecked[#playersChecked+1] = sender;
+				print(sender .. "-" .. msg);
 			end
+		end
+	elseif (event == "CHAT_MSG_SYSTEM") then
+		local msg = ...;
+		local sender = msg;
+		msg = msg:match("%s(.+)");
+		if (msg == FRIEND_ONLINE) then
+			sender = sender:match("%[(.+)%]");
+			if (sender ~= UnitName("player")) then
+				C_Timer.After(5, function() 
+					if (sender ~= nil and UnitIsConnected(sender)) then
+						C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "WHISPER", sender);
+					end
+				end);
+			end
+		end
+	elseif (event == "GROUP_ROSTER_UPDATE") then
+		if (IsInRaid(LE_PARTY_CATEGORY_INSTANCE) or IsInGroup(LE_PARTY_CATEGORY_INSTANCE)) then
+			C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "INSTANCE_CHAT");
+		elseif (IsInRaid(LE_PARTY_CATEGORY_HOME)) then
+			C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "RAID");
+		elseif (IsInGroup(LE_PARTY_CATEGORY_HOME)) then
+			C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "PARTY");
 		end
 	elseif event == "ADDON_LOADED" and addon == ... then
 		if EnRT_PopupTextPosition ~= nil then
@@ -57,6 +92,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (EnRT_MinimapMode == nil) then EnRT_MinimapMode = "Always"; end
 		EnRT_PopupUpdateFontSize()
 		EnRT_InfoBoxUpdateFontSize()
+		if (IsInGuild()) then
+			C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "GUILD");
+		end
 	elseif (event == "PLAYER_LOGIN") then
 		if (EnRT_MinimapMode == "Always") then
 			EnRT_MinimapButton:Show();

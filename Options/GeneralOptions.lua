@@ -71,12 +71,16 @@ infoBoxToggleButton:HookScript("OnClick", function(self)
 	EnRT_InfoBoxMove();
 end);
 
+local generalText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
+generalText:SetPoint("TOPLEFT", 30, -345);
+generalText:SetText(L.OPTIONS_GENERALSETTINGS_TEXT);
+
 local minimapModeText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontWhite");
 minimapModeText:SetText(L.OPTIONS_MINIMAP_MODE_TEXT);
-minimapModeText:SetPoint("TOPLEFT", 30, -345);
+minimapModeText:SetPoint("TOPLEFT", 30, -370);
 
 local minimapStateMenu = CreateFrame("Button", nil, EnRT_GeneralOptions, "UIDropDownMenuTemplate");
-minimapStateMenu:SetPoint("TOPLEFT", 175, -335);
+minimapStateMenu:SetPoint("TOPLEFT", 175, -360);
 
 local minimapStates = {"Always", "On Hover", "Never"};
 
@@ -106,6 +110,18 @@ UIDropDownMenu_SetWidth(minimapStateMenu, 110)
 UIDropDownMenu_SetButtonWidth(minimapStateMenu, 110)
 UIDropDownMenu_JustifyText(minimapStateMenu, "CENTER")
 UIDropDownMenu_Initialize(minimapStateMenu, Initialize_MinimapState)
+
+local vcText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontWhite");
+vcText:SetText(L.OPTIONS_VERSIONCHECK_TEXT);
+vcText:SetPoint("TOPLEFT", 30, -410);
+
+local vcButton = CreateFrame("Button", "EnRT_VCButton", EnRT_GeneralOptions, "UIPanelButtonTemplate");
+vcButton:SetSize(150, 35);
+vcButton:SetPoint("TOPLEFT", vcText, "TOPLEFT", 140, 15);
+vcButton:SetText(L.OPTIONS_VERSIONCHECK_BUTTON_TEXT);
+vcButton:HookScript("OnClick", function(self)
+	C_ChatInfo.SendAddonMessage("EnRT_VC", "vc", "RAID");
+end);
 
 EnRT_GeneralOptions:SetScript("OnShow", function(self)
 	fontSlider:SetValue(EnRT_PopupTextFontSize)
