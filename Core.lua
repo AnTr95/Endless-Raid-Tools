@@ -2,7 +2,7 @@ local f = CreateFrame("Frame");
 local addon = ...; -- The name of the addon folder
 local version = GetAddOnMetadata(addon, "Version");
 local recievedOutOfDateMessage = false;
-local FRIEND_ONLINE = ERR_FRIEND_ONLINE_SS:match("%s(.+)") -- Converts "[%s] has come online". to "has come online".
+local FRIEND_ONLINE = ERR_FRIEND_ONLINE_SS:match("%s(.+)"); -- Converts "[%s] has come online". to "has come online".
 SLASH_ENDLESSRAIDTOOLS1 = "/endlessraidtools";
 SLASH_ENDLESSRAIDTOOLS2 = "/enrt";
 local playersChecked = {};
@@ -24,14 +24,14 @@ f:RegisterEvent("ADDON_LOADED");
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("GROUP_ROSTER_UPDATE");
 f:RegisterEvent("CHAT_MSG_SYSTEM");
-C_ChatInfo.RegisterAddonMessagePrefix("EnRT_VC")
+C_ChatInfo.RegisterAddonMessagePrefix("EnRT_VC");
 f:SetScript("OnEvent", function(self, event, ...)
-	if event == "CHAT_MSG_ADDON" then
-		local prefix, msg, channel, sender = ...
+	if (event == "CHAT_MSG_ADDON") then
+		local prefix, msg, channel, sender = ...;
 		if (prefix == "EnRT_VC" and UnitName("player") ~= Ambiguate(sender, "short")) then
 			if (msg == "vc") then
 				C_ChatInfo.SendAddonMessage("EnRT_VC", version, "WHISPER", sender);
-			elseif (msg:find("vco") and not recievedOutOfDateMessage and UnitName("player") ~= Ambiguate(sender, "short")) then
+			elseif (msg:find("vco") and not recievedOutOfDateMessage) then
 				local head, tail, ver = msg:find("^(vco%-)");
 				if (tonumber(ver) ~= nil) then
 					if (tonumber(ver) > tonumber(version)) then
@@ -75,23 +75,23 @@ f:SetScript("OnEvent", function(self, event, ...)
 		elseif (IsInGroup(LE_PARTY_CATEGORY_HOME)) then
 			C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "PARTY");
 		end
-	elseif event == "ADDON_LOADED" and addon == ... then
-		if EnRT_PopupTextPosition ~= nil then
-			EnRT_PopupSetPosition(EnRT_PopupTextPosition.point, EnRT_PopupTextPosition.relativeTo, EnRT_PopupTextPosition.relativePoint, EnRT_PopupTextPosition.xOffset, EnRT_PopupTextPosition.yOffset)
+	elseif (event == "ADDON_LOADED" and addon == ...) then
+		if (EnRT_PopupTextPosition ~= nil) then
+			EnRT_PopupSetPosition(EnRT_PopupTextPosition.point, EnRT_PopupTextPosition.relativeTo, EnRT_PopupTextPosition.relativePoint, EnRT_PopupTextPosition.xOffset, EnRT_PopupTextPosition.yOffset);
 		end
-		if EnRT_PopupTextFontSize == nil then
-			EnRT_PopupTextFontSize = 28
+		if (EnRT_PopupTextFontSize == nil) then
+			EnRT_PopupTextFontSize = 28;
 		end
-		if EnRT_InfoBoxTextPosition ~= nil then
-			EnRT_InfoBoxSetPosition(EnRT_InfoBoxTextPosition.point, EnRT_InfoBoxTextPosition.relativeTo, EnRT_InfoBoxTextPosition.relativePoint, EnRT_InfoBoxTextPosition.xOffset, EnRT_InfoBoxTextPosition.yOffset)
+		if (EnRT_InfoBoxTextPosition ~= nil) then
+			EnRT_InfoBoxSetPosition(EnRT_InfoBoxTextPosition.point, EnRT_InfoBoxTextPosition.relativeTo, EnRT_InfoBoxTextPosition.relativePoint, EnRT_InfoBoxTextPosition.xOffset, EnRT_InfoBoxTextPosition.yOffset);
 		end
-		if EnRT_InfoBoxTextFontSize == nil then
-			EnRT_InfoBoxTextFontSize = 14
+		if (EnRT_InfoBoxTextFontSize == nil) then
+			EnRT_InfoBoxTextFontSize = 14;
 		end
 		if (EnRT_MinimapDegree) then EnRT_SetMinimapPoint(EnRT_MinimapDegree); end
 		if (EnRT_MinimapMode == nil) then EnRT_MinimapMode = "Always"; end
-		EnRT_PopupUpdateFontSize()
-		EnRT_InfoBoxUpdateFontSize()
+		EnRT_PopupUpdateFontSize();
+		EnRT_InfoBoxUpdateFontSize();
 		if (IsInGuild()) then
 			C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "GUILD");
 		end
@@ -102,11 +102,11 @@ f:SetScript("OnEvent", function(self, event, ...)
 			EnRT_MinimapButton:Hide();
 		end
 	end
-end)
+end);
 function EnRT_FindMissingPlayers()
 	for i = 1, GetNumGroupMembers() do
-		if not Endless_Contains(playersChecked, UnitName("raid"..i)) and UnitName("raid"..i) ~= UnitName("player") then
-			print(GetUnitName("raid"..i, true) .. "-not installed")
+		if (not Endless_Contains(playersChecked, UnitName("raid"..i)) and UnitName("raid"..i) ~= UnitName("player")) then
+			print(GetUnitName("raid"..i, true) .. "-not installed");
 		end
 	end
 end
@@ -117,18 +117,18 @@ end
 	return boolean or integer / returns false if the table does not contain the value otherwise it returns the index of where the value is locatedd
 ]]
 function Endless_Contains(arr, value)
-	if value == nil then
-		return false
+	if (value == nil) then
+		return false;
 	end
-	if arr == nil then
-		return false
+	if (arr == nil) then
+		return false;
 	end
 	for k, v in pairs(arr) do
-		if v == value then
-			return k
+		if (v == value) then
+			return k;
 		end
 	end
-	return false
+	return false;
 end
 --[[
 	Checking if a table contains a given value and if it does, what index is the value located at
@@ -149,14 +149,14 @@ function EnRT_ContainsKey(arr, value)
 end
 
 function EnRT_UnitBuff(unit, spellName)
-	if unit and spellName then
+	if (unit and spellName) then
 		for i = 1, 100 do
 			local name, rank, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3 = UnitBuff(unit, i);
-			if not name then
+			if (not name) then
 				return
 			end
-			if name == spellName then
-				return name, rank, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3
+			if (name == spellName) then
+				return name, rank, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3;
 			end
 		end
 	end
