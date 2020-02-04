@@ -1,3 +1,4 @@
+local L = EnRTLocals;
 local f = CreateFrame("Frame");
 local addon = ...; -- The name of the addon folder
 local version = GetAddOnMetadata(addon, "Version");
@@ -32,7 +33,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (msg == "vc") then
 				C_ChatInfo.SendAddonMessage("EnRT_VC", version, "WHISPER", sender);
 			elseif (msg:find("vco") and not recievedOutOfDateMessage) then
-				local head, tail, ver = msg:find("^(vco%-)");
+				local head, tail, ver = msg:find("([^vco-].*)");
 				if (tonumber(ver) ~= nil) then
 					if (tonumber(ver) > tonumber(version)) then
 						DEFAULT_CHAT_FRAME:AddMessage("|cFFFFFF00" .. L.WARNING_OUTOFDATEMESSAGE);
@@ -60,7 +61,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (msg == FRIEND_ONLINE) then
 			sender = sender:match("%[(.+)%]");
 			if (sender ~= UnitName("player")) then
-				C_Timer.After(5, function() 
+				C_Timer.After(10, function() 
 					if (sender ~= nil and UnitIsConnected(sender)) then
 						C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "WHISPER", sender);
 					end
