@@ -3,7 +3,6 @@ local f = CreateFrame("Frame");
 local addon = ...; -- The name of the addon folder
 local version = GetAddOnMetadata(addon, "Version");
 local recievedOutOfDateMessage = false;
-local FRIEND_ONLINE = ERR_FRIEND_ONLINE_SS:match("%s(.+)"); -- Converts "[%s] has come online". to "has come online".
 SLASH_ENDLESSRAIDTOOLS1 = "/endlessraidtools";
 SLASH_ENDLESSRAIDTOOLS2 = "/enrt";
 local playersChecked = {};
@@ -24,7 +23,6 @@ f:RegisterEvent("CHAT_MSG_ADDON");
 f:RegisterEvent("ADDON_LOADED");
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("GROUP_ROSTER_UPDATE");
-f:RegisterEvent("CHAT_MSG_SYSTEM");
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_VC");
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "CHAT_MSG_ADDON") then
@@ -52,20 +50,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 				sender = Ambiguate(sender, "short");
 				playersChecked[#playersChecked+1] = sender;
 				print(sender .. "-" .. msg);
-			end
-		end
-	elseif (event == "CHAT_MSG_SYSTEM") then
-		local msg = ...;
-		local sender = msg;
-		msg = msg:match("%s(.+)");
-		if (msg == FRIEND_ONLINE) then
-			sender = sender:match("%[(.+)%]");
-			if (sender ~= UnitName("player")) then
-				C_Timer.After(10, function() 
-					if (sender ~= nil and UnitIsConnected(sender)) then
-						C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "WHISPER", sender);
-					end
-				end);
 			end
 		end
 	elseif (event == "GROUP_ROSTER_UPDATE") then
