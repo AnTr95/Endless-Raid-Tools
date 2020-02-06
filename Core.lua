@@ -2,7 +2,6 @@ local L = EnRTLocals;
 local f = CreateFrame("Frame");
 local addon = ...; -- The name of the addon folder
 local version = GetAddOnMetadata(addon, "Version");
-local recievedOutOfDateMessage = false;
 SLASH_ENDLESSRAIDTOOLS1 = "/endlessraidtools";
 SLASH_ENDLESSRAIDTOOLS2 = "/enrt";
 local playersChecked = {};
@@ -22,7 +21,6 @@ SlashCmdList["ENDLESSRAIDTOOLS"] = handler;
 f:RegisterEvent("CHAT_MSG_ADDON");
 f:RegisterEvent("ADDON_LOADED");
 f:RegisterEvent("PLAYER_LOGIN");
-f:RegisterEvent("GROUP_ROSTER_UPDATE");
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_VC");
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "CHAT_MSG_ADDON") then
@@ -30,15 +28,16 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (prefix == "EnRT_VC" and UnitName("player") ~= Ambiguate(sender, "short")) then
 			if (msg == "vc") then
 				C_ChatInfo.SendAddonMessage("EnRT_VC", version, "WHISPER", sender);
+			--[[
 			elseif (msg:find("vco") and not recievedOutOfDateMessage) then
-				local head, tail, ver = msg:find("([^vco-].*)");
-				if (tonumber(ver) ~= nil) then
-					if (tonumber(ver) > tonumber(version)) then
-						DEFAULT_CHAT_FRAME:AddMessage("|cFFFFFF00" .. L.WARNING_OUTOFDATEMESSAGE);
-						recievedOutOfDateMessage = true;
-					end
+			local head, tail, ver = msg:find("([^vco-].*)");
+			if (tonumber(ver) ~= nil) then
+				if (tonumber(ver) > tonumber(version)) then
+					DEFAULT_CHAT_FRAME:AddMessage("|cFFFFFF00" .. L.WARNING_OUTOFDATEMESSAGE);
+					recievedOutOfDateMessage = true;
 				end
-			elseif (tonumber(msg)) then
+			end]]
+			else
 				if (not initCheck) then
 					initCheck = true;
 					C_Timer.After(2, function() 
@@ -52,6 +51,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				print(sender .. "-" .. msg);
 			end
 		end
+	--[[
 	elseif (event == "GROUP_ROSTER_UPDATE") then
 		if (IsInRaid(LE_PARTY_CATEGORY_INSTANCE) or IsInGroup(LE_PARTY_CATEGORY_INSTANCE)) then
 			C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "INSTANCE_CHAT");
@@ -60,6 +60,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		elseif (IsInGroup(LE_PARTY_CATEGORY_HOME)) then
 			C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "PARTY");
 		end
+	]]
 	elseif (event == "ADDON_LOADED" and addon == ...) then
 		if (EnRT_PopupTextPosition ~= nil) then
 			EnRT_PopupSetPosition(EnRT_PopupTextPosition.point, EnRT_PopupTextPosition.relativeTo, EnRT_PopupTextPosition.relativePoint, EnRT_PopupTextPosition.xOffset, EnRT_PopupTextPosition.yOffset);
@@ -77,9 +78,11 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (EnRT_MinimapMode == nil) then EnRT_MinimapMode = "Always"; end
 		EnRT_PopupUpdateFontSize();
 		EnRT_InfoBoxUpdateFontSize();
+		--[[
 		if (IsInGuild()) then
 			C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "GUILD");
 		end
+		]]
 	elseif (event == "PLAYER_LOGIN") then
 		if (EnRT_MinimapMode == "Always") then
 			EnRT_MinimapButton:Show();
@@ -152,10 +155,10 @@ function EnRT_UnitDebuff(unit, spellName)
 	if unit and spellName then
 		for i = 1, 100 do
 			local name, rank, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3 = UnitDebuff(unit, i);
-			if not name then
+			if (not name) then
 				return
 			end
-			if name == spellName then
+			if (name == spellName) then
 				return name, rank, count, debuffType, duration, expirationTime, unitCaster, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3
 			end
 		end
@@ -165,12 +168,12 @@ end
 
 function EnRT_GetRaidLeader()
 	for i = 1, GetNumGroupMembers() do
-		local raider = "raid"..i
+		local raider = "raid"..i;
 		if select(2, GetRaidRosterInfo(i)) == 2 then
-			return GetUnitName(raider, true)
+			return GetUnitName(raider, true);
 		end
 	end
-	return ""
+	return "";
 end
 
 function sortTableByValue(tbl)
