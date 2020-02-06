@@ -37,6 +37,11 @@ EnRT_BR_Settings:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background
 	insets = { left = 4, right = 4, top = 4, bottom = 4 }
 });
 EnRT_BR_Settings:SetBackdropColor(0,0,0,1);
+EnRT_BR_Settings:SetMovable(false);
+EnRT_BR_Settings:EnableMouse(false);
+EnRT_BR_Settings:RegisterForDrag("LeftButton");
+EnRT_BR_Settings:SetScript("OnDragStart", EnRT_BR_Settings.StartMoving);
+EnRT_BR_Settings:SetScript("OnDragStop", EnRT_BR_Settings.StopMovingOrSizing);
 EnRT_BR_Settings:Hide();
 
 local function initBLPText()
@@ -220,6 +225,8 @@ EnRT_BR_Settings:SetScript("OnShow", function(self)
 	if (spent >= bonusRolls) then
 		EnRT_BR_Lock();
 	end
+	EnRT_BR_Settings:SetMovable(true);
+	EnRT_BR_Settings:EnableMouse(true);
 end)
 function EnRT_BR_Lock()
 	for bossName, data in pairs(EnRT_BonusRollBosses) do
@@ -270,6 +277,8 @@ BonusRollFrame.PromptFrame.InfoFrame:HookScript("OnHide", function()
 	if (EnRT_BLPCountString) then
 		EnRT_BLPCountString:Hide();
 	end
+	EnRT_BR_Settings:SetMovable(false);
+	EnRT_BR_Settings:EnableMouse(false);
 end)
 --[[
 BonusRollFrame.PromptFrame.RollButton:HookScript("OnClick", function() 
