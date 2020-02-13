@@ -13,7 +13,7 @@ local bossLex = {
 	[9] = "Ra-den the Despoiled",
 	[10] = "Il'gynoth, Corruption Reborn",
 	[11] = "Carapace of N'Zoth",
-	[12] = "N'Zoth, the Corruptor",
+	[12] = "N'Zoth the Corruptor",
 };
 local difficultyLex = {
 	[14] = 2,
@@ -141,7 +141,7 @@ function EnRT_BR_ArrayInit()
 		["Ra-den the Despoiled"] = {2331,0,0,0},
 		["Il'gynoth, Corruption Reborn"] = {2345,0,0,0},
 		["Carapace of N'Zoth"] = {2337,0,0,0},
-		["N'Zoth, the Corruptor"] = {2344,0,0,0},
+		["N'Zoth the Corruptor"] = {2344,0,0,0},
 	};
 end
 function EnRT_BR_GUIInit()
@@ -251,7 +251,7 @@ function EnRT_BR_UpdateCoinText()
 	EnRT_BR_GUI["coinText"]:SetText("Remaining Coins: "..bonusRolls-spent);
 end
 function EnRT_BR_CheckLatestRaid()
-	if (EnRT_BonusRollBosses["N'Zoth, the Corruptor"] == nil) then
+	if (EnRT_BonusRollBosses["N'Zoth the Corruptor"] == nil) then
 		EnRT_BR_ArrayInit();
 	end
 	if (EnRT_BonusRollCurrentRaid ~= "Ny'alotha, the Waking City") then
