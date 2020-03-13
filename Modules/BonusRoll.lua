@@ -133,7 +133,7 @@ function EnRT_BR_ArrayInit()
 		["Wrathion"] = {2329,0,0,0},
 		["Maut"] = {2327,0,0,0},
 		["Prophet Skitra"] = {2334,0,0,0},
-		["Dark Inquisitor Xanesh"] = {2338,0,0,0},
+		["Dark Inquisitor Xanesh"] = {2328,0,0,0},
 		["The Hivemind"] = {2333,0,0,0},
 		["Shad'har the Insatiable"] = {2335,0,0,0},
 		["Drest'agath"] = {2343,0,0,0},
@@ -252,6 +252,8 @@ function EnRT_BR_UpdateCoinText()
 end
 function EnRT_BR_CheckLatestRaid()
 	if (EnRT_BonusRollBosses["N'Zoth the Corruptor"] == nil) then
+		EnRT_BR_ArrayInit();
+	elseif (select(1, EnRT_BonusRollBosses["Dark Inquisitor Xanesh"][1] == 2338)) then
 		EnRT_BR_ArrayInit();
 	end
 	if (EnRT_BonusRollCurrentRaid ~= "Ny'alotha, the Waking City") then
