@@ -1,6 +1,6 @@
-## Interface: 80300
+## Interface: 90000
 ## Title: Endless Raid Tools
-## Version: 8.53
+## Version: 8.6
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: EnRT_InterruptEnabled
@@ -67,3 +67,7 @@ Modules\Raden.lua
 Options\RadenOptions.lua
 Modules\Maut.lua
 Options\MautOptions.lua
+Modules\HungeringDestroyer2.lua
+Options\HungeringDestroyerOptions.lua
+Modules\LadyInervaDarkvein.lua
+Options\LadyInervaDarkveinOptions.lua
