@@ -66,4 +66,6 @@ L.OPTIONS_HUNGERINGDESTROYER_INFO = "Evenly distributes players for gluttonous m
 L.OPTIONS_LADYINERVADARKVEIN_TITLE = "Lady Inerva Darkvein Module";
 L.OPTIONS_LADYINERVADARKVEIN_INFO = "Marks players with Sins and suffering pointing them to star, circle and diamond. Raid leader can then use world marks to tell people where to go.";
 L.BONUSROLL_INFO = "Pick bosses to coin";
+L.OPTIONS_COUNCILOFBLOOD_TITLE = "Council of Blood Modules";
+L.OPTIONS_COUNCILOFBLOOD_INFO = "Makes the raiders action buttons glow based of what the raid leader is pressing during the Danse Macabre.";
 L.WARNING_OUTOFDATEMESSAGE = "There is a newer version of Endless Raid Tools available on twitch/curse!";

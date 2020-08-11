@@ -1,6 +1,6 @@
 ## Interface: 90000
 ## Title: Endless Raid Tools
-## Version: 8.6
+## Version: 8.61
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: EnRT_InterruptEnabled
@@ -21,6 +21,9 @@
 ## SavedVariables: EnRT_RadenEnabled
 ## SavedVariables: EnRT_RadenColors
 ## SavedVarialbes: EnRT_MautEnabled
+## SavedVariables: EnRT_HungeringDestroyerEnabled
+## SavedVariables: EnRT_LadyInervaDarkveinEnabled
+## SavedVariables: EnRT_CouncilofBloodEnabled
 ## SavedVariablesPerCharacter: EnRT_BonusRollCurrentRaid
 ## SavedVariablesPerCharacter: EnRT_ConsumableCheckEnabled
 ## SavedVariablesPerCharacter: EnRT_CalendarNotificationEnabled
@@ -71,3 +74,5 @@ Modules\HungeringDestroyer2.lua
 Options\HungeringDestroyerOptions.lua
 Modules\LadyInervaDarkvein.lua
 Options\LadyInervaDarkveinOptions.lua
+Modules\CouncilofBlood2.lua
+Options\CouncilofBloodOptions.lua
