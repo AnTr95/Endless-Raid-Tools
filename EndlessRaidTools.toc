@@ -1,4 +1,4 @@
-## Interface: 90000
+## Interface: 90001
 ## Title: Endless Raid Tools
 ## Version: 8.61
 ## Notes: Raid Tools
@@ -8,19 +8,6 @@
 ## SavedVariables: EnRT_InnervateEnabled
 ## SavedVariables: EnRT_PopupTextFontSize
 ## SavedVariables: EnRT_PopupTextPosition
-## SavedVariables: EnRT_HTMEnabled
-## SavedVariables: EnRT_MOTHEREnabled
-## SavedVariables: EnRT_OpulenceEnabled
-## SavedVariables: EnRT_UunatEnabled
-## SavedVariables: EnRT_UunatStormMark
-## SavedVariables: EnRT_UunatOceanMark
-## SavedVariables: EnRT_UunatVoidMark
-## SavedVariables: EnRT_LadyAshvaneEnabled
-## SavedVariables: EnRT_QueenAzsharaEnabled
-## SavedVariables: EnRT_ReadyCheckFlashing
-## SavedVariables: EnRT_RadenEnabled
-## SavedVariables: EnRT_RadenColors
-## SavedVarialbes: EnRT_MautEnabled
 ## SavedVariables: EnRT_HungeringDestroyerEnabled
 ## SavedVariables: EnRT_LadyInervaDarkveinEnabled
 ## SavedVariables: EnRT_CouncilofBloodEnabled
@@ -32,10 +19,8 @@
 ## SavedVariablesPerCharacter: EnRT_BonusRollBosses
 ## SavedVariablesPerCharacter: EnRT_BonusRollEnabled
 ## SavedVariablesPerCharacter: EnRT_BonusRollBLPCount
-## SavedVariablesPerCharacter: EnRT_HTMUIPosition
 ## SavedVariablesPerCharacter: EnRT_MinimapMode
 ## SavedVariablesPerCharacter: EnRT_MinimapDegree
-## SavedVariablesPerCharacter: EnRT_OpulenceUIPosition
 ## SavedVariablesPerCharacter: EnRT_InfoBoxPosition
 ## SavedVariablesPerCharacter: EnRT_HuntsmanAlitmorPlayersPerLine
 Localization\Localization.enUS.lua
@@ -55,22 +40,6 @@ Modules\ReadyCheck.lua
 Options\ReadyCheckOptions.lua
 Modules\BonusRoll.lua
 Options\BonusRollOptions.lua
-Modules\MOTHER.lua
-Options\MOTHEROptions.lua
-Modules\HighTinkerMekkatorque.lua
-Options\HighTinkerMekkatorqueOptions.lua
-Modules\Opulence.lua
-Options\OpulenceOptions.lua
-Modules\Uunat.lua
-Options\UunatOptions.lua
-Modules\LadyAshvane.lua
-Options\LadyAshvaneOptions.lua
-Modules\QueenAzshara.lua
-Options\QueenAzsharaOptions.lua
-Modules\Raden.lua
-Options\RadenOptions.lua
-Modules\Maut.lua
-Options\MautOptions.lua
 Modules\HuntsmanAltimor.lua
 Options\HuntsmanAltimorOptions.lua
 Modules\HungeringDestroyer2.lua
