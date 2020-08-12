@@ -1,6 +1,6 @@
 --Todo, hook blizzards bonus roll button and make it show until either button is pressed / times out by copying the bonus roll timer
 local L = EnRTLocals;
-local f = CreateFrame("Frame", nil, nil, BackdropTemplateMixin and "BackdropTemplate");
+local f = CreateFrame("Frame");
 local bossLex = {
 	[1] = "Wrathion",
 	[2] = "Maut",
@@ -27,7 +27,7 @@ local isLockMode = false;
 local currentCurrencyID = 1580;
 local currentSpellID = 259702;
 
-EnRT_BR_Settings = CreateFrame("Frame");
+EnRT_BR_Settings = CreateFrame("Frame", nil, nil, BackdropTemplateMixin and "BackdropTemplate");
 EnRT_BR_Settings:SetPoint("CENTER");
 EnRT_BR_Settings:SetSize(270, 270);
 EnRT_BR_Settings:SetFrameStrata("TOOLTIP");
