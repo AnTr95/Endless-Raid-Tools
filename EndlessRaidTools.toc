@@ -24,6 +24,7 @@
 ## SavedVariables: EnRT_HungeringDestroyerEnabled
 ## SavedVariables: EnRT_LadyInervaDarkveinEnabled
 ## SavedVariables: EnRT_CouncilofBloodEnabled
+## SavedVariables: EnRT_HuntsmanAltimorEnabled
 ## SavedVariablesPerCharacter: EnRT_BonusRollCurrentRaid
 ## SavedVariablesPerCharacter: EnRT_ConsumableCheckEnabled
 ## SavedVariablesPerCharacter: EnRT_CalendarNotificationEnabled
@@ -36,7 +37,7 @@
 ## SavedVariablesPerCharacter: EnRT_MinimapDegree
 ## SavedVariablesPerCharacter: EnRT_OpulenceUIPosition
 ## SavedVariablesPerCharacter: EnRT_InfoBoxPosition
-
+## SavedVariablesPerCharacter: EnRT_HuntsmanAlitmorPlayersPerLine
 Localization\Localization.enUS.lua
 Core.lua
 Options\Options.lua
@@ -76,3 +77,4 @@ Modules\LadyInervaDarkvein.lua
 Options\LadyInervaDarkveinOptions.lua
 Modules\CouncilofBlood2.lua
 Options\CouncilofBloodOptions.lua
+Modules\HuntsmanAltimor.lua

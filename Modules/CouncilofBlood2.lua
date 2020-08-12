@@ -12,6 +12,7 @@ f:RegisterEvent("CHAT_MSG_SYSTEM");
 f:RegisterEvent("UI_INFO_MESSAGE");
 f:RegisterEvent("CHAT_MSG_RESTRICTED");
 f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
+f:RegisterEvent("CHAT_MSG_RAID_BOSS_WHISPER");
 
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_TCOB");
 
