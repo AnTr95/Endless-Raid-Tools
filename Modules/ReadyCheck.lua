@@ -1,4 +1,4 @@
-local f = CreateFrame("Frame")
+local f = CreateFrame("Frame", nil, nil, BackdropTemplateMixin and "BackdropTemplate");
 f:RegisterEvent("READY_CHECK_CONFIRM")
 f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("READY_CHECK_FINISHED")
@@ -18,7 +18,7 @@ f:SetBackdropBorderColor(169,169,169,0)
 
 local rcStatus = false;
 local rcSender = ""
-local flasks = {298839,298836,298837,298841,251836, 251837, 251839, 251838};
+local flasks = {307185,307187};
 local RED = "\124cFFFF0000";
 local YELLOW = "\124cFFFFFF00";
 local GREEN = "\124cFF00FF00";
@@ -101,7 +101,7 @@ rcButton:Hide()
 f:Hide()
 
 local function updateConsumables()
-	local flask, flaskIcon, _, _, _, flaskTime = EnRT_UnitBuff("player", GetSpellInfo(298839));
+	local flask, flaskIcon, _, _, _, flaskTime = EnRT_UnitBuff("player", GetSpellInfo(307185));
 	for i = 1, #flasks do
 		flask, flaskIcon, _, _, _, flaskTime = EnRT_UnitBuff("player", GetSpellInfo(flasks[i]));
 		if (flask) then

@@ -185,3 +185,14 @@ end
 
 function sortTableByValue(tbl)
 end
+
+function EnRT_SetFlagIcon(texture, index)
+	local iconSize = 32;
+	local columns = 256/iconSize;
+	local rows = 64/iconSize;
+	local l = mod(index, columns) / columns;
+	local r = l + (1/columns);
+	local t = floor(index/columns) / rows;
+	local b = t + (1/rows);
+	texture:SetTexCoord(l,r,t,b);
+end

@@ -2,18 +2,16 @@
 local L = EnRTLocals;
 local f = CreateFrame("Frame");
 local bossLex = {
-	[1] = "Wrathion",
-	[2] = "Maut",
-	[3] = "Prophet Skitra",
-	[4] = "Dark Inquisitor Xanesh",
-	[5] = "The Hivemind",
-	[6] = "Shad'har the Insatiable",
-	[7] = "Drest'agath",
-	[8] = "Vexiona",
-	[9] = "Ra-den the Despoiled",
-	[10] = "Il'gynoth, Corruption Reborn",
-	[11] = "Carapace of N'Zoth",
-	[12] = "N'Zoth the Corruptor",
+	[1] = "Shriekwing",
+	[2] = "Huntsman Altimor",
+	[3] = "Lady Inerva Darkvein",
+	[4] = "Hungering Destroyer",
+	[5] = "Kael'thas",
+	[6] = "Broker Curator",
+	[7] = "The Council of Blood",
+	[8] = "Sludgefist",
+	[9] = "Stone Legion Generals",
+	[10] = "Sire Denathrius",
 };
 local difficultyLex = {
 	[14] = 2,
@@ -27,7 +25,7 @@ local isLockMode = false;
 local currentCurrencyID = 1580;
 local currentSpellID = 259702;
 
-EnRT_BR_Settings = CreateFrame("Frame");
+EnRT_BR_Settings = CreateFrame("Frame", nil, nil, BackdropTemplateMixin and "BackdropTemplate");
 EnRT_BR_Settings:SetPoint("CENTER");
 EnRT_BR_Settings:SetSize(270, 270);
 EnRT_BR_Settings:SetFrameStrata("TOOLTIP");
@@ -125,23 +123,18 @@ function EnRT_Contains2DValue(arr, index, value)
 end
 
 function EnRT_BR_ArrayInit()
-	--2032,2048,2036,2050,2037,2054,2052,2038,2051 ToS
-	--2076,2074,2070,2064,2075,2082,2088,2069,2073,2063,2092 Antorus
-	--2265,2263,2266,2271,2268,2272,2276,2280,2281 BoD
-	--2329,2327,2334,2328,2333,2335,2343,2336,2331,2345,2337,2344 Nyalotha
+	--2398 2418 2406 2383 2402 2405 2412 2399 2417 2407 Castle Nathria
 	EnRT_BonusRollBosses = {
-		["Wrathion"] = {2329,0,0,0},
-		["Maut"] = {2327,0,0,0},
-		["Prophet Skitra"] = {2334,0,0,0},
-		["Dark Inquisitor Xanesh"] = {2328,0,0,0},
-		["The Hivemind"] = {2333,0,0,0},
-		["Shad'har the Insatiable"] = {2335,0,0,0},
-		["Drest'agath"] = {2343,0,0,0},
-		["Vexiona"] = {2336,0,0,0},
-		["Ra-den the Despoiled"] = {2331,0,0,0},
-		["Il'gynoth, Corruption Reborn"] = {2345,0,0,0},
-		["Carapace of N'Zoth"] = {2337,0,0,0},
-		["N'Zoth the Corruptor"] = {2344,0,0,0},
+		["Shriekwing"] = {2398,0,0,0},
+		["Huntsman Altimor"] = {2418,0,0,0},
+		["Lady Inerva Darkvein"] = {2406,0,0,0},
+		["Hungering Destroyer"] = {2383,0,0,0},
+		["Kael'thas"] = {2402,0,0,0},
+		["Broker Curator"] = {2405,0,0,0},
+		["The Council of Blood"] = {2412,0,0,0},
+		["Sludgefist"] = {2399,0,0,0},
+		["Stone Legion Generals"] = {2337,0,0,0},
+		["Sire Denathrius"] = {2407,0,0,0},
 	};
 end
 function EnRT_BR_GUIInit()
@@ -251,13 +244,12 @@ function EnRT_BR_UpdateCoinText()
 	EnRT_BR_GUI["coinText"]:SetText("Remaining Coins: "..bonusRolls-spent);
 end
 function EnRT_BR_CheckLatestRaid()
-	if (EnRT_BonusRollBosses["N'Zoth the Corruptor"] == nil) then
+	--[[
+	if (EnRT_BonusRollBosses["Sire Denathrius"] == nil) then
 		EnRT_BR_ArrayInit();
-	elseif (select(1, EnRT_BonusRollBosses["Dark Inquisitor Xanesh"][1] == 2338)) then
-		EnRT_BR_ArrayInit();
-	end
-	if (EnRT_BonusRollCurrentRaid ~= "Ny'alotha, the Waking City") then
-		EnRT_BonusRollCurrentRaid = "Ny'alotha, the Waking City";
+	end]]
+	if (EnRT_BonusRollCurrentRaid ~= "Castle Nathria") then
+		EnRT_BonusRollCurrentRaid = "Castle Nathria";
 		EnRT_BR_ArrayInit();
 	end
 end

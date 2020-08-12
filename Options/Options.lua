@@ -39,6 +39,6 @@ EnRT_CastleModules = CreateFrame("Frame", "EnRT_CastleModulesFrame")
 EnRT_CastleModules.name = "|cFFFFFF00Castle Nathria Modules"
 EnRT_CastleModules.parent = "Endless Raid Tools"
 EnRT_CastleModules:SetScript("OnShow", function(EnRT_CastleModules)
-	InterfaceOptionsFrame_OpenToCategory(EnRT_HungeringDestroyerOptions);
+	InterfaceOptionsFrame_OpenToCategory(EnRT_HuntsmanAltimorOptions);
 end)
 InterfaceOptions_AddCategory(EnRT_CastleModules)
