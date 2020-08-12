@@ -1,4 +1,4 @@
-local f = CreateFrame("Frame");
+local f = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate");
 local timer = nil;
 f:SetSize(185, 150);
 f:SetPoint("TOPLEFT", 30, -150);
