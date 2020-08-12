@@ -308,9 +308,9 @@ end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then 
-		if (EnRT_HuntsmanAltimoreEnabled == nil) then EnRT_HuntsmanAltimoreEnabled = true; end
-		if (EnRT_HuntsmanAltimorePlayersPerLine == nil) then EnRT_HuntsmanAltimorePlayersPerLine = 4; end
-	elseif (event == "UNIT_AURA" and EnRT_HuntsmanAltimoreEnabled and inEncounter) then
+		if (EnRT_HuntsmanAltimornabled == nil) then EnRT_HuntsmanAltimorEnabled = true; end
+		if (EnRT_HuntsmanAltimorPlayersPerLine == nil) then EnRT_HuntsmanAltimorPlayersPerLine = 4; end
+	elseif (event == "UNIT_AURA" and EnRT_HuntsmanAltimorEnabled and inEncounter) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
 		if (UnitIsUnit(leader, playerName)) then
@@ -349,7 +349,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
-	elseif (event == "CHAT_MSG_ADDON" and EnRT_HuntsmanAltimoreEnabled) then
+	elseif (event == "CHAT_MSG_ADDON" and EnRT_HuntsmanAltimorEnabled) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "EnRT_HA") then
 			if(msg == "reset") then
@@ -370,9 +370,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
-	elseif (event == "ENCOUNTER_START" and EnRT_HuntsmanAltimoreEnabled) then
+	elseif (event == "ENCOUNTER_START" and EnRT_HuntsmanAltimorEnabled) then
 		local eID = ...;
-		if (eID == 0000) then
+		local difficulty = select(3, GetInstanceInfo());
+		if (eID == 2418 and difficulty == 16) then
 			inEncounter = true;
 			leader = EnRT_GetRaidLeader();
 			debuffed = {};
@@ -380,7 +381,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			initRaid();
 			timer = nil;
 		end
-	elseif (event == "ENCOUNTER_END" and EnRT_HuntsmanAltimoreEnabled and inEncounter) then
+	elseif (event == "ENCOUNTER_END" and EnRT_HuntsmanAltimorEnabled and inEncounter) then
 		inEncounter = false;
 		debuffed = {};
 		assignment = nil;

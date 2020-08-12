@@ -67,7 +67,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "ENCOUNTER_START" and EnRT_LadyInervaDarkveinEnabled) then
 		local eID = ...;
-		if (eID == 0000) then
+		if (eID == 2406) then
 			inEncounter = true;
 			leader = EnRT_GetRaidLeader();
 			debuffed = {};

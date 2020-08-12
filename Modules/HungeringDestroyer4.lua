@@ -307,7 +307,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_START" and EnRT_HungeringDestroyerEnabled) then
 		local eID = ...;
 		local difficulty = select(3, GetInstanceInfo());
-		if (eID == 0000 and difficulty == 16) then
+		if (eID == 2383 and difficulty == 16) then
 			inEncounter = true;
 			raid = {};
 			leader = EnRT_GetRaidLeader();
