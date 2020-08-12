@@ -1,4 +1,4 @@
-local f = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate");
+local f = CreateFrame("Frame", nil, nil, BackdropTemplateMixin and "BackdropTemplate");
 local inEncounter = false;
 local pendingAssignments = false;
 local shrunkPlayers = {};
@@ -42,16 +42,7 @@ f:SetMovable(false);
 f:EnableMouse(false);
 f:SetClampedToScreen(true);
 f:RegisterForDrag("LeftButton");
-f:SetFrameLevel(1);
-f:SetFrameStrata("TOOLTIP");
-f:SetBackdrop({
-	bgFile = "Interface/Tooltips/UI-Tooltip-Background", --Set the background and border textures
-	edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
-	tile = true, tileSize = 16, edgeSize = 16, 
-	insets = { left = 4, right = 4, top = 4, bottom = 4 }
-});
-f:SetBackdropColor(0,0,0,1);
-f:SetBackdropBorderColor(1,0,0,1);
+f:SetFrameLevel(3);
 f:SetScript("OnDragStart", f.StartMoving);
 f:SetScript("OnDragStop", function(self)
 	local point, relativeTo, relativePoint, xOffset, yOffset = self:GetPoint(1);
@@ -63,6 +54,15 @@ f:SetScript("OnDragStop", function(self)
 	EnRT_HTMUIPosition.yOffset = yOffset;
 	self:StopMovingOrSizing();
 end);
+f:SetFrameStrata("TOOLTIP");
+f:SetBackdrop({
+	bgFile = "Interface/Tooltips/UI-Tooltip-Background", --Set the background and border textures
+	edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
+	tile = true, tileSize = 16, edgeSize = 16, 
+	insets = { left = 4, right = 4, top = 4, bottom = 4 }
+});
+f:SetBackdropColor(0,0,0,1);
+f:SetBackdropBorderColor(1,0,0,1);
 f:Hide();
 
 local targetText = f:CreateFontString(nil, "ARTWORK", "GameFontNormal");
