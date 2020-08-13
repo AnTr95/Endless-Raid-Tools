@@ -27,7 +27,7 @@ end);
 InterfaceOptions_AddCategory(EnRT_Options)
 
 EnRT_GeneralModules = CreateFrame("Frame", "EnRT_GeneralModulesFrame")
-EnRT_GeneralModules.name = "|cFFFFFF00General Modules"
+EnRT_GeneralModules.name = "|cFFFFFF00General Modules|r"
 EnRT_GeneralModules.parent = "Endless Raid Tools"
 EnRT_GeneralModules:SetScript("OnShow", function(EnRT_GeneralModules)
 	InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralOptions)
@@ -36,7 +36,7 @@ InterfaceOptions_AddCategory(EnRT_GeneralModules)
 
 
 EnRT_CastleModules = CreateFrame("Frame", "EnRT_CastleModulesFrame")
-EnRT_CastleModules.name = "|cFFFFFF00Castle Nathria Modules"
+EnRT_CastleModules.name = "|cFFFFFF00Castle Nathria Modules|r"
 EnRT_CastleModules.parent = "Endless Raid Tools"
 EnRT_CastleModules:SetScript("OnShow", function(EnRT_CastleModules)
 	InterfaceOptionsFrame_OpenToCategory(EnRT_HuntsmanAltimorOptions);

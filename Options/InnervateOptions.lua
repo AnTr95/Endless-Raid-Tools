@@ -2,7 +2,7 @@ local L = EnRTLocals;
 
 EnRT_InnervateOptions = CreateFrame("Frame", "EnRT_InnervateOptionsFrame", InterfaceOptionsFramePanelContainer)
 EnRT_InnervateOptions.name = "Innervate Module"
-EnRT_InnervateOptions.parent = "|cFFFFFF00General Modules"
+EnRT_InnervateOptions.parent = "|cFFFFFF00General Modules|r"
 EnRT_InnervateOptions:Hide()
 
 local title = EnRT_InnervateOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")

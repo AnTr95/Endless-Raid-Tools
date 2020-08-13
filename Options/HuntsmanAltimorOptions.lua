@@ -2,7 +2,7 @@ local L = EnRTLocals;
 
 EnRT_HuntsmanAltimorOptions = CreateFrame("Frame", "EnRT_HuntsmanAltimorOptionsFrame", InterfaceOptionsFramePanelContainer);
 EnRT_HuntsmanAltimorOptions.name = L.OPTIONS_HUNTSMANALTIMOR_TITLE;
-EnRT_HuntsmanAltimorOptions.parent = "|cFFFFFF00Castle Nathria Modules";
+EnRT_HuntsmanAltimorOptions.parent = "|cFFFFFF00Castle Nathria Modules|r";
 EnRT_HuntsmanAltimorOptions:Hide();
 
 local title = EnRT_HuntsmanAltimorOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");

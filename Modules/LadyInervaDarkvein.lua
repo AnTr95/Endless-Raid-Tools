@@ -53,7 +53,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 					debuffed[EnRT_Contains(debuffed, unitName)] = nil;
 					SetRaidTarget(unitName, 0);
 					if (timer) then
-						timer:Cancel();
+						EnRT_PopupHide();
 						timer = nil;
 					end
 				end

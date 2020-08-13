@@ -322,7 +322,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 					SetRaidTarget(unitName, 0);
 					resetAssignmentsData();
 					if (timer) then
-						timer:Cancel();
+						EnRT_PopupHide();
 						timer = nil;
 					end
 				end
@@ -339,7 +339,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 					--PlaySoundFile("Sound\\Interface\\RaidWarning.wav");
 					PlaySoundFile(567397, "Master");
 					if (timer) then
-						timer:Cancel();
+						EnRT_PopupHide();
 					end
 					assignment = msg;
 					playerNotification(mark, pos, 5);

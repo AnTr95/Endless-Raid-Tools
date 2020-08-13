@@ -286,7 +286,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 							f:SetBackdropColor(0,0,0,1)
 							f:SetBackdropBorderColor(169,169,169,1)
 						end
-
 						local playerText = string.format("|c%s%s", RAID_CLASS_COLORS[select(2, UnitClass(raider))].colorStr, Ambiguate(raider, "short"));
 						if (rcText:GetText() == nil) then
 							rcText:SetText("Players not ready or afk: \n" .. playerText .. '\n');

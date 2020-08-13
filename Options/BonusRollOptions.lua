@@ -2,7 +2,7 @@ local L = EnRTLocals;
 
 EnRT_BonusRollOptions = CreateFrame("Frame", "EnRT_BonusRollOptionsFrame", InterfaceOptionsFramePanelContainer)
 EnRT_BonusRollOptions.name = "Bonus Roll Module"
-EnRT_BonusRollOptions.parent = "|cFFFFFF00General Modules"
+EnRT_BonusRollOptions.parent = "|cFFFFFF00General Modules|r"
 EnRT_BonusRollOptions:Hide()
 
 local title = EnRT_BonusRollOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")

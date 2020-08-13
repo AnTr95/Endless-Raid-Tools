@@ -2,7 +2,7 @@ local L = EnRTLocals;
 
 EnRT_CouncilofBloodOptions = CreateFrame("Frame", "EnRT_CouncilofBloodOptionsFrame", InterfaceOptionsFramePanelContainer);
 EnRT_CouncilofBloodOptions.name = L.OPTIONS_COUNCILOFBLOOD_TITLE;
-EnRT_CouncilofBloodOptions.parent = "|cFFFFFF00Castle Nathria Modules";
+EnRT_CouncilofBloodOptions.parent = "|cFFFFFF00Castle Nathria Modules|r";
 EnRT_CouncilofBloodOptions:Hide();
 
 local title = EnRT_CouncilofBloodOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");

@@ -56,7 +56,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		elseif (prefix == "EnRT_UPDATE" and UnitName("player") ~= Ambiguate(sender, "short") and not recievedOutOfDateMessage) then
 			if (tonumber(msg) ~= nil) then
 				if (tonumber(msg) > tonumber(version)) then
-					DEFAULT_CHAT_FRAME:AddMessage("|cFFFF0000" .. L.WARNING_OUTOFDATEMESSAGE);
+					DEFAULT_CHAT_FRAME:AddMessage("|cFFFF0000" .. L.WARNING_OUTOFDATEMESSAGE .. "|r");
 					recievedOutOfDateMessage = true;
 				end
 			end

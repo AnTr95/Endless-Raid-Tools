@@ -132,25 +132,25 @@ local function updateGroups()
 		for index, player in pairs(raid[grp]) do
 			local playerShort = Ambiguate(player, "short");
 			if (index > 1) then
-				printText = printText .. ", ";
+				printText = printText .. "|cFFFFFFFF,|r ";
 			else
 				printText = printText .. " ";
 			end
 			if (UnitIsConnected(player)) then -- add icons for 1st and 2nd soak and debuff & CHECK DEBUFF DOESNT TIME OUT NEXT 2s
 				if (EnRT_ContainsKey(debuffed, player)) then
 					C_ChatInfo.SendAddonMessage("EnRT_HD", grp, "WHISPER", player);
-					printText = printText .. "|c296d98FF\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t" .. playerShort .. "\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t|cFFFFFFFF";
+					printText = printText .. "|c296d98FF\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t" .. playerShort .. "|r\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t";
 				elseif (not EnRT_UnitDebuff(player, spellIDs["Sap"]) and count < 2)then
 					C_ChatInfo.SendAddonMessage("EnRT_HD", grp, "WHISPER", player);
 					count = count + 1;
-					printText = printText .. "|cFF00FF00" .. playerShort .. "|cFFFFFFFF";
+					printText = printText .. "|cFF00FF00" .. playerShort .. "|r";
 				elseif (EnRT_UnitDebuff(player, spellIDs["Sap"]) and select(7, EnRT_UnitDebuff(player, spellIDs["Sap"]))-GetTime() < 2 and count < 2) then
 					--Assign now?? less than 2s
 				elseif (count == 2) then
 					if (EnRT_UnitDebuff(player, spellIDs["Sap"])) then
-						printText = printText .. "|cFFFF0000(\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t)|cFFFFFFFF";
+						printText = printText .. "|cFFFF0000(\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t)|r";
 					else
-						printText = printText .. "|cFFFF0000" .. playerShort .. "|cFFFFFFFF";
+						printText = printText .. "|cFFFF0000" .. playerShort .. "|r";
 					end
 					C_ChatInfo.SendAddonMessage("EnRT_HD", "soon " .. grp, "WHISPER", player);
 				else
@@ -171,7 +171,7 @@ local function updateGroups()
 										--1 better option palyer out of 2
 									elseif (nextStacks < lowestDebuff2) then
 										--2 better option player this player soaks later
-										printText = printText .. "|cFFFF0000(\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t)|cFFFFFFFF";
+										printText = printText .. "|cFFFF0000(\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t)|r";
 										C_ChatInfo.SendAddonMessage("EnRT_HD", "soon " .. grp, "WHISPER", player);
 										break;
 									end
@@ -181,7 +181,7 @@ local function updateGroups()
 									local nextStacks = select(7, EnRT_UnitDebuff(pl, spellIDs["Sap"]));
 									if (nextStacks < lowestDebuff1) then
 										--better option player this player soaks later
-										printText = printText .. "|cFFFF0000\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t|cFFFFFFFF";
+										printText = printText .. "|cFFFF0000\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "|r\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t";
 										C_ChatInfo.SendAddonMessage("EnRT_HD", "soon " .. grp, "WHISPER", player);
 										break;
 									end
@@ -189,7 +189,7 @@ local function updateGroups()
 							end
 							-- best option player soak now
 							C_ChatInfo.SendAddonMessage("EnRT_HD", grp, "WHISPER", player);
-							printText = printText .. "|cFF00FF00\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t|cFFFFFFFF";
+							printText = printText .. "|cFF00FF00\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "|r\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t";
 							count = count + 1;
 						end
 					end
@@ -198,18 +198,18 @@ local function updateGroups()
 				previous version tested and works
 				if ((EnRT_UnitDebuff(player, spellIDs["Sap"]) and not EnRT_ContainsKey(debuffed, player)) or (count == 2 and not EnRT_ContainsKey(debuffed, player))) then
 					if (EnRT_UnitDebuff(player, spellIDs["Sap"])) then
-						printText = printText .. "|cFFFF0000(\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t)|cFFFFFFFF";
+						printText = printText .. "|cFFFF0000(\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t)|cFFFFFFFF|r";
 					else
 						printText = printText .. "|cFFFF0000(" .. playerShort .. ")|cFFFFFFFF";
 					end
 					C_ChatInfo.SendAddonMessage("EnRT_HD", "soon " .. grp, "WHISPER", player);
 				elseif (EnRT_ContainsKey(debuffed, player)) then
 					C_ChatInfo.SendAddonMessage("EnRT_HD", grp, "WHISPER", player);
-					printText = printText .. "|c296d98FF\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t" .. playerShort .. "\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t|cFFFFFFFF";
+					printText = printText .. "|c296d98FF\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t" .. playerShort .. "|r\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t";
 				else
 					C_ChatInfo.SendAddonMessage("EnRT_HD", grp, "WHISPER", player);
 					count = count + 1;
-					printText = printText .. "|cFF00FF00" .. playerShort .. "|cFFFFFFFF";
+					printText = printText .. "|cFF00FF00" .. playerShort .. "|r";
 				end]]
 			end
 		end
@@ -280,10 +280,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (msg:match("soon")) then
 				local soakTime = time() + 12;
 				local text, mark = strsplit(" ", msg);
-				EnRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. ", SOAK IN: |cFFFFFFFF" .. "12" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 1);
+				EnRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. ", SOAK IN: |cFFFFFFFF12|r" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 1);
 				C_Timer.NewTicker(1, function()
 					local timeLeft = math.floor(soakTime - time());
-					EnRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. ", SOAK IN: |cFFFFFFFF" .. timeLeft .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 1);
+					EnRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. ", SOAK IN: |cFFFFFFFF" .. timeLeft .. "|r" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 1);
 					if (timeLeft <= 3) then
 						PlaySoundFile("Interface\\AddOns\\EndlessRaidTools\\Sound\\CalendarNotification\\calnot"..timeLeft..".ogg", "Master");
 					end

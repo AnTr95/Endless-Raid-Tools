@@ -2,7 +2,7 @@ local L = EnRTLocals;
 
 EnRT_MautOptions = CreateFrame("Frame", "EnRT_MautOptionsFrame", InterfaceOptionsFramePanelContainer);
 EnRT_MautOptions.name = L.OPTIONS_MAUT_TITLE;
-EnRT_MautOptions.parent = "|cFFFFFF00Ny'alotha, the Waking City Modules";
+EnRT_MautOptions.parent = "|cFFFFFF00Ny'alotha, the Waking City Modules|r";
 EnRT_MautOptions:Hide();
 
 local title = EnRT_MautOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");

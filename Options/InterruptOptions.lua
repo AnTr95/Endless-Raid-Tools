@@ -35,7 +35,7 @@ local L = EnRTLocals;
 
 EnRT_InterruptOptions = CreateFrame("Frame", "EnRT_InterruptOptionsFrame", InterfaceOptionsFramePanelContainer);
 EnRT_InterruptOptions.name = "Interrupt Module";
-EnRT_InterruptOptions.parent = "|cFFFFFF00General Modules";
+EnRT_InterruptOptions.parent = "|cFFFFFF00General Modules|r";
 EnRT_InterruptOptions:Hide();
 
 local title = EnRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");

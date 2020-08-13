@@ -2,7 +2,7 @@ local L = EnRTLocals;
 
 EnRT_CalendarNotificationOptions = CreateFrame("Frame", "EnRT_CalendarNotificationOptionsFrame", InterfaceOptionsFramePanelContainer)
 EnRT_CalendarNotificationOptions.name = L.OPTIONS_CALENDARNOTIFICATION_TITLE
-EnRT_CalendarNotificationOptions.parent = "|cFFFFFF00General Modules"
+EnRT_CalendarNotificationOptions.parent = "|cFFFFFF00General Modules|r"
 EnRT_CalendarNotificationOptions:Hide()
 
 local title = EnRT_CalendarNotificationOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")

@@ -2,7 +2,7 @@ local L = EnRTLocals;
 
 EnRT_ReadyCheckOptions = CreateFrame("Frame", "EnRT_ReadyCheckOptionsFrame", InterfaceOptionsFramePanelContainer)
 EnRT_ReadyCheckOptions.name = "Ready Check Module"
-EnRT_ReadyCheckOptions.parent = "|cFFFFFF00General Modules"
+EnRT_ReadyCheckOptions.parent = "|cFFFFFF00General Modules|r"
 EnRT_ReadyCheckOptions:Hide()
 
 local title = EnRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")

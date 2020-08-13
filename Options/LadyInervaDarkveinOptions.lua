@@ -2,7 +2,7 @@ local L = EnRTLocals;
 
 EnRT_LadyInervaDarkveinOptions = CreateFrame("Frame", "EnRT_LadyInervaDarkveinOptionsFrame", InterfaceOptionsFramePanelContainer);
 EnRT_LadyInervaDarkveinOptions.name = L.OPTIONS_LADYINERVADARKVEIN_TITLE;
-EnRT_LadyInervaDarkveinOptions.parent = "|cFFFFFF00Castle Nathria Modules";
+EnRT_LadyInervaDarkveinOptions.parent = "|cFFFFFF00Castle Nathria Modules|r";
 EnRT_LadyInervaDarkveinOptions:Hide();
 
 local title = EnRT_LadyInervaDarkveinOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");

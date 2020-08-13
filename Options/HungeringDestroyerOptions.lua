@@ -2,7 +2,7 @@ local L = EnRTLocals;
 
 EnRT_HungeringDestroyerOptions = CreateFrame("Frame", "EnRT_HungeringDestroyerOptionsFrame", InterfaceOptionsFramePanelContainer);
 EnRT_HungeringDestroyerOptions.name = L.OPTIONS_HUNGERINGDESTROYER_TITLE;
-EnRT_HungeringDestroyerOptions.parent = "|cFFFFFF00Castle Nathria Modules";
+EnRT_HungeringDestroyerOptions.parent = "|cFFFFFF00Castle Nathria Modules|r";
 EnRT_HungeringDestroyerOptions:Hide();
 
 local title = EnRT_HungeringDestroyerOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");

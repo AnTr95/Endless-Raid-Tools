@@ -2,7 +2,7 @@ local L = EnRTLocals;
 
 EnRT_GeneralOptions = CreateFrame("Frame", "EnRT_GeneralOptionsFrame", InterfaceOptionsFramePanelContainer)
 EnRT_GeneralOptions.name = L.OPTIONS_GENERAL_TITLE
-EnRT_GeneralOptions.parent = "|cFFFFFF00General Modules"
+EnRT_GeneralOptions.parent = "|cFFFFFF00General Modules|r"
 EnRT_GeneralOptions:Hide()
 
 local title = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")

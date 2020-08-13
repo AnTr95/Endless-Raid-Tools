@@ -158,7 +158,7 @@ function EnRT_BR_GUIInit()
 		data = EnRT_BonusRollBosses[bossName];
 		local bossText = EnRT_BR_Settings:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
 		bossText:SetPoint("TOPLEFT", 100, -35-(20*i));
-		bossText:SetText("|cFFFFFFFF"..bossName);
+		bossText:SetText("|cFFFFFFFF"..bossName.."|r");
 		EnRT_BR_GUI[bossName] = bossText;
 		for j = 1, 3 do
 			local bossDifButton = CreateFrame("CheckButton", "EnRT_BR_"..bossName..j, EnRT_BR_Settings, "UICheckButtonTemplate");
