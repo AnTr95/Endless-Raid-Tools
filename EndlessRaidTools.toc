@@ -40,7 +40,7 @@ Modules\ReadyCheck.lua
 Options\ReadyCheckOptions.lua
 Modules\BonusRoll.lua
 Options\BonusRollOptions.lua
-Modules\HuntsmanAltimor.lua
+Modules\huntsmanlogic.lua
 Options\HuntsmanAltimorOptions.lua
 Modules\LadyInervaDarkvein.lua
 Options\LadyInervaDarkveinOptions.lua
