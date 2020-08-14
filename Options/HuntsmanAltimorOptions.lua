@@ -78,9 +78,46 @@ local enabledText = EnRT_HuntsmanAltimorOptions:CreateFontString(nil, "ARTWORK",
 enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
 
+local playersPerLineText = EnRT_HuntsmanAltimorOptions:CreateFontString(nil, "ARTWORK", "GameFontWhite");
+playersPerLineText:SetText(L.OPTIONS_HUNTSMANALTIMOR_PLAYERSPERLINE);
+playersPerLineText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 0, -50);
+playersPerLineText:SetSize(150,100);
+playersPerLineText:SetWordWrap(true);
+playersPerLineText:SetJustifyH("LEFT");
+playersPerLineText:SetJustifyV("TOP");
+
+local playersPerLineStateMenu = CreateFrame("Button", nil, EnRT_HuntsmanAltimorOptions, "UIDropDownMenuTemplate");
+playersPerLineStateMenu:SetPoint("TOPLEFT", playersPerLineText, "TOPLEFT", -20, -70);
+
+local playersPerLineStates = {"2", "3", "4", "5"};
+
+local function playersPerLineState_OnClick(self)
+	UIDropDownMenu_SetSelectedID(playersPerLineStateMenu, self:GetID());
+	local state = self:GetText();
+	EnRT_HuntsmanAltimorPlayersPerLine = tonumber(state);
+end
+
+local function Initialize_PlayersPerLineState(self, level)
+	local info = UIDropDownMenu_CreateInfo();
+	for k,v in pairs(playersPerLineStates) do
+	  info = UIDropDownMenu_CreateInfo();
+	  info.text = v;
+	  info.value = v;
+	  info.func = playersPerLineState_OnClick;
+	  UIDropDownMenu_AddButton(info, level);
+	end
+end
+
+UIDropDownMenu_SetWidth(playersPerLineStateMenu, 90);
+UIDropDownMenu_SetButtonWidth(playersPerLineStateMenu, 90);
+UIDropDownMenu_JustifyText(playersPerLineStateMenu, "CENTER");
+UIDropDownMenu_Initialize(playersPerLineStateMenu, Initialize_PlayersPerLineState);
+
 
 EnRT_HuntsmanAltimorOptions:SetScript("OnShow", function(self)
 	enabledButton:SetChecked(EnRT_HuntsmanAltimorEnabled);
+	Initialize_PlayersPerLineState();
+	UIDropDownMenu_SetSelectedName(playersPerLineStateMenu, tostring(EnRT_HuntsmanAltimorPlayersPerLine));
 end);
 
 InterfaceOptions_AddCategory(EnRT_HuntsmanAltimorOptions);

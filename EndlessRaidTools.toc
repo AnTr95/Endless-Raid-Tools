@@ -22,7 +22,7 @@
 ## SavedVariablesPerCharacter: EnRT_MinimapMode
 ## SavedVariablesPerCharacter: EnRT_MinimapDegree
 ## SavedVariablesPerCharacter: EnRT_InfoBoxPosition
-## SavedVariablesPerCharacter: EnRT_HuntsmanAlitmorPlayersPerLine
+## SavedVariablesPerCharacter: EnRT_HuntsmanAltimorPlayersPerLine
 Localization\Localization.enUS.lua
 Core.lua
 Options\Options.lua
