@@ -21,28 +21,37 @@ local version = EnRT_CalendarNotificationOptions:CreateFontString(nil, "ARTWORK"
 version:SetPoint("TOPLEFT", author, "BOTTOMLEFT", 0, -10)
 version:SetText(L.OPTIONS_VERSION)
 
+local infoBorder = EnRT_CalendarNotificationOptions:CreateTexture(nil, "BACKGROUND");
+infoBorder:SetTexture("Interface\\GMChatFrame\\UI-GMStatusFrame-Pulse.PNG");
+infoBorder:SetWidth(470);
+infoBorder:SetHeight(120);
+infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
+infoBorder:SetPoint("TOP", 0, -85);
+
 local info = EnRT_CalendarNotificationOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-info:SetPoint("TOPLEFT", 220, -10)
-info:SetSize(350, 200)
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25)
+info:SetSize(450, 200)
 info:SetText(L.OPTIONS_CALENDARNOTIFICATION_INFO)
 info:SetWordWrap(true)
+info:SetJustifyV("TOP");
 
-local enabledButton = CreateFrame("CheckButton", "EnRT_CalendarNotificationEnabledCheckButton", EnRT_CalendarNotificationOptions, "UICheckButtonTemplate")
-enabledButton:SetSize(26, 26)
-enabledButton:SetPoint("TOPLEFT", 30, -90)
+local enabledButton = CreateFrame("CheckButton", "EnRT_CalendarNotificationEnabledCheckButton", EnRT_CalendarNotificationOptions, "UICheckButtonTemplate");
+enabledButton:SetSize(26, 26);
+enabledButton:SetPoint("TOPLEFT", 30, -215);
 enabledButton:HookScript("OnClick", function(self)
-	if self:GetChecked() then
-		EnRT_CalendarNotificationEnabled = true
-		PlaySound(856)
+	if (self:GetChecked()) then
+		EnRT_CalendarNotificationEnabled = true;
+		PlaySound(856);
 	else
-		EnRT_CalendarNotificationEnabled = false
-		PlaySound(857)
+		EnRT_CalendarNotificationEnabled = false;
+		PlaySound(857);
 	end
-end)
+end);
 
-local enabledText = EnRT_CalendarNotificationOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7)
-enabledText:SetText(L.OPTIONS_ENABLED)
+local enabledText = EnRT_CalendarNotificationOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
+enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
+enabledText:SetText(L.OPTIONS_ENABLED);
+
 
 
 EnRT_CalendarNotificationOptions:SetScript("OnShow", function(self)

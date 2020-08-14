@@ -90,8 +90,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_END" and EnRT_CouncilofBloodEnabled and inEncounter) then
 		inEncounter = false;
 		isGlowing = false;
-	else
-		--print(event);
+	elseif (event ~= "ENCOUNTER_END" and event ~= "ENCOUNTER_START" and event ~= "UNIT_AURA" and event ~= "UNIT_SPELLCAST_SUCCEEDED" and event ~= "PLAYER_LOGIN" and event ~= "CHAT_MSG_ADDON") then
+		print(event);
 		local msg = ...;
 		if (msg:match("Sashy Left")) then
 			glowButton(1);

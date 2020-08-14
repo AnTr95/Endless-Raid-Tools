@@ -33,11 +33,11 @@ EnRT_SetFlagIcon(mythicTexture, 12);
 mythicTexture:SetPoint("TOPLEFT", difficultyText, "TOPLEFT", 60, 10);
 
 local bossTexture = EnRT_HuntsmanAltimorOptions:CreateTexture(nil,"BACKGROUND");
-bossTexture:SetTexture("Interface\\ENCOUNTERJOURNAL\\UI-EJ-BOSS-Xanesh.PNG");
-bossTexture:SetWidth(128);
+bossTexture:SetTexture("Interface\\ENCOUNTERJOURNAL\\UI-EJ-BOSS-HuntsmanAltimor.PNG");
+bossTexture:SetWidth(120);
 bossTexture:SetHeight(64);
 bossTexture:SetTexCoord(0,1,0,0.8);
-bossTexture:SetPoint("TOPLEFT", -5, -47);
+bossTexture:SetPoint("TOPLEFT", 2, -47);
 
 local bossBorder = EnRT_HuntsmanAltimorOptions:CreateTexture(nil,"BORDER");
 bossBorder:SetTexture("Interface\\MINIMAP\\UI-MINIMAP-BORDER.PNG");
@@ -48,14 +48,14 @@ bossBorder:SetPoint("TOPLEFT", -30, -35);
 
 local infoBorder = EnRT_HuntsmanAltimorOptions:CreateTexture(nil, "BACKGROUND");
 infoBorder:SetTexture("Interface\\GMChatFrame\\UI-GMStatusFrame-Pulse.PNG");
-infoBorder:SetWidth(420);
-infoBorder:SetHeight(320);
+infoBorder:SetWidth(450);
+infoBorder:SetHeight(250);
 infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
-infoBorder:SetPoint("TOPLEFT", 190, -85);
+infoBorder:SetPoint("TOP", 20, -85);
 
 local info = EnRT_HuntsmanAltimorOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
-info:SetPoint("TOPLEFT", 200, -110);
-info:SetSize(400, 300);
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25);
+info:SetSize(430, 300);
 info:SetText(L.OPTIONS_HUNTSMANALTIMOR_INFO);
 info:SetWordWrap(true);
 info:SetJustifyH("LEFT");
@@ -63,7 +63,7 @@ info:SetJustifyV("TOP");
 
 local enabledButton = CreateFrame("CheckButton", "EnRT_HuntsmanAltimorEnabledCheckButton", EnRT_HuntsmanAltimorOptions, "UICheckButtonTemplate");
 enabledButton:SetSize(26, 26);
-enabledButton:SetPoint("TOPLEFT", 30, -130);
+enabledButton:SetPoint("TOPLEFT", 30, -345);
 enabledButton:HookScript("OnClick", function(self)
 	if (self:GetChecked()) then
 		EnRT_HuntsmanAltimorEnabled = true;
@@ -80,14 +80,14 @@ enabledText:SetText(L.OPTIONS_ENABLED);
 
 local playersPerLineText = EnRT_HuntsmanAltimorOptions:CreateFontString(nil, "ARTWORK", "GameFontWhite");
 playersPerLineText:SetText(L.OPTIONS_HUNTSMANALTIMOR_PLAYERSPERLINE);
-playersPerLineText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 0, -50);
-playersPerLineText:SetSize(150,100);
+playersPerLineText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 0, -35);
+playersPerLineText:SetSize(400,100);
 playersPerLineText:SetWordWrap(true);
 playersPerLineText:SetJustifyH("LEFT");
 playersPerLineText:SetJustifyV("TOP");
 
 local playersPerLineStateMenu = CreateFrame("Button", nil, EnRT_HuntsmanAltimorOptions, "UIDropDownMenuTemplate");
-playersPerLineStateMenu:SetPoint("TOPLEFT", playersPerLineText, "TOPLEFT", -20, -70);
+playersPerLineStateMenu:SetPoint("TOPLEFT", playersPerLineText, "TOPLEFT", -20, -15);
 
 local playersPerLineStates = {"2", "3", "4", "5"};
 
@@ -108,8 +108,8 @@ local function Initialize_PlayersPerLineState(self, level)
 	end
 end
 
-UIDropDownMenu_SetWidth(playersPerLineStateMenu, 90);
-UIDropDownMenu_SetButtonWidth(playersPerLineStateMenu, 90);
+UIDropDownMenu_SetWidth(playersPerLineStateMenu, 110);
+UIDropDownMenu_SetButtonWidth(playersPerLineStateMenu, 110);
 UIDropDownMenu_JustifyText(playersPerLineStateMenu, "CENTER");
 UIDropDownMenu_Initialize(playersPerLineStateMenu, Initialize_PlayersPerLineState);
 

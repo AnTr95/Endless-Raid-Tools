@@ -54,31 +54,51 @@ local version = EnRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFont
 version:SetPoint("TOPLEFT", author, "BOTTOMLEFT", 0, -10)
 version:SetText(L.OPTIONS_VERSION)
 
+local infoBorder = EnRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
+infoBorder:SetTexture("Interface\\GMChatFrame\\UI-GMStatusFrame-Pulse.PNG");
+infoBorder:SetWidth(470);
+infoBorder:SetHeight(120);
+infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
+infoBorder:SetPoint("TOP", 0, -85);
+
 local info = EnRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-info:SetPoint("TOPLEFT", 220, -10)
-info:SetSize(350, 200)
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25)
+info:SetSize(450, 200)
 info:SetText(L.OPTIONS_INTERRUPT_INFO)
 info:SetWordWrap(true)
+info:SetJustifyV("TOP");
 
-local enabledButton = CreateFrame("CheckButton", "EnRT_InterruptEnabledCheckButton", EnRT_InterruptOptions, "UICheckButtonTemplate")
-enabledButton:SetSize(26, 26)
-enabledButton:SetPoint("TOPLEFT", 30, -90)
+local enabledButton = CreateFrame("CheckButton", "EnRT_InterruptEnabledCheckButton", EnRT_InterruptOptions, "UICheckButtonTemplate");
+enabledButton:SetSize(26, 26);
+enabledButton:SetPoint("TOPLEFT", 30, -215);
 enabledButton:HookScript("OnClick", function(self)
-	if self:GetChecked() then
-		EnRT_InterruptEnabled = true
-		PlaySound(856)
+	if (self:GetChecked()) then
+		EnRT_InterruptEnabled = true;
+		PlaySound(856);
 	else
-		EnRT_InterruptEnabled = false
-		PlaySound(857)
+		EnRT_InterruptEnabled = false;
+		PlaySound(857);
 	end
-end)
+end);
 
-local enabledText = EnRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7)
-enabledText:SetText(L.OPTIONS_ENABLED)
+local enabledText = EnRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
+enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
+enabledText:SetText(L.OPTIONS_ENABLED);
+--[[
+local infoTexture = EnRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
+infoTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\Interrupt.tga");
+infoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 130, -50);
+infoTexture:SetSize(320, 100);
+infoTexture:SetTexCoord(0,1,0,0.2);
+
+local previewText = EnRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+previewText:SetPoint("TOP", infoTexture, "TOP", 0, 20);
+previewText:SetText(L.OPTIONS_INTERRUPT_PREVIEW);
+previewText:SetJustifyH("CENTER");
+--]]
 
 local orderText = EnRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-orderText:SetPoint("TOPLEFT", 30, -180)
+orderText:SetPoint("TOPLEFT", 30, -240)
 orderText:SetText(L.OPTIONS_INTERRUPT_ORDER)
 
 local function createRow()
@@ -179,7 +199,7 @@ showButtonAdd:SetText("+");
 showButtonAdd:SetSize(30, 25);
 showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -2);
 showButtonAdd:HookScript("OnClick", function(self)
-	if (#EnRT_NextInterrupt < 9) then
+	if (#EnRT_NextInterrupt < 8) then
 		EnRT_NextInterrupt[#EnRT_NextInterrupt+1] = {bossID=1};
 		createRow();
 		showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -2-(#EnRT_NextInterrupt*40));

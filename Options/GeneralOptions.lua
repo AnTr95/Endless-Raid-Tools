@@ -21,18 +21,26 @@ local version = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNo
 version:SetPoint("TOPLEFT", author, "BOTTOMLEFT", 0, -10)
 version:SetText(L.OPTIONS_VERSION)
 
+local infoBorder = EnRT_GeneralOptions:CreateTexture(nil, "BACKGROUND");
+infoBorder:SetTexture("Interface\\GMChatFrame\\UI-GMStatusFrame-Pulse.PNG");
+infoBorder:SetWidth(470);
+infoBorder:SetHeight(120);
+infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
+infoBorder:SetPoint("TOP", 0, -85);
+
 local info = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-info:SetPoint("TOPLEFT", 130, -10)
-info:SetSize(350, 200)
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25)
+info:SetSize(450, 200)
 info:SetText(L.OPTIONS_GENERAL_INFO)
 info:SetWordWrap(true)
+info:SetJustifyV("TOP");
 
 local fontOptionsText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-fontOptionsText:SetPoint("TOPLEFT", 30, -155)
+fontOptionsText:SetPoint("TOPLEFT", 30, -230)
 fontOptionsText:SetText(L.OPTIONS_POPUPSETTINGS_TEXT);
 
 local fontText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-fontText:SetPoint("TOPLEFT", 30, -180)
+fontText:SetPoint("TOPLEFT", fontOptionsText, "TOPLEFT", 0, -25)
 fontText:SetText(L.OPTIONS_FONTSIZE_TEXT)
 
 local fontSizeText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
@@ -60,7 +68,7 @@ end)
 
 
 local infoBoxText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
-infoBoxText:SetPoint("TOPLEFT", 30, -250);
+infoBoxText:SetPoint("TOPLEFT", fontText, "TOPLEFT", 0, -50);
 infoBoxText:SetText(L.OPTIONS_INFOBOXSETTINGS_TEXT);
 
 local infoBoxToggleButton = CreateFrame("Button", "EnRT_InfoBoxToggleButton", EnRT_GeneralOptions, "UIPanelButtonTemplate");
@@ -72,15 +80,15 @@ infoBoxToggleButton:HookScript("OnClick", function(self)
 end);
 
 local generalText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
-generalText:SetPoint("TOPLEFT", 30, -345);
+generalText:SetPoint("TOPLEFT", infoBoxText, "TOPLEFT", 0, -70);
 generalText:SetText(L.OPTIONS_GENERALSETTINGS_TEXT);
 
 local minimapModeText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontWhite");
 minimapModeText:SetText(L.OPTIONS_MINIMAP_MODE_TEXT);
-minimapModeText:SetPoint("TOPLEFT", 30, -370);
+minimapModeText:SetPoint("TOPLEFT", generalText, "TOPLEFT", 0, -25);
 
 local minimapStateMenu = CreateFrame("Button", nil, EnRT_GeneralOptions, "UIDropDownMenuTemplate");
-minimapStateMenu:SetPoint("TOPLEFT", 175, -360);
+minimapStateMenu:SetPoint("TOPLEFT", minimapModeText, "TOPLEFT", 145, 8);
 
 local minimapStates = {"Always", "On Hover", "Never"};
 
@@ -113,11 +121,11 @@ UIDropDownMenu_Initialize(minimapStateMenu, Initialize_MinimapState)
 
 local vcText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontWhite");
 vcText:SetText(L.OPTIONS_VERSIONCHECK_TEXT);
-vcText:SetPoint("TOPLEFT", 30, -410);
+vcText:SetPoint("TOPLEFT", generalText, "TOPLEFT", 0, -70);
 
 local vcButton = CreateFrame("Button", "EnRT_VCButton", EnRT_GeneralOptions, "UIPanelButtonTemplate");
 vcButton:SetSize(150, 35);
-vcButton:SetPoint("TOPLEFT", vcText, "TOPLEFT", 140, 15);
+vcButton:SetPoint("TOPLEFT", vcText, "TOPLEFT", 190, 15);
 vcButton:SetText(L.OPTIONS_VERSIONCHECK_BUTTON_TEXT);
 vcButton:HookScript("OnClick", function(self)
 	C_ChatInfo.SendAddonMessage("EnRT_VC", "vc", "RAID");

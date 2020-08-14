@@ -44,7 +44,7 @@ EnRT_BR_Settings:Hide();
 
 local function initBLPText()
 	local BLPText = BonusRollFrame.PromptFrame.InfoFrame:CreateFontString("EnRT_BLPCountString", "ARTWORK", "GameFontNormal");
-	BLPText:SetText("BLP: " .. EnRT_BonusRollBLPCount .. "/6");
+	BLPText:SetText("|cFFFFFF00BLP: " .. EnRT_BonusRollBLPCount .. "/6|r");
 	BLPText:SetPoint("TOPLEFT", 65, -23);
 	BLPText:SetTextColor(1, 1, 1);
 end
@@ -58,7 +58,7 @@ f:RegisterEvent("CHAT_MSG_LOOT");
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "ZONE_CHANGED_NEW_AREA" and EnRT_BonusRollEnabled) then
 		if (GetZoneText() == EnRT_BonusRollCurrentRaid) then
-			bonusRolls = select(2,GetCurrencyInfo(currentCurrencyID));
+			bonusRolls = C_CurrencyInfo.GetCurrencyInfo(currentCurrencyID).quantity;
 			if (bonusRolls > 0) then
 				EnRT_BR_Settings:Show();
 			end
@@ -68,7 +68,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (EnRT_Contains2DValue(EnRT_BonusRollBosses, 1, eID) and outcome == 1) then
 			local difficulty = select(3,GetInstanceInfo());
 			if (difficultyLex[difficulty] and EnRT_BonusRollBosses[eName][difficultyLex[difficulty]] == 1) then
-				EnRT_PopupShow("\124TInterface\\Icons\\inv_misc_azsharacoin:16\124t \124cFFFFFF00 BONUS LOOT! \124TInterface\\Icons\\inv_misc_azsharacoin:16\124t", 10);
+				EnRT_PopupShow("\124TInterface\\Icons\\timelesscoin_yellow:16\124t \124cFFFFFF00 BONUS LOOT!\124r \124TInterface\\Icons\\timelesscoin_yellow:16\124t", 10);
 				EnRT_BonusRollBosses[eName][difficultyLex[difficulty]] = 0;
 				--BonusRollFrame.PromptFrame.InfoFrame.Cost
 				--hook tooltip
@@ -99,7 +99,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "PLAYER_LOGIN") then
 		if (EnRT_BonusRollBosses == nil) then EnRT_BR_ArrayInit() end;
 		if (EnRT_BonusRollEnabled == nil) then EnRT_BonusRollEnabled = true end;
-		if (EnRT_BonusRollCurrentRaid == nil) then EnRT_BonusRollCurrentRaid = "Ny'alotha, the Waking City" end;
+		if (EnRT_BonusRollCurrentRaid == nil) then EnRT_BonusRollCurrentRaid = "Castle Nathria" end;
 		if (EnRT_BonusRollBLPCount == nil) then EnRT_BonusRollBLPCount = 0 end;
 		EnRT_BR_CheckLatestRaid();
 		EnRT_BR_GUIInit();
@@ -240,7 +240,7 @@ function EnRT_BR_Unlock()
 	isLockMode = false;
 end
 function EnRT_BR_UpdateCoinText()
-	bonusRolls = select(2,GetCurrencyInfo(currentCurrencyID));
+	bonusRolls = C_CurrencyInfo.GetCurrencyInfo(currentCurrencyID).quantity;
 	EnRT_BR_GUI["coinText"]:SetText("Remaining Coins: "..bonusRolls-spent);
 end
 function EnRT_BR_CheckLatestRaid()

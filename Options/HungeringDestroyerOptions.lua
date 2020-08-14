@@ -33,11 +33,11 @@ EnRT_SetFlagIcon(mythicTexture, 12);
 mythicTexture:SetPoint("TOPLEFT", difficultyText, "TOPLEFT", 60, 10);
 
 local bossTexture = EnRT_HungeringDestroyerOptions:CreateTexture(nil,"BACKGROUND");
-bossTexture:SetTexture("Interface\\ENCOUNTERJOURNAL\\UI-EJ-BOSS-Xanesh.PNG");
-bossTexture:SetWidth(128);
-bossTexture:SetHeight(64);
-bossTexture:SetTexCoord(0,1,0,0.8);
-bossTexture:SetPoint("TOPLEFT", -5, -47);
+bossTexture:SetTexture("Interface\\ENCOUNTERJOURNAL\\UI-EJ-BOSS-HungeringDestroyer.PNG");
+bossTexture:SetWidth(72);
+bossTexture:SetHeight(68);
+bossTexture:SetTexCoord(0.1,1,0,0.8);
+bossTexture:SetPoint("TOPLEFT", 32, -45);
 
 local bossBorder = EnRT_HungeringDestroyerOptions:CreateTexture(nil,"BORDER");
 bossBorder:SetTexture("Interface\\MINIMAP\\UI-MINIMAP-BORDER.PNG");
@@ -48,14 +48,14 @@ bossBorder:SetPoint("TOPLEFT", -30, -35);
 
 local infoBorder = EnRT_HungeringDestroyerOptions:CreateTexture(nil, "BACKGROUND");
 infoBorder:SetTexture("Interface\\GMChatFrame\\UI-GMStatusFrame-Pulse.PNG");
-infoBorder:SetWidth(420);
-infoBorder:SetHeight(320);
+infoBorder:SetWidth(450);
+infoBorder:SetHeight(250);
 infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
-infoBorder:SetPoint("TOPLEFT", 190, -85);
+infoBorder:SetPoint("TOP", 20, -85);
 
 local info = EnRT_HungeringDestroyerOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
-info:SetPoint("TOPLEFT", 200, -110);
-info:SetSize(400, 300);
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25);
+info:SetSize(450, 300);
 info:SetText(L.OPTIONS_HUNGERINGDESTROYER_INFO);
 info:SetWordWrap(true);
 info:SetJustifyH("LEFT");
@@ -63,7 +63,7 @@ info:SetJustifyV("TOP");
 
 local enabledButton = CreateFrame("CheckButton", "EnRT_HungeringDestroyerEnabledCheckButton", EnRT_HungeringDestroyerOptions, "UICheckButtonTemplate");
 enabledButton:SetSize(26, 26);
-enabledButton:SetPoint("TOPLEFT", 30, -130);
+enabledButton:SetPoint("TOPLEFT", 30, -345);
 enabledButton:HookScript("OnClick", function(self)
 	if (self:GetChecked()) then
 		EnRT_HungeringDestroyerEnabled = true;

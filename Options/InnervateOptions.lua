@@ -21,29 +21,47 @@ local version = EnRT_InnervateOptions:CreateFontString(nil, "ARTWORK", "GameFont
 version:SetPoint("TOPLEFT", author, "BOTTOMLEFT", 0, -10)
 version:SetText(L.OPTIONS_VERSION)
 
+local infoBorder = EnRT_InnervateOptions:CreateTexture(nil, "BACKGROUND");
+infoBorder:SetTexture("Interface\\GMChatFrame\\UI-GMStatusFrame-Pulse.PNG");
+infoBorder:SetWidth(470);
+infoBorder:SetHeight(120);
+infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
+infoBorder:SetPoint("TOP", 0, -85);
+
 local info = EnRT_InnervateOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-info:SetPoint("TOPLEFT", 220, -10)
-info:SetSize(350, 200)
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25)
+info:SetSize(450, 200)
 info:SetText(L.OPTIONS_INNERVATE_INFO)
 info:SetWordWrap(true)
+info:SetJustifyV("TOP");
 
-local enabledButton = CreateFrame("CheckButton", "EnRT_InnervateEnabledCheckButton", EnRT_InnervateOptions, "UICheckButtonTemplate")
-enabledButton:SetSize(26, 26)
-enabledButton:SetPoint("TOPLEFT", 30, -90)
+local enabledButton = CreateFrame("CheckButton", "EnRT_InnervateEnabledCheckButton", EnRT_InnervateOptions, "UICheckButtonTemplate");
+enabledButton:SetSize(26, 26);
+enabledButton:SetPoint("TOPLEFT", 30, -215);
 enabledButton:HookScript("OnClick", function(self)
-	if self:GetChecked() then
-		EnRT_InnervateEnabled = true
-		PlaySound(856)
+	if (self:GetChecked()) then
+		EnRT_InnervateEnabled = true;
+		PlaySound(856);
 	else
-		EnRT_InnervateEnabled = false
-		PlaySound(857)
+		EnRT_InnervateEnabled = false;
+		PlaySound(857);
 	end
-end)
+end);
 
-local enabledText = EnRT_InnervateOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7)
-enabledText:SetText(L.OPTIONS_ENABLED)
+local enabledText = EnRT_InnervateOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
+enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
+enabledText:SetText(L.OPTIONS_ENABLED);
 
+local infoTexture = EnRT_InnervateOptions:CreateTexture(nil, "BACKGROUND");
+infoTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\Innervate.tga");
+infoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 130, -50);
+infoTexture:SetSize(320, 100);
+infoTexture:SetTexCoord(0,1,0,0.2);
+
+local previewText = EnRT_InnervateOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+previewText:SetPoint("TOP", infoTexture, "TOP", 0, 20);
+previewText:SetText(L.OPTIONS_INNERVATE_PREVIEW);
+previewText:SetJustifyH("CENTER");
 
 EnRT_InnervateOptions:SetScript("OnShow", function(self)
 	enabledButton:SetChecked(EnRT_InnervateEnabled)

@@ -7,10 +7,6 @@ EnRT_Options:Hide()
 local title = EnRT_Options:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 title:SetPoint("TOP", 0, -16)
 title:SetText(L.OPTIONS_TITLE)
-	
-local tabinfo = EnRT_Options:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-tabinfo:SetPoint("TOPLEFT", 16, -16)
-tabinfo:SetText(L.OPTIONS_READYCHECK_TITLE)
 
 local author = EnRT_Options:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 author:SetPoint("TOPLEFT", 450, -20)
@@ -21,7 +17,7 @@ version:SetPoint("TOPLEFT", author, "BOTTOMLEFT", 0, -10)
 version:SetText(L.OPTIONS_VERSION)
 
 EnRT_Options:SetScript("OnShow", function(EnRT_OptionsFrame)
-	InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralOptions);
+	InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralModules);
 end);
 
 InterfaceOptions_AddCategory(EnRT_Options)
@@ -31,7 +27,7 @@ EnRT_GeneralModules.name = "|cFFFFFF00General Modules|r"
 EnRT_GeneralModules.parent = "Endless Raid Tools"
 EnRT_GeneralModules:SetScript("OnShow", function(EnRT_GeneralModules)
 	InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralOptions)
-end)
+end);
 InterfaceOptions_AddCategory(EnRT_GeneralModules)
 
 
@@ -40,5 +36,5 @@ EnRT_CastleModules.name = "|cFFFFFF00Castle Nathria Modules|r"
 EnRT_CastleModules.parent = "Endless Raid Tools"
 EnRT_CastleModules:SetScript("OnShow", function(EnRT_CastleModules)
 	InterfaceOptionsFrame_OpenToCategory(EnRT_HuntsmanAltimorOptions);
-end)
+end);
 InterfaceOptions_AddCategory(EnRT_CastleModules)

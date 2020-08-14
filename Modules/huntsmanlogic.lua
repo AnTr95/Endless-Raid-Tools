@@ -133,7 +133,6 @@ local function playerNotification(mark, pos, duration)
 		chatText = "DO NOT SOAK";
 		EnRT_PopupShow("|cFFFF0000DO NOT SOAK!|r", duration);
 	else
-		--chatText = "{rt" .. mark .. "} " .. pos .. " {rt" .. mark .. "}";
 		chatText = "{rt" .. mark .. "} " .. pos .. " {rt" .. mark .. "}";
 		EnRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. ", POSITION: " .. pos .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
 	end

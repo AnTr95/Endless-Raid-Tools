@@ -40,7 +40,7 @@ EnRT_SetFlagIcon(mythicTexture, 12);
 mythicTexture:SetPoint("TOPLEFT", heroicTexture, "TOPLEFT", 20, 0);
 
 local bossTexture = EnRT_LadyInervaDarkveinOptions:CreateTexture(nil,"BACKGROUND");
-bossTexture:SetTexture("Interface\\ENCOUNTERJOURNAL\\UI-EJ-BOSS-Xanesh.PNG");
+bossTexture:SetTexture("Interface\\ENCOUNTERJOURNAL\\UI-EJ-BOSS-LadyInervaDarkvein.PNG");
 bossTexture:SetWidth(128);
 bossTexture:SetHeight(64);
 bossTexture:SetTexCoord(0,1,0,0.8);
@@ -55,14 +55,14 @@ bossBorder:SetPoint("TOPLEFT", -30, -35);
 
 local infoBorder = EnRT_LadyInervaDarkveinOptions:CreateTexture(nil, "BACKGROUND");
 infoBorder:SetTexture("Interface\\GMChatFrame\\UI-GMStatusFrame-Pulse.PNG");
-infoBorder:SetWidth(420);
-infoBorder:SetHeight(320);
+infoBorder:SetWidth(450);
+infoBorder:SetHeight(250);
 infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
-infoBorder:SetPoint("TOPLEFT", 190, -85);
+infoBorder:SetPoint("TOP", 20, -85);
 
 local info = EnRT_LadyInervaDarkveinOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
-info:SetPoint("TOPLEFT", 200, -110);
-info:SetSize(400, 300);
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25);
+info:SetSize(430, 300);
 info:SetText(L.OPTIONS_LADYINERVADARKVEIN_INFO);
 info:SetWordWrap(true);
 info:SetJustifyH("LEFT");
@@ -70,7 +70,7 @@ info:SetJustifyV("TOP");
 
 local enabledButton = CreateFrame("CheckButton", "EnRT_LadyInervaDarkveinEnabledCheckButton", EnRT_LadyInervaDarkveinOptions, "UICheckButtonTemplate");
 enabledButton:SetSize(26, 26);
-enabledButton:SetPoint("TOPLEFT", 30, -130);
+enabledButton:SetPoint("TOPLEFT", 30, -345);
 enabledButton:HookScript("OnClick", function(self)
 	if (self:GetChecked()) then
 		EnRT_LadyInervaDarkveinEnabled = true;
