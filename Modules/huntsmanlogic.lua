@@ -69,7 +69,7 @@ local function resetAssignments()
 		assignments[mark] = {};
 		local group = mark+1;
 		for index, player in pairs(raid[group]) do
-			if (index == 5) then
+			if (index >= EnRT_HuntsmanAltimorPlayersPerLine+1) then
 				break;
 			else
 				assignments[mark][index] = {["name"] = player, ["mark"] = mark, ["pos"] = positions[index]};
@@ -89,13 +89,11 @@ end
 
 local function printAssignments()
 	local printText = "EnRT Assignments:";
-
 	for i = 1, 3 do
+		printText = printText .. "\n\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_".. i .. ":12\124t"
 		for idx = #assignments[i], 1, -1 do
 			local pl = Ambiguate(assignments[i][idx].name, "short");
-			if (idx == 3) then
-				printText = printText .. "\n\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_".. i .. ":12\124t |cFF00FF00" .. pl .. "|r|cFFFFFFFF, |r";
-			elseif (idx == 2) then
+			if (idx > 1 and idx < EnRT_HuntsmanAltimorPlayersPerLine) then
 				printText = printText .. "|cFF00FF00" .. pl .. "|r|cFFFFFFFF, |r";
 			elseif (idx == 1) then
 				printText = printText .. "|cFF00FF00" .. pl .. "|r|cFFFFFFFF, |r" .. "\124TInterface\\Icons\\ability_hunter_assassinate2:12\124t|c296d98FF" .. debuffed[i] .. "|r\124TInterface\\Icons\\ability_hunter_assassinate2:12\124t";
@@ -160,7 +158,7 @@ local function assignMarks()
 	if (printDebug) then
 		print(debuffedPlayer .. " in " .. grp .. " is debuffed");
 	end
-	if (grp ~= 1 and EnRT_Contains(raid[grp], debuffedPlayer) ~= 5) then --A soaker is debuffed
+	if (grp ~= 1 and EnRT_Contains(raid[grp], debuffedPlayer) <= EnRT_HuntsmanAltimorPlayersPerLine) then --A soaker is debuffed
 		if (printDebug) then
 			print("a soaker is debuffed")
 		end
@@ -178,7 +176,7 @@ local function assignMarks()
 				print(assignments[mark][idx].name .. " is moved to position " .. positions[idx] .. " on mark " .. groupIcons[tostring(mark)]);
 			end
 		end 
-		if (#debuffed < 3 and grp ~= 4) then --give backup players to group 1 and 2
+		if (#debuffed < EnRT_HuntsmanAltimorPlayersPerLine-1 and grp ~= 4) then --give backup players to group 1 and 2
 			local backupPlayer = table.remove(assignments[mark+1]);
 			backupPlayer.mark = mark;
 			backupPlayer.pos = positions[#assignments[mark]+1];
@@ -200,7 +198,7 @@ local function assignMarks()
 	if (#debuffed == 3) then--make sure each group has 3 soakers
 		for mark = 1, 3 do
 			for otherGroup = mark+1, 3 do -- G2 iterates G3 then G4, G3 iterates G4, G4 no iteration
-				if (#assignments[mark] < 3 and assignments[otherGroup][4]) then
+				if (#assignments[mark] < EnRT_HuntsmanAltimorPlayersPerLine-1 and assignments[otherGroup][EnRT_HuntsmanAltimorPlayersPerLine]) then
 					if (printDebug) then
 						print("G2 iterates G3 then G4, G3 iterates G4, G4 no iteration");
 					end
@@ -216,7 +214,7 @@ local function assignMarks()
 		end
 		for mark = 1, 3 do
 			for otherGroup = mark-1, 1, -1 do -- G2 no iteration, G3 iterates G2, G4 iterates G3 then G2
-				if (#assignments[mark] < 3 and assignments[otherGroup][4]) then
+				if (#assignments[mark] < EnRT_HuntsmanAltimorPlayersPerLine-1 and assignments[otherGroup][EnRT_HuntsmanAltimorPlayersPerLine]) then
 					if (printDebug) then
 						print("G2 no iteration, G3 iterates G2, G4 iterates G3 then G2");
 					end
@@ -231,11 +229,11 @@ local function assignMarks()
 			end
 		end
 		for i = 1, 3 do --remove backups
-			if (assignments[i][4] and assignments[i][4].pos == positions[4]) then
+			if (assignments[i][EnRT_HuntsmanAltimorPlayersPerLine] and assignments[i][EnRT_HuntsmanAltimorPlayersPerLine].pos == positions[EnRT_HuntsmanAltimorPlayersPerLine]) then
 				if (printDebug) then
-					print("dont need " .. assignments[i][4].name .. " to soak their mark was " .. groupIcons[tostring(i)]);
+					print("dont need " .. assignments[i][EnRT_HuntsmanAltimorPlayersPerLine].name .. " to soak their mark was " .. groupIcons[tostring(i)]);
 				end
-				assignments[i][4].pos = positions[5];
+				assignments[i][EnRT_HuntsmanAltimorPlayersPerLine].pos = positions[5];
 			end
 		end
 		printAssignments();
@@ -251,7 +249,7 @@ end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then 
-		if (EnRT_HuntsmanAltimornabled == nil) then EnRT_HuntsmanAltimorEnabled = true; end
+		if (EnRT_HuntsmanAltimorEnabled == nil) then EnRT_HuntsmanAltimorEnabled = true; end
 		if (EnRT_HuntsmanAltimorPlayersPerLine == nil) then EnRT_HuntsmanAltimorPlayersPerLine = 4; end
 	elseif (event == "UNIT_AURA" and EnRT_HuntsmanAltimorEnabled and inEncounter) then
 		local unit = ...;
@@ -345,7 +343,7 @@ function testResults(test)
 			end);
 		end
 		C_Timer.After(25*4, function()
-			testResultText = testResultText .. testResultsCount .. "/21 tests failed";
+			testResultText = testResultText .. testResultsCount .. "/25 tests failed";
 			print(testResultText);
 		end);
 	elseif (test == 1) then
