@@ -43,7 +43,7 @@ end
 --TO:DO Create instances of text so multiple texts can be shown at the same time (1 way would be to create an array and keep all visible texts there)
 function EnRT_InfoBoxShow(message, sec)
 	text:SetText(message);
-	f:SetSize(15 + text:GetStringWidth(), 15 + text:GetStringHeight());
+	f:SetSize(15 + text:GetStringWidth(), 20 + text:GetStringHeight());
 	f:Show();
 	if (timer) then
 		timer:Cancel();

@@ -3,12 +3,12 @@ local inEncounter = false;
 local assignments = {};
 local targetedPlayers = {};
 local hookedPlayers = {};
-local leader = "Antr";
+local leader = "";
 local playerName = GetUnitName("player");
 local count = 1;
 local ticks = 0;
 local debuffed = false;
-pair = nil;
+local pair = nil;
 local raid = {
 	["TANK"] = {},
 	["HEALER"] = {},
@@ -200,27 +200,28 @@ local function assignMarks()
 	end
 end
 
-f:SetScript("OnUpdate",function(self, elapsed)
-	if (debuffed and EnRT_SludgefistEnabled and pair) then
+local function onUpdate(self, elapsed)
+	if (debuffed and EnRT_SludgefistEnabled and pair and inEncounter) then
 		ticks = ticks + elapsed;
 		if (ticks > 0.05) then
 			local safe = false;
 			if (UnitIsConnected(pair) and UnitIsVisible(pair)) then
+				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pair))].colorStr, Ambiguate(pair, "short"));
 				if (not IsItemInRange(37727, pair)) then
-					EnRT_InfoBoxShow("|cFFFF0000WARNING|r |cFF00FFFF" .. pair .. "|r > 6 yards",56);
+					EnRT_InfoBoxShow("|cFFFF0000WARNING|r " .. name .. "|r |cFFFFFFFF> 6 yards|r",56);
 				else
-					EnRT_InfoBoxShow("|cFF00FF00SAFE|r |cFF00FFFF" .. pair .. "|r < 6 yards",56);
+					EnRT_InfoBoxShow("|cFF00FF00SAFE|r " .. name .. "|r |cFFFFFFFF< 6 yards|r",56);
 				end
 			end
 			ticks = 0;
 		end
 	end
-end)
+end
 
 f:SetScript("OnEvent", function(self, event, ...) 
 	if (event == "PLAYER_LOGIN") then
 		if (EnRT_SludgefistEnabled == nil) then EnRT_SludgefistEnabled = true; end
-	elseif (event == "CHAT_MSG_ADDON" and EnRT_SludgefistEnabled) then
+	elseif (event == "CHAT_MSG_ADDON" and EnRT_SludgefistEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "EnRT_SLUDGEFIST") then
 			if (msg == "spec") then
@@ -245,12 +246,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 				playerNotification(mark, pos, 10);
 			end
 		end
-	elseif (event == "CHAT_MSG_BOSS_WHISPER" and EnRT_SludgefistEnabled) then
+	elseif (event == "CHAT_MSG_BOSS_WHISPER" and EnRT_SludgefistEnabled and inEncounter) then
 		local msg = ...;
 		if (msg:match("Hateful Gaze")) then
 			assignMarks();
 		end
-	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED" and EnRT_SludgefistEnabled and UnitIsUnit(playerName, leader)) then
+	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED" and EnRT_SludgefistEnabled and inEncounter) then
 		local _, logEvent, _, _, _, _, _, _, target, _, _, spellID = CombatLogGetCurrentEventInfo();
 		if (UnitIsUnit(playerName, leader)) then
 			if (logEvent == "SPELL_AURA_APPLIED") then
@@ -274,11 +275,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (logEvent == "SPELL_AURA_APPLIED") then
 				if (spellID == 335293) then
 					debuffed = true;
+					f:SetScript("OnUpdate", onUpdate);
 				elseif (spellID == 335468) then --335294?
 					debuffed = true;
+					f:SetScript("OnUpdate", onUpdate);
 				end
 			elseif (logEvent == "SPELL_AURA_REMOVED" and (spellID == 335468 or spellID == 335293)) then
 				debuffed = false;
+				f:SetScript("OnUpdate", nil);
 				pair = nil;
 			end
 			--spellcaststarted
@@ -288,11 +292,25 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local difficulty = select(3, GetInstanceInfo());
 		if (eID == 2399 and difficulty == 16) then
 			inEncounter = true;
+			pair = nil;
+			assignments = {};
+			debuffed = false;
+			targetedPlayers = {};
+			hookedPlayers = {};
+			raid = {};
+			count = 1;
 			leader = EnRT_GetRaidLeader();
 			initRaid();
 		end
 	elseif (event == "ENCOUNTER_END" and EnRT_SludgefistEnabled and inEncounter) then
 		inEncounter = false;
+		pair = nil;
+		assignments = {};
+		debuffed = false;
+		targetedPlayers = {};
+		hookedPlayers = {};
+		raid = {};
+		count = 1;
 	end
 end);
 
