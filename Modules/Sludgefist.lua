@@ -212,7 +212,6 @@ local function onUpdate(self, elapsed)
 			local safe = false;
 			if (UnitIsConnected(pair) and UnitIsVisible(pair)) then
 				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pair))].colorStr, Ambiguate(pair, "short"));
-				name = pair
 				if (not IsItemInRange(37727, pair)) then
 					if (plMark and plPos) then
 						local tempPos = plPos:lower();
