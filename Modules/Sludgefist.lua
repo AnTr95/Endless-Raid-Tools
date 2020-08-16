@@ -188,22 +188,10 @@ local function assignMarks()
 						assignments[chainedTo].mark = count;
 						assignments[chainedTo].pos = "small";
 						if (UnitIsConnected(player)) then
-							if (isHooked) then
-								C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", "Follow", "WHISPER", player);
-							else
-								C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", "Lead", "WHISPER", player);
-							end
 							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
-							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", Ambiguate(chainedTo, "short"), "WHISPER", player);
 						end
 						if (UnitIsConnected(chainedTo)) then
-							if (isHooked) then
-								C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", "Follow", "WHISPER", chainedTo);
-							else
-								C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", "Lead", "WHISPER", chainedTo);
-							end
 							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[chainedTo].mark .. " " .. assignments[chainedTo].pos, "WHISPER", chainedTo);
-							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", Ambiguate(player, "short"), "WHISPER", chainedTo);
 						end
 						count = count + 1;
 						if (count == 5) then
