@@ -63,7 +63,7 @@ info:SetJustifyV("TOP");
 
 local enabledButton = CreateFrame("CheckButton", "EnRT_HuntsmanAltimorEnabledCheckButton", EnRT_HuntsmanAltimorOptions, "UICheckButtonTemplate");
 enabledButton:SetSize(26, 26);
-enabledButton:SetPoint("TOPLEFT", 30, -345);
+enabledButton:SetPoint("TOPLEFT", 60, -345);
 enabledButton:HookScript("OnClick", function(self)
 	if (self:GetChecked()) then
 		EnRT_HuntsmanAltimorEnabled = true;

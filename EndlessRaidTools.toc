@@ -51,3 +51,5 @@ Modules\HungeringDestroyer2.lua
 Options\HungeringDestroyerOptions.lua
 Modules\CouncilofBlood2.lua
 Options\CouncilofBloodOptions.lua
+Modules\Sludgefist.lua
+Options\SludgefistOptions.lua
