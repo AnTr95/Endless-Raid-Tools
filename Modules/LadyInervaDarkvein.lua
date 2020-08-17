@@ -7,9 +7,7 @@ local groupIcons = {
 	["1"] = "STAR",
 	["2"] = "CIRCLE",
 	["3"] = "DIAMOND",
-	["4"] = "TRIANGLE",
 };
-local timer = nil;
 
 
 f:RegisterEvent("PLAYER_LOGIN");
@@ -52,17 +50,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (EnRT_Contains(debuffed, unitName)) then
 					debuffed[EnRT_Contains(debuffed, unitName)] = nil;
 					SetRaidTarget(unitName, 0);
-					if (timer) then
-						EnRT_PopupHide();
-						timer = nil;
-					end
+					EnRT_PopupHide();
 				end
 			end
 		end
 	elseif (event == "CHAT_MSG_ADDON" and EnRT_LadyInervaDarkveinEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "EnRT_LID") then
-			timer = EnRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. " NOW " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 60);
+			EnRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. " NOW " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 60);
 			PlaySoundFile("Interface\\AddOns\\EndlessRaidTools\\Sound\\"..groupIcons[mark]..".ogg", "Master");
 		end
 	elseif (event == "ENCOUNTER_START" and EnRT_LadyInervaDarkveinEnabled) then

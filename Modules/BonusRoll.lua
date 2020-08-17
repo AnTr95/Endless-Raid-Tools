@@ -44,7 +44,7 @@ EnRT_BR_Settings:Hide();
 
 local function initBLPText()
 	local BLPText = BonusRollFrame.PromptFrame.InfoFrame:CreateFontString("EnRT_BLPCountString", "ARTWORK", "GameFontNormal");
-	BLPText:SetText("|cFFFFFF00BLP: " .. EnRT_BonusRollBLPCount .. "/6|r");
+	BLPText:SetText("|cFF00FFFFBLP: " .. EnRT_BonusRollBLPCount .. "/6|r"); --|cFFFFFF00
 	BLPText:SetPoint("TOPLEFT", 65, -23);
 	BLPText:SetTextColor(1, 1, 1);
 end

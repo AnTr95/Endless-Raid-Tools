@@ -9,7 +9,6 @@ local count = 1;
 local ticks = 0;
 local debuffed = false;
 local pair = nil;
-local role = nil;
 local plMark = nil;
 local plPos = nil;
 local hasAssigned = false;
@@ -127,11 +126,9 @@ local function assignMarks()
 		local pl2 = Ambiguate(hookedPlayers[i], "short");
 		if (UnitIsConnected(pl1)) then
 			C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", pl2, "WHISPER", pl1);
-			C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", "Lead", "WHISPER", pl1);
 		end
 		if (UnitIsConnected(pl2)) then
 			C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", pl1, "WHISPER", pl2);
-			C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", "Follow", "WHISPER", pl2);
 		end
 	end
 	for i = 1, 3 do -- do not assign melee
@@ -206,7 +203,7 @@ local function assignMarks()
 end
 
 local function onUpdate(self, elapsed)
-	if (debuffed and EnRT_SludgefistEnabled and role and pair and inEncounter) then
+	if (debuffed and EnRT_SludgefistEnabled and pair and inEncounter) then
 		ticks = ticks + elapsed;
 		if (ticks > 0.05) then
 			local safe = false;
@@ -216,15 +213,15 @@ local function onUpdate(self, elapsed)
 					if (plMark and plPos) then
 						local tempPos = plPos:lower();
 						tempPos = tempPos:sub(1,1):upper() .. tempPos:sub(2);
-						EnRT_InfoBoxShow("Your role: |cFFFFFFFF" .. role .. "|r\n|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 6 yards|r\nYour soak: |cFFFFFFFF" .. tempPos .. "|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
+						EnRT_InfoBoxShow("|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 6 yards|r\nYour soak: |cFFFFFFFF" .. tempPos .. "|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
 					else
-						EnRT_InfoBoxShow("Your role: |cFFFFFFFF" .. role .. "|r\n|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 6 yards|r", 56);
+						EnRT_InfoBoxShow("|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 6 yards|r", 56);
 					end
 				else
 					if(plMark and plPos) then
-						EnRT_InfoBoxShow("Your role: |cFFFFFFFF" .. role .. "|r\n|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 6 yards|r\nYour soak: |cFFFFFFFF" .. tempPos .. "|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
+						EnRT_InfoBoxShow("|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 6 yards|r\nYour soak: |cFFFFFFFF" .. tempPos .. "|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
 					else
-						EnRT_InfoBoxShow("Your role: |cFFFFFFFF" .. role .. "|r\n|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 6 yards|r", 56);
+						EnRT_InfoBoxShow("|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 6 yards|r", 56);
 					end
 				end
 			end
@@ -245,8 +242,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (UnitIsConnected(leader)) then
 					C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", specName, "WHISPER", leader);
 				end
-			elseif (msg == "Lead" or msg == "Follow") then
-				role = msg;
 			elseif (msg == "notify" and plMark and plPos) then
 				playerNotification(plMark, plPos, 10);
 			elseif (tonumber(msg)) then
@@ -306,7 +301,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 				f:SetScript("OnUpdate", nil);
 				debuffed = false;
 				pair = nil;
-				role = nil;
 				plMark = nil;
 				plPos = nil;
 			end
@@ -323,7 +317,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 			hookedPlayers = {};
 			raid = {};
 			count = 1;
-			role = nil;
 			plMark = nil;
 			plPos = nil;
 			hasAssigned = false;
@@ -339,7 +332,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 		hookedPlayers = {};
 		raid = {};
 		count = 1;
-		role = nil;
 		plMark = nil;
 		plPos = nil;
 		hasAssigned = false;
