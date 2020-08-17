@@ -20,7 +20,6 @@ f:RegisterEvent("UI_INFO_MESSAGE");
 f:RegisterEvent("CHAT_MSG_RESTRICTED");
 f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 f:RegisterEvent("CHAT_MSG_RAID_BOSS_WHISPER");
-f:RegisterEvent("RAID_TARGET_UPDATE")
 
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_TCOB");
 
@@ -61,20 +60,28 @@ local function onUpdate(self, elapsed)
 						if (UnitIsConnected(name)) then
 							C_ChatInfo.SendAddonMessage("EnRT_TCOB", "NEARBY", "WHISPER", name);
 						end
-					elseif (CheckInteractDistance(raider, 3) and UnitIsConnected(master)) then
+					elseif (CheckInteractDistance(raider, 3)) then
 						safe = false;
-					elseif (not CheckInteractDistance(raider, 3) and UnitIsConnected(master) and EnRT_Contains(nearby, name)) then
+					elseif (not CheckInteractDistance(raider, 3) and EnRT_Contains(nearby, name)) then
 						nearby[EnRT_Contains(nearby, name)] = nil;
 						if (UnitIsConnected(name)) then
-							C_ChatInfo.SendAddonMessage("EnRT_TCOB", "AWAY " .. GetRaidTargetIndex(playerName), "WHISPER", name);
+							C_ChatInfo.SendAddonMessage("EnRT_TCOB", "AWAY", "WHISPER", name);
 						end
 					end
 				end
 			end
 			if (safe and UnitIsConnected(master) and EnRT_UnitDebuff(player, GetSpellInfo(00000))) then
+				text = "SAFE - " .. debuffed;
 				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "SHOW", "RAID");
-			elseif (not safe and UnitIsConnected(master) and EnRT_UnitDebuff(player, GetSpellInfo(247552))) then
+			elseif (not safe and UnitIsConnected(master) and EnRT_UnitDebuff(player, GetSpellInfo(00000))) then
+				text = "NOT SAFE - " .. debuffed;
 				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "HIDE", "RAID");
+			end
+			if (timer == nil) then
+				SendChatMessage(text, "YELL");
+				timer = C_Timer.NewTicker(1, function()
+					SendChatMessage(text, "YELL");
+				end, 4);
 			end
 			ticks = 0;
 		end
@@ -84,14 +91,6 @@ end
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then 
 		if (EnRT_CouncilofBloodEnabled == nil) then EnRT_CouncilofBloodEnabled = true; end
-	elseif (event == "RAID_TARGET_UPDATE" and EnRT_CouncilofBloodEnabled and inEncounter and debuffed) then
-		local mark = GetRaidTargetIndex(playerName);
-		if (not timer and mark) then
-			SendChatMessage("{rt" .. mark .. "} " .. math.ceil(debuffed-GetTime()) .. " {rt" .. mark .. "}");
-			timer = C_Timer.NewTicker(1, function ()
-				SendChatMessage("{rt" .. mark .. "} " .. math.ceil(debuffed-GetTime()) .. " {rt" .. mark .. "}");
-			end, 4);
-		end
 	elseif (event == "UNIT_AURA" and EnRT_CouncilofBloodEnabled and inEncounter) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
@@ -159,13 +158,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (prefix == "EnRT_TCOB") then
 			local class = select(2, UnitClass(sender));
 			if (class == "MONK" or class == "PALADIN" or class == "PRIEST") then
+				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, sender);
 				if (msg == "SHOW") then
 					if (not EnRT_PopupIsShown() or not EnRT_PopupGetText():match("DISPEL")) then
-						EnRT_PopupShow("DISPEL " .. sender, 500);
+						EnRT_PopupShow("|cFF00FF00DISPEL|r " .. name, 500);
 					elseif (EnRT_PopupIsShown() and EnRT_PopupGetText():match("DISPEL") and not EnRT_PopupGetText():match(sender)) then
 						local getText = EnRT_PopupGetText();
 						EnRT_PopupHide();
-						EnRT_PopupShow(getText .. " AND " .. sender, 500);
+						EnRT_PopupShow(getText .. " AND " .. name, 500);
 					end
 				elseif (msg == "HIDE" and EnRT_PopupGetText():match(sender)) then
 					if (EnRT_PopupIsShown() and EnRT_PopupGetText():match("DISPEL")) then
@@ -174,54 +174,28 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 			if (msg == "NEARBY" and not debuffed) then
-				if (timer and not text:match(GetRaidTargetIndex(sender))) then 
-					text = text .. "AND {rt" .. GetRaidTargetIndex(sender) .."}";
-					SendChatMessage(text);
-				elseif (timer == nil) then
-					text = "Close to: {rt" .. GetRaidTargetIndex(sender) .. "}";
-					SendChatMessage("Close to: {rt" .. GetRaidTargetIndex(sender) .. "}");
-					timer = C_Timer.NewTicker(1, function() 
-						SendChatMessage(text);
-					end, 4);
+				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, sender);
+				if (EnRT_PopupIsShown() and not EnRT_PopupGetText():match(sender)) then 
+					local getText = EnRT_PopupGetText();
+					EnRT_PopupShow(getText .. "AND \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. GetRaidTargetIndex(sender) .. ":30\124t" .. name, 5);
+				elseif (not EnRT_PopupIsShown()) then
+					EnRT_PopupShow("|cFFFF0000Close to:|r \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. GetRaidTargetIndex(sender) .. ":30\124t" .. name, 5);
 				end
-			elseif (msg:match("AWAY") and text and timer and not debuffed) then
-				local pos, mark = strsplit(" ", msg);
-				local oldText = text;
-				if (mark == nil) then
-					text = nil;
-					for i = 1, GetNumGroupMembers() do
-						mark = GetRaidTargetIndex("raid"..i);
-						if (oldText:match(mark)) then
-							if (text == nil) then
-								text = "Close to: {rt" .. mark .. "}";
-							else
-								text = text .. " AND {rt" .. mark .. "}";
-							end
+			elseif (msg:match("AWAY") and EnRT_PopupIsShown() and not debuffed and EnRT_PopupGetText():match(sender)) then
+				if (EnRT_PopupGetText():match(" AND ")) then
+					local getText = EnRT_PopupGetText();
+					getText = getText:sub(21);
+					local tempText = "|cFFFF0000Close to: ";
+					for k, v in getText:gmatch("([^AND]*)") do
+						if (not k:match(sender) and tempText == "") then
+							tempText = "|cFFFF0000Close to: " .. tempText .. k;
+						elseif(not k:match(sender)) then
+							tempText = tempText .. "AND" .. k;
 						end
 					end
-					if (text) then
-						SendChatMessage(text);
-					else
-						timer:Cancel();
-						timer = nil;
-					end
-				elseif (text:match(" AND ")) then
-					local splitText = {strsplit(" ", text)};
-					text = "";
-					for k, v in pairs (splitText) do
-						if (v ~= "AND" and not v:match(mark)) then
-							if (text ~= "") then
-								text = text .. " AND " .. v;
-							else
-								text = "Close to: " .. v;
-							end
-						end
-					end
-					SendChatMessage(text);
+					EnRT_PopupShow(tempText, 5);
 				else
-					timer:Cancel();
-					timer = nil;
-					text = nil;
+					EnRT_PopupHide();
 				end
 			end
 		end
