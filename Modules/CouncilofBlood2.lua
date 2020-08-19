@@ -54,7 +54,7 @@ local function onUpdate(self, elapsed)
 				local raider = "raid"..i;
 				local name = GetUnitName(raider, true);
 				if (UnitIsVisible(raider) and not UnitIsUnit(playerName, name) and not UnitIsDead(raider)) then
-					if (CheckInteractDistance(raider, 3) and UnitIsConnected(master) and not EnRT_Contains(nearby, name)) then --Duel range 10y
+					if (CheckInteractDistance(raider, 3) and not EnRT_Contains(nearby, name)) then --Duel range 10y
 						safe = false;
 						nearby[#nearby+1] = name;
 						if (UnitIsConnected(name)) then
@@ -70,10 +70,10 @@ local function onUpdate(self, elapsed)
 					end
 				end
 			end
-			if (safe and UnitIsConnected(master) and EnRT_UnitDebuff(player, GetSpellInfo(00000))) then
+			if (safe and EnRT_UnitDebuff(player, GetSpellInfo(00000))) then
 				text = "SAFE - " .. debuffed;
 				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "SHOW", "RAID");
-			elseif (not safe and UnitIsConnected(master) and EnRT_UnitDebuff(player, GetSpellInfo(00000))) then
+			elseif (not safe and EnRT_UnitDebuff(player, GetSpellInfo(00000))) then
 				text = "NOT SAFE - " .. debuffed;
 				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "HIDE", "RAID");
 			end
@@ -159,15 +159,15 @@ f:SetScript("OnEvent", function(self, event, ...)
 			local class = select(2, UnitClass(sender));
 			if (class == "MONK" or class == "PALADIN" or class == "PRIEST") then
 				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, sender);
-				if (msg == "SHOW") then
-					if (not EnRT_PopupIsShown() or not EnRT_PopupGetText():match("DISPEL")) then
+				if (msg == "SHOW") then --and not UnitIsUnit(playerName, sender)) then
+					if (not EnRT_PopupIsShown()) then
 						EnRT_PopupShow("|cFF00FF00DISPEL|r " .. name, 500);
 					elseif (EnRT_PopupIsShown() and EnRT_PopupGetText():match("DISPEL") and not EnRT_PopupGetText():match(sender)) then
 						local getText = EnRT_PopupGetText();
 						EnRT_PopupHide();
 						EnRT_PopupShow(getText .. " AND " .. name, 500);
 					end
-				elseif (msg == "HIDE" and EnRT_PopupGetText():match(sender)) then
+				elseif (msg == "HIDE" and EnRT_PopupIsShown() and EnRT_PopupGetText():match(sender)) then
 					if (EnRT_PopupIsShown() and EnRT_PopupGetText():match("DISPEL")) then
 						EnRT_PopupHide();
 					end
@@ -175,22 +175,23 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 			if (msg == "NEARBY" and not debuffed) then
 				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, sender);
-				if (EnRT_PopupIsShown() and not EnRT_PopupGetText():match(sender)) then 
+				if (not EnRT_PopupIsShown() or not EnRT_PopupGetText():match("Close to")) then
+					EnRT_PopupShow("|cFFFF0000Close to:|r \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. GetRaidTargetIndex(sender) .. ":20\124t" .. name, 5);
+				elseif (EnRT_PopupIsShown() and not EnRT_PopupGetText():match(sender)) then 
 					local getText = EnRT_PopupGetText();
-					EnRT_PopupShow(getText .. "AND \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. GetRaidTargetIndex(sender) .. ":30\124t" .. name, 5);
-				elseif (not EnRT_PopupIsShown()) then
-					EnRT_PopupShow("|cFFFF0000Close to:|r \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. GetRaidTargetIndex(sender) .. ":30\124t" .. name, 5);
+					EnRT_PopupShow(getText .. " AND \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. GetRaidTargetIndex(sender) .. ":20\124t" .. name, 5);
 				end
 			elseif (msg:match("AWAY") and EnRT_PopupIsShown() and not debuffed and EnRT_PopupGetText():match(sender)) then
 				if (EnRT_PopupGetText():match(" AND ")) then
 					local getText = EnRT_PopupGetText();
-					getText = getText:sub(21);
-					local tempText = "|cFFFF0000Close to: ";
-					for k, v in getText:gmatch("([^AND]*)") do
-						if (not k:match(sender) and tempText == "") then
-							tempText = "|cFFFF0000Close to: " .. tempText .. k;
-						elseif(not k:match(sender)) then
-							tempText = tempText .. "AND" .. k;
+					getText = getText:sub(23);
+					local tempText = "";
+					local test = {strsplit(" ", getText)};
+					for k, v in pairs(test) do
+						if (not v:match(sender) and tempText == "" and v ~= "AND") then
+							tempText = "|cFFFF0000Close to:|r " .. v;
+						elseif(not v:match(sender) and v ~= "AND") then
+							tempText = tempText .. " AND " .. v;
 						end
 					end
 					EnRT_PopupShow(tempText, 5);
