@@ -16,7 +16,6 @@ f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("CHAT_MSG_ADDON");
 f:RegisterEvent("CHAT_MSG_SYSTEM");
-f:RegisterEvent("UI_INFO_MESSAGE");
 f:RegisterEvent("CHAT_MSG_RESTRICTED");
 f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 f:RegisterEvent("CHAT_MSG_RAID_BOSS_WHISPER");
@@ -54,19 +53,13 @@ local function onUpdate(self, elapsed)
 				local raider = "raid"..i;
 				local name = GetUnitName(raider, true);
 				if (UnitIsVisible(raider) and not UnitIsUnit(playerName, name) and not UnitIsDead(raider)) then
-					if (CheckInteractDistance(raider, 3) and not EnRT_Contains(nearby, name)) then --Duel range 10y
+					if (IsItemInRange(63427, raider) and not EnRT_Contains(nearby, name)) then --Duel range 10y
 						safe = false;
 						nearby[#nearby+1] = name;
-						if (UnitIsConnected(name)) then
-							C_ChatInfo.SendAddonMessage("EnRT_TCOB", "NEARBY", "WHISPER", name);
-						end
-					elseif (CheckInteractDistance(raider, 3)) then
+					elseif (IsItemInRange(63427, raider)) then
 						safe = false;
-					elseif (not CheckInteractDistance(raider, 3) and EnRT_Contains(nearby, name)) then
+					elseif (not IsItemInRange(63427, raider) and EnRT_Contains(nearby, name)) then
 						nearby[EnRT_Contains(nearby, name)] = nil;
-						if (UnitIsConnected(name)) then
-							C_ChatInfo.SendAddonMessage("EnRT_TCOB", "AWAY", "WHISPER", name);
-						end
 					end
 				end
 			end
@@ -126,7 +119,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 				timer = nil;
 				f:SetScript("OnUpdate", nil);
 				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "HIDE", "RAID");
-				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "AWAY", "RAID");
 			end
 		end
 	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and EnRT_CouncilofBloodEnabled and inEncounter) then
@@ -159,7 +151,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			local class = select(2, UnitClass(sender));
 			if (class == "MONK" or class == "PALADIN" or class == "PRIEST") then
 				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, sender);
-				if (msg == "SHOW") then --and not UnitIsUnit(playerName, sender)) then
+				if (msg == "SHOW" and not UnitIsUnit(playerName, sender)) then
 					if (not EnRT_PopupIsShown()) then
 						EnRT_PopupShow("|cFF00FF00DISPEL|r " .. name, 500);
 					elseif (EnRT_PopupIsShown() and EnRT_PopupGetText():match("DISPEL") and not EnRT_PopupGetText():match(sender)) then
@@ -171,32 +163,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 					if (EnRT_PopupIsShown() and EnRT_PopupGetText():match("DISPEL")) then
 						EnRT_PopupHide();
 					end
-				end
-			end
-			if (msg == "NEARBY" and not debuffed) then
-				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, sender);
-				if (not EnRT_PopupIsShown() or not EnRT_PopupGetText():match("Close to")) then
-					EnRT_PopupShow("|cFFFF0000Close to:|r \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. GetRaidTargetIndex(sender) .. ":20\124t" .. name, 5);
-				elseif (EnRT_PopupIsShown() and not EnRT_PopupGetText():match(sender)) then 
-					local getText = EnRT_PopupGetText();
-					EnRT_PopupShow(getText .. " AND \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. GetRaidTargetIndex(sender) .. ":20\124t" .. name, 5);
-				end
-			elseif (msg:match("AWAY") and EnRT_PopupIsShown() and not debuffed and EnRT_PopupGetText():match(sender)) then
-				if (EnRT_PopupGetText():match(" AND ")) then
-					local getText = EnRT_PopupGetText();
-					getText = getText:sub(23);
-					local tempText = "";
-					local test = {strsplit(" ", getText)};
-					for k, v in pairs(test) do
-						if (not v:match(sender) and tempText == "" and v ~= "AND") then
-							tempText = "|cFFFF0000Close to:|r " .. v;
-						elseif(not v:match(sender) and v ~= "AND") then
-							tempText = tempText .. " AND " .. v;
-						end
-					end
-					EnRT_PopupShow(tempText, 5);
-				else
-					EnRT_PopupHide();
 				end
 			end
 		end
