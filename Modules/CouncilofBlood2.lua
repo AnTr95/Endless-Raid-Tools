@@ -70,10 +70,10 @@ local function onUpdate(self, elapsed)
 					end
 				end
 			end
-			if (safe and EnRT_UnitDebuff(player, GetSpellInfo(00000))) then
+			if (safe and EnRT_UnitDebuff(player, GetSpellInfo(342859))) then
 				text = "SAFE - " .. debuffed;
 				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "SHOW", "RAID");
-			elseif (not safe and EnRT_UnitDebuff(player, GetSpellInfo(00000))) then
+			elseif (not safe and EnRT_UnitDebuff(player, GetSpellInfo(342859))) then
 				text = "NOT SAFE - " .. debuffed;
 				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "HIDE", "RAID");
 			end
@@ -95,7 +95,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
 		if (UnitIsUnit(leader, unitName)) then
-			if (EnRT_UnitDebuff(unit, GetSpellInfo(00000)) and not EnRT_Contains(debuffedPlayers, unitName)) then
+			if (EnRT_UnitDebuff(unit, GetSpellInfo(342859)) and not EnRT_Contains(debuffedPlayers, unitName)) then
 				debuffedPlayers[#debuffedPlayers+1] = unitName;
 				SetRaidTarget(unitName, #debuffedPlayers);
 			elseif (EnRT_Contains(debuffedPlayers, unitName)) then
@@ -116,8 +116,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 					ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..isGlowing]);
 				end
 			end
-			if (EnRT_UnitDebuff(unit, GetSpellInfo(00000)) and not debuffed) then -- unknown spellid Dancing Fever
-				debuffed = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(00000)));
+			if (EnRT_UnitDebuff(unit, GetSpellInfo(342859)) and not debuffed) then -- unknown spellid Dancing Fever
+				debuffed = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(342859)));
 				nearby = {};
 				f:SetScript("OnUpdate", onUpdate);
 			elseif (debuffed) then
