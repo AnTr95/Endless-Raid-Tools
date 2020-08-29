@@ -17,6 +17,7 @@ f:SetBackdropBorderColor(169,169,169,0)
 
 local rcStatus = false;
 local rcSender = ""
+local raiders = {};
 
 local blizzFixFrame = CreateFrame("Frame", "$parentDetails"); -- UIGoldBorderButtonTemplate is using $parentDetails pointing to a frame called the parents name of the button followed by Details which is undefined in blizzcode.
 blizzFixFrame:SetPoint("CENTER", f, "CENTER");

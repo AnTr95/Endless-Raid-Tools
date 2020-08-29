@@ -3,6 +3,7 @@ local flasks = {307185,307187};
 local RED = "\124cFFFF0000";
 local YELLOW = "\124cFFFFFF00";
 local GREEN = "\124cFF00FF00";
+local rcSender = "";
 local raiders = {};
 local buffSpellIDs = {
 	["MAGE"] = 1459, 
@@ -96,12 +97,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (EnRT_ConsumableCheckEnabled == nil) then EnRT_ConsumableCheckEnabled = true; end
 	elseif (event == "READY_CHECK" and EnRT_ConsumableCheckEnabled) then
 		local sender = ...
-		if (not UnitIsUnit(sender, UnitName("player")) and EnRT_ConsumableCheckEnabled) then
+		rcSender = sender;
+		if (not UnitIsUnit(sender, UnitName("player"))) then
 			updateConsumables();
 		end
 	elseif (event == "UNIT_AURA" and EnRT_ConsumableCheckEnabled and ReadyCheckFrame:IsShown()) then
 		local unit = ...;
-		if (UnitInRaid(unit) or UnitInParty(unit)) then
+		if ((UnitInRaid(unit) or UnitInParty(unit)) and not UnitIsUnit(rcSender, UnitName("player"))) then
 			updateConsumables();
 		end
 	end

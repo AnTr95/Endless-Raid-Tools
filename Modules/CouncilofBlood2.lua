@@ -1,5 +1,5 @@
 local f = CreateFrame("Frame");
-local inEncounter = false;
+local inEncounter = true;
 local playerName = GetUnitName("player");
 local isGlowing = false;
 local timer = nil;
@@ -23,14 +23,16 @@ f:RegisterEvent("CHAT_MSG_RAID_BOSS_WHISPER");
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_TCOB");
 
 local function glowButton(button)
-	if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..isGlowing]) then
-		ActionButton_HideOverlayGlow(_G["BT4Button"..isGlowing]);
-	elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]) then
-		ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]);
-	elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..isGlowing]) then
-		ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..isGlowing]);
-	else
-		ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..isGlowing]);
+	if (isGlowing) then
+		if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..isGlowing]) then
+			ActionButton_HideOverlayGlow(_G["BT4Button"..isGlowing]);
+		elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]) then
+			ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]);
+		elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..isGlowing]) then
+			ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..isGlowing]);
+		elseif (ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..isGlowing])) then
+			ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..isGlowing]);
+		end
 	end
 	if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..button]) then
 		ActionButton_ShowOverlayGlow(_G["BT4Button"..button]);
@@ -45,7 +47,7 @@ local function glowButton(button)
 end
 
 local function onUpdate(self, elapsed)
-	if (debuffed and EnRT_CouncilofBloodEnabled and inEncounter) then
+	if (debuffed and EnRT_TCOBDFEnabled and inEncounter) then
 		ticks = ticks + elapsed;
 		if (ticks > 0.05) then
 			safe = true;
@@ -83,11 +85,12 @@ end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then 
-		if (EnRT_CouncilofBloodEnabled == nil) then EnRT_CouncilofBloodEnabled = true; end
-	elseif (event == "UNIT_AURA" and EnRT_CouncilofBloodEnabled and inEncounter) then
+		if (EnRT_TCOBDMEnabled == nil) then EnRT_TCOBDMEnabled = true; end
+		if (EnRT_TCOBDFEnabled == nil) then EnRT_TCOBDFEnabled = true; end
+	elseif (event == "UNIT_AURA" and inEncounter) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
-		if (UnitIsUnit(leader, unitName)) then
+		if (UnitIsUnit(leader, unitName) and EnRT_TCOBDFEnabled) then
 			if (EnRT_UnitDebuff(unit, GetSpellInfo(342859)) and not EnRT_Contains(debuffedPlayers, unitName)) then
 				debuffedPlayers[#debuffedPlayers+1] = unitName;
 				SetRaidTarget(unitName, #debuffedPlayers);
@@ -97,8 +100,39 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 		end
 		if (UnitIsUnit(unitName, playerName)) then
-			if ((not EnRT_UnitDebuff(unit, GetSpellInfo(328495)) or EnRT_UnitDebuff(unit, GetSpellInfo(330848))) and isGlowing) then
-				isGlowing = false;
+			if (EnRT_TCOBDMEnabled) then
+				if ((not EnRT_UnitDebuff(unit, GetSpellInfo(328495)) or EnRT_UnitDebuff(unit, GetSpellInfo(330848))) and isGlowing) then
+					if (isGlowing) then
+						if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..isGlowing]) then
+							ActionButton_HideOverlayGlow(_G["BT4Button"..isGlowing]);
+						elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]) then
+							ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]);
+						elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..isGlowing]) then
+							ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..isGlowing]);
+						else
+							ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..isGlowing]);
+						end
+						isGlowing = false;
+					end
+				end
+			elseif (EnRT_TCOBDFEnabled) then
+				if (EnRT_UnitDebuff(unit, GetSpellInfo(342859)) and not debuffed) then -- unknown spellid Dancing Fever
+					debuffed = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(342859)));
+					nearby = {};
+					f:SetScript("OnUpdate", onUpdate);
+				elseif (debuffed) then
+					debuffed = false;
+					nearby = {};
+					timer = nil;
+					f:SetScript("OnUpdate", nil);
+					C_ChatInfo.SendAddonMessage("EnRT_TCOB", "HIDE", "RAID");
+				end
+			end
+		end
+	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and EnRT_TCOBDMEnabled and inEncounter) then
+		local unit, _, spellID = ...;
+		if (UnitIsUnit(unit, playerName) and (spellID == 333837 or spellID == 328595 or spellID == 333835 or spellID == 333836 or spellID == 328593 or spellID == 333838 or spellID == 328596)) then
+			if (isGlowing) then
 				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..isGlowing]) then
 					ActionButton_HideOverlayGlow(_G["BT4Button"..isGlowing]);
 				elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]) then
@@ -109,42 +143,18 @@ f:SetScript("OnEvent", function(self, event, ...)
 					ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..isGlowing]);
 				end
 			end
-			if (EnRT_UnitDebuff(unit, GetSpellInfo(342859)) and not debuffed) then -- unknown spellid Dancing Fever
-				debuffed = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(342859)));
-				nearby = {};
-				f:SetScript("OnUpdate", onUpdate);
-			elseif (debuffed) then
-				debuffed = false;
-				nearby = {};
-				timer = nil;
-				f:SetScript("OnUpdate", nil);
-				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "HIDE", "RAID");
-			end
-		end
-	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and EnRT_CouncilofBloodEnabled and inEncounter) then
-		local unit, _, spellID = ...;
-		if (UnitIsUnit(unit, playerName) and (spellID == 333837 or spellID == 328595 or spellID == 333835 or spellID == 333836 or spellID == 328593 or spellID == 333838 or spellID == 328596)) then
-			if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..isGlowing]) then
-				ActionButton_HideOverlayGlow(_G["BT4Button"..isGlowing]);
-			elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]) then
-				ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]);
-			elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..isGlowing]) then
-				ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..isGlowing]);
-			else
-				ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..isGlowing]);
-			end
 		elseif (not UnitInRaid(unit) and (spellID == 333837 or spellID == 328595 or spellID == 333835 or spellID == 328591 or spellID == 333836 or spellID == 328592 or spellID == 333838 or spellID == 328596)) then
-			if (spellID == 333837 or spellID == 328595) then
+			if (spellID == 333837 or spellID == 328595 and not isGlowing) then
 				glowButton(1);
-			elseif (spellID == 333835 or spellID == 328591) then
+			elseif (spellID == 333835 or spellID == 328591 and not isGlowing) then
 				glowButton(2);
-			elseif (spellID == 333836 or spellID == 328592) then
+			elseif (spellID == 333836 or spellID == 328592 and not isGlowing) then
 				glowButton(3);
-			elseif (spellID == 333838 or spellID == 328596) then
+			elseif (spellID == 333838 or spellID == 328596 and not isGlowing) then
 				glowButton(4);
 			end
 		end
-	elseif (event == "CHAT_MSG_ADDON" and EnRT_CouncilofBloodEnabled and inEncounter) then
+	elseif (event == "CHAT_MSG_ADDON" and EnRT_TCOBDFEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
 		sender = Ambiguate(sender, "short");
 		if (prefix == "EnRT_TCOB") then
@@ -166,7 +176,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
-	elseif (event == "ENCOUNTER_START" and EnRT_CouncilofBloodEnabled) then
+	elseif (event == "ENCOUNTER_START" and (EnRT_TCOBDMEnabled or EnRT_TCOBDFEnabled)) then
 		local eID = ...;
 		if (eID == 2412) then
 			inEncounter = true;
@@ -179,7 +189,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			leader = EnRT_GetRaidLeader();
 			f:SetScript("OnUpdate", nil);
 		end
-	elseif (event == "ENCOUNTER_END" and EnRT_CouncilofBloodEnabled and inEncounter) then
+	elseif (event == "ENCOUNTER_END" and inEncounter and (EnRT_TCOBDFEnabled or EnRT_TCOBDMEnabled)) then
 		inEncounter = false;
 		isGlowing = false;
 		timer = nil;

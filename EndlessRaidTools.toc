@@ -12,6 +12,8 @@
 ## SavedVariables: EnRT_LadyInervaDarkveinEnabled
 ## SavedVariables: EnRT_CouncilofBloodEnabled
 ## SavedVariables: EnRT_HuntsmanAltimorEnabled
+## SavedVariables: EnRT_TCOBDMEnabled
+## SavedVariables: EnRT_TCOBDFEnabled
 ## SavedVariablesPerCharacter: EnRT_BonusRollCurrentRaid
 ## SavedVariablesPerCharacter: EnRT_ConsumableCheckEnabled
 ## SavedVariablesPerCharacter: EnRT_CalendarNotificationEnabled

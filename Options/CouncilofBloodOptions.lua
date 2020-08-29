@@ -68,26 +68,60 @@ info:SetWordWrap(true);
 info:SetJustifyH("LEFT");
 info:SetJustifyV("TOP");
 
-local enabledButton = CreateFrame("CheckButton", "EnRT_CouncilofBloodEnabledCheckButton", EnRT_CouncilofBloodOptions, "UICheckButtonTemplate");
-enabledButton:SetSize(26, 26);
-enabledButton:SetPoint("TOPLEFT", 60, -345);
-enabledButton:HookScript("OnClick", function(self)
+local dmEnabledButton = CreateFrame("CheckButton", "EnRT_CouncilofBlood1EnabledCheckButton", EnRT_CouncilofBloodOptions, "UICheckButtonTemplate");
+dmEnabledButton:SetSize(26, 26);
+dmEnabledButton:SetPoint("TOPLEFT", 60, -345);
+dmEnabledButton:HookScript("OnClick", function(self)
 	if (self:GetChecked()) then
-		EnRT_CouncilofBloodEnabled = true;
+		EnRT_TCOBDMEnabled = true;
 		PlaySound(856);
 	else
-		EnRT_CouncilofBloodEnabled = false;
+		EnRT_TCOBDMEnabled = false;
 		PlaySound(857);
 	end
 end);
 
-local enabledText = EnRT_CouncilofBloodOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
-enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
-enabledText:SetText(L.OPTIONS_ENABLED);
+local dmEnabledText = EnRT_CouncilofBloodOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
+dmEnabledText:SetPoint("TOPLEFT", dmEnabledButton, "TOPLEFT", 30, -7);
+dmEnabledText:SetText(L.OPTIONS_COUNCILOFBLOOD_DM);
 
+local dfEnabledButton = CreateFrame("CheckButton", "EnRT_CouncilofBlood2EnabledCheckButton", EnRT_CouncilofBloodOptions, "UICheckButtonTemplate");
+dfEnabledButton:SetSize(26, 26);
+dfEnabledButton:SetPoint("TOPLEFT", dmEnabledButton, "TOPLEFT", 0, -20);
+dfEnabledButton:HookScript("OnClick", function(self)
+	if (self:GetChecked()) then
+		EnRT_TCOBDFEnabled = true;
+		PlaySound(856);
+	else
+		EnRT_TCOBDFEnabled = false;
+		PlaySound(857);
+	end
+end);
+
+local dfEnabledText = EnRT_CouncilofBloodOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
+dfEnabledText:SetPoint("TOPLEFT", dfEnabledButton, "TOPLEFT", 30, -7);
+dfEnabledText:SetText(L.OPTIONS_COUNCILOFBLOOD_DF);
+
+local dmInfoTexture = EnRT_CouncilofBloodOptions:CreateTexture(nil, "BACKGROUND");
+dmInfoTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\tcobdm.tga");
+dmInfoTexture:SetPoint("TOPLEFT", dfEnabledButton, "TOPLEFT", -30, -50);
+dmInfoTexture:SetSize(256, 128);
+dmInfoTexture:SetTexCoord(0,0.95,0.1,1);
+
+local previewText = EnRT_CouncilofBloodOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+previewText:SetPoint("TOP", dmInfoTexture, "TOP", 150, 20);
+previewText:SetText(L.OPTIONS_COUNCILOFBLOOD_PREVIEW);
+previewText:SetJustifyH("CENTER");
+
+local dfInfoTexture = EnRT_CouncilofBloodOptions:CreateTexture(nil, "BACKGROUND");
+dfInfoTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\tcobdf.tga");
+dfInfoTexture:SetPoint("TOPLEFT", dmInfoTexture, "TOPLEFT", 290, -5);
+dfInfoTexture:SetSize(256, 37);
+dfInfoTexture:SetTexCoord(0,1,0,0.7);
 
 EnRT_CouncilofBloodOptions:SetScript("OnShow", function(self)
-	enabledButton:SetChecked(EnRT_CouncilofBloodEnabled);
+	dmEnabledButton:SetChecked(EnRT_TCOBDMEnabled);
+	dfEnabledButton:SetChecked(EnRT_TCOBDFEnabled);
 end);
 
 InterfaceOptions_AddCategory(EnRT_CouncilofBloodOptions);
