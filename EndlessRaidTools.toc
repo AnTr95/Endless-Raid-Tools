@@ -47,10 +47,10 @@ Modules\BonusRoll.lua
 Options\BonusRollOptions.lua
 Modules\huntsmanlogic.lua
 Options\HuntsmanAltimorOptions.lua
-Modules\LadyInervaDarkvein.lua
-Options\LadyInervaDarkveinOptions.lua
 Modules\HungeringDestroyer2.lua
 Options\HungeringDestroyerOptions.lua
+Modules\LadyInervaDarkvein.lua
+Options\LadyInervaDarkveinOptions.lua
 Modules\CouncilofBlood2.lua
 Options\CouncilofBloodOptions.lua
 Modules\Sludgefist.lua

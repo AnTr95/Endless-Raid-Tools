@@ -17,6 +17,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "CHAT_MSG_ADDON" and EnRT_InnervateEnabled) then
 		local prefix, msg, channel, sender = ...;
 		sender = Ambiguate(sender, "short");
+		sender = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, sender);
 		if (prefix == "ENDLESS_INN") then
 			timer = EnRT_PopupShow("\124TInterface\\Icons\\spell_nature_lightning:30\124t INNERVATE ON " .. sender .. " \124TInterface\\Icons\\spell_nature_lightning:30\124t" , 5);
 			f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
