@@ -139,7 +139,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 						removeGlow();
 					end);
 				end
-			elseif (EnRT_TCOBDFEnabled) then
+			end
+			if (EnRT_TCOBDFEnabled) then
 				if (EnRT_UnitDebuff(unit, GetSpellInfo(342859)) and not debuffed) then -- unknown spellid Dancing Fever
 					debuffed = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(342859)));
 					nearby = {};
