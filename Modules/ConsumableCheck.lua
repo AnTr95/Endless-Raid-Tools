@@ -5,7 +5,7 @@ local oilIconIDs = {[6188] = 463543, [6190] = 463544, [6200] = 3528422}; --35284
 local RED = "\124cFFFF0000";
 local YELLOW = "\124cFFFFFF00";
 local GREEN = "\124cFF00FF00";
-local CROSS = "\124TInterface\\addons\\EndlessRaidTools\\Res\\cross2:16\124t";
+local CROSS = "\124TInterface\\addons\\EndlessRaidTools\\Res\\cross:16\124t";
 local CHECK = "\124TInterface\\addons\\EndlessRaidTools\\Res\\check:16\124t";
 local rcSender = "";
 local raiders = {};
@@ -55,7 +55,7 @@ local function updateConsumables()
 	end
 	local currTime = GetTime();
 	flaskTime = flaskTime and math.floor((tonumber(flaskTime)-currTime)/60) or nil;
-	oilTime = oilTime and math.floor((tonumber(oilTime)/1000)/60) or nil;
+	oilTime = oilTime and math.floor(tonumber(oilTime)/1000/60) or nil;
 	if (flaskTime) then
 		if (flaskTime > 15) then
 			flaskTime = GREEN .. flaskTime .. "min";
@@ -109,9 +109,9 @@ local function updateConsumables()
 				count = count + 1;
 			end
 		end
-		ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. "  \124T" .. oilIcon .. ":16\124t" .. oilTime .. "  \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. "  \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. "  \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" ..total) or (RED .. count .. "/" .. total)));
+		ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
 	else
-		ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. "  \124T" .. oilIcon .. ":16\124t" .. oilTime .. "  \124T" .. foodIcon .. ":16\124t " .. (food and CHECK or CROSS) .. "  \124T" .. runeIcon .. ":16\124t " .. (rune and CHECK or CROSS)); 
+		ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. foodIcon .. ":16\124t " .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS)); 
 	end
 end
 

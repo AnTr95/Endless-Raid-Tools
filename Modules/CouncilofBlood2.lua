@@ -1,5 +1,5 @@
 local f = CreateFrame("Frame");
-local inEncounter = true;
+local inEncounter = false;
 local playerName = GetUnitName("player");
 local isGlowing = false;
 local timer = nil;
@@ -9,6 +9,7 @@ local debuffed = false;
 local safe = true;
 local leader = "";
 local nearby = {};
+local debuffedPlayers = {};
 
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("ENCOUNTER_START");
@@ -44,7 +45,38 @@ local function glowButton(button)
 	else
 		ActionButton_ShowOverlayGlow(_G["OverrideActionBarButton"..button]);
 	end
+	--[[
+	C_Timer.After(2.5, function()
+		if (isGlowing) then
+			print("timer removing glow " .. isGlowing)
+			if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..isGlowing]) then
+				ActionButton_HideOverlayGlow(_G["BT4Button"..isGlowing]);
+			elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]) then
+				ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]);
+			elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..isGlowing]) then
+				ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..isGlowing]);
+			elseif (ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..isGlowing])) then
+				ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..isGlowing]);
+			end
+		end
+		isGlowing = false;
+	end);]]
 	isGlowing = button;
+end
+
+local function removeGlow()
+	if (isGlowing) then
+		if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..isGlowing]) then
+			ActionButton_HideOverlayGlow(_G["BT4Button"..isGlowing]);
+		elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]) then
+			ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]);
+		elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..isGlowing]) then
+			ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..isGlowing]);
+		else
+			ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..isGlowing]);
+		end
+		isGlowing = false;
+	end
 end
 
 local function onUpdate(self, elapsed)
@@ -103,18 +135,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (UnitIsUnit(unitName, playerName)) then
 			if (EnRT_TCOBDMEnabled) then
 				if ((not EnRT_UnitDebuff(unit, GetSpellInfo(328495)) or EnRT_UnitDebuff(unit, GetSpellInfo(330848))) and isGlowing) then
-					if (isGlowing) then
-						if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..isGlowing]) then
-							ActionButton_HideOverlayGlow(_G["BT4Button"..isGlowing]);
-						elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]) then
-							ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]);
-						elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..isGlowing]) then
-							ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..isGlowing]);
-						else
-							ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..isGlowing]);
-						end
-						isGlowing = false;
-					end
+					C_Timer.After(1, function() 
+						removeGlow();
+					end);
 				end
 			elseif (EnRT_TCOBDFEnabled) then
 				if (EnRT_UnitDebuff(unit, GetSpellInfo(342859)) and not debuffed) then -- unknown spellid Dancing Fever
@@ -130,32 +153,20 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
+	--[[
 	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and EnRT_TCOBDMEnabled and inEncounter) then
 		local unit, _, spellID = ...;
-		if (UnitIsUnit(unit, playerName) and (spellID == 333837 or spellID == 328595 or spellID == 333835 or spellID == 328591 or spellID == 333836 or spellID == 328593 or spellID == 333838 or spellID == 328596)) then
-			if (isGlowing) then
-				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..isGlowing]) then
-					ActionButton_HideOverlayGlow(_G["BT4Button"..isGlowing]);
-				elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]) then
-					ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..isGlowing]);
-				elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..isGlowing]) then
-					ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..isGlowing]);
-				else
-					ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..isGlowing]);
-				end
-				isGlowing = false;
-			end
-		elseif (not UnitInRaid(unit) and (spellID == 333837 or spellID == 328595 or spellID == 333835 or spellID == 328591 or spellID == 333836 or spellID == 328592 or spellID == 333838 or spellID == 328596)) then
-			if (spellID == 333837 or spellID == 328595 and not isGlowing) then
+		if (not UnitInRaid(unit) and (spellID == 328595 or spellID == 328591 or spellID == 328592 or spellID == 328596)) then
+			if (spellID == 328595 and not isGlowing) then
 				glowButton(1);
-			elseif (spellID == 333835 or spellID == 328591 and not isGlowing) then
+			elseif (spellID == 328591 and not isGlowing) then
 				glowButton(2);
-			elseif (spellID == 333836 or spellID == 328592 and not isGlowing) then
+			elseif (spellID == 328592 and not isGlowing) then
 				glowButton(3);
-			elseif (spellID == 333838 or spellID == 328596 and not isGlowing) then
+			elseif (spellID == 328596 and not isGlowing) then
 				glowButton(4);
 			end
-		end
+		end]]
 	elseif (event == "CHAT_MSG_ADDON" and EnRT_TCOBDFEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
 		sender = Ambiguate(sender, "short");
@@ -200,14 +211,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 		ticks = 0;
 		text = nil;
 		f:SetScript("OnUpdate", nil);
-	elseif (inEncounter and event ~= "ENCOUNTER_END" and event ~= "ENCOUNTER_START" and event ~= "UNIT_AURA" and event ~= "UNIT_SPELLCAST_SUCCEEDED" and event ~= "PLAYER_LOGIN" and event ~= "CHAT_MSG_ADDON") then
-		print(event);
+	elseif (inEncounter and event == "CHAT_MSG_RAID_BOSS_EMOTE") then
 		local msg = ...;
-		if (msg:match("Sashy Left")) then
+		if (msg:match("Sashay Left")) then
 			glowButton(1);
-		elseif (msg:match("Boogie Down")) then
-			glowButton(2);
 		elseif (msg:match("Prance Forward")) then
+			glowButton(2);
+		elseif (msg:match("Boogie Down")) then
 			glowButton(3);
 		elseif (msg:match("Shimmy Right")) then
 			glowButton(4);
