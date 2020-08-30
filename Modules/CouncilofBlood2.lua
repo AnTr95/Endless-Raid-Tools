@@ -19,6 +19,7 @@ f:RegisterEvent("CHAT_MSG_SYSTEM");
 f:RegisterEvent("CHAT_MSG_RESTRICTED");
 f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 f:RegisterEvent("CHAT_MSG_RAID_BOSS_WHISPER");
+f:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE");
 
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_TCOB");
 
@@ -131,7 +132,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and EnRT_TCOBDMEnabled and inEncounter) then
 		local unit, _, spellID = ...;
-		if (UnitIsUnit(unit, playerName) and (spellID == 333837 or spellID == 328595 or spellID == 333835 or spellID == 333836 or spellID == 328593 or spellID == 333838 or spellID == 328596)) then
+		if (UnitIsUnit(unit, playerName) and (spellID == 333837 or spellID == 328595 or spellID == 333835 or spellID == 328591 or spellID == 333836 or spellID == 328593 or spellID == 333838 or spellID == 328596)) then
 			if (isGlowing) then
 				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..isGlowing]) then
 					ActionButton_HideOverlayGlow(_G["BT4Button"..isGlowing]);
@@ -142,6 +143,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				else
 					ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..isGlowing]);
 				end
+				isGlowing = false;
 			end
 		elseif (not UnitInRaid(unit) and (spellID == 333837 or spellID == 328595 or spellID == 333835 or spellID == 328591 or spellID == 333836 or spellID == 328592 or spellID == 333838 or spellID == 328596)) then
 			if (spellID == 333837 or spellID == 328595 and not isGlowing) then
@@ -198,7 +200,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		ticks = 0;
 		text = nil;
 		f:SetScript("OnUpdate", nil);
-	elseif (event ~= "ENCOUNTER_END" and event ~= "ENCOUNTER_START" and event ~= "UNIT_AURA" and event ~= "UNIT_SPELLCAST_SUCCEEDED" and event ~= "PLAYER_LOGIN" and event ~= "CHAT_MSG_ADDON") then
+	elseif (inEncounter and event ~= "ENCOUNTER_END" and event ~= "ENCOUNTER_START" and event ~= "UNIT_AURA" and event ~= "UNIT_SPELLCAST_SUCCEEDED" and event ~= "PLAYER_LOGIN" and event ~= "CHAT_MSG_ADDON") then
 		print(event);
 		local msg = ...;
 		if (msg:match("Sashy Left")) then

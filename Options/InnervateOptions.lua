@@ -56,7 +56,7 @@ local infoTexture = EnRT_InnervateOptions:CreateTexture(nil, "BACKGROUND");
 infoTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\Innervate.tga");
 infoTexture:SetPoint("TOPLEFT", enabledButton, "TOP", 100, -70);
 infoTexture:SetSize(256, 16);
-infoTexture:SetTexCoord(0,0.95,0,0.55);
+infoTexture:SetTexCoord(0,0.95,0,0.59);
 
 local innervateTexture1 = EnRT_InnervateOptions:CreateTexture(nil, "BACKGROUND");
 innervateTexture1:SetTexture("Interface\\Icons\\spell_nature_lightning");
