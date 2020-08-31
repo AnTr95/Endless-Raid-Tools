@@ -54,7 +54,7 @@ infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
 infoBorder:SetPoint("TOP", 20, -85);
 
 local info = EnRT_SludgefistOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
-info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25);
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -8);
 info:SetSize(430, 300);
 info:SetText(L.OPTIONS_SLUDGEFIST_INFO);
 info:SetWordWrap(true);
@@ -77,6 +77,29 @@ end);
 local enabledText = EnRT_SludgefistOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
 enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
+
+local infoTexture = EnRT_SludgefistOptions:CreateTexture(nil, "BACKGROUND");
+infoTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\Sludgefist.tga");
+infoTexture:SetPoint("TOPLEFT", enabledButton, "TOP", 5, -50);
+infoTexture:SetSize(465, 170);
+infoTexture:SetTexCoord(0,0.9,0,0.65);
+
+local starTexture1 = EnRT_SludgefistOptions:CreateTexture(nil, "BACKGROUND");
+starTexture1:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_1");
+starTexture1:SetPoint("TOPLEFT", infoTexture, "TOPLEFT", -45, 5);
+starTexture1:SetSize(40, 40);
+
+local starTexture2 = EnRT_SludgefistOptions:CreateTexture(nil, "BACKGROUND");
+starTexture2:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_1");
+starTexture2:SetPoint("TOPLEFT", infoTexture, "TOPRIGHT", 3, 5);
+starTexture2:SetSize(40, 40);
+
+local previewText = EnRT_SludgefistOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+previewText:SetPoint("TOP", infoTexture, "TOP", 0, 25);
+previewText:SetText(L.OPTIONS_SLUDGEFIST_PREVIEW);
+previewText:SetJustifyH("CENTER");
+previewText:SetSize(570,25);
+previewText:SetWordWrap(true);
 
 
 EnRT_SludgefistOptions:SetScript("OnShow", function(self)

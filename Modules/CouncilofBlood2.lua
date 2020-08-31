@@ -44,6 +44,10 @@ local function glowButton(button)
 		ActionButton_ShowOverlayGlow(_G["OverrideActionBarButton"..button]);
 	end
 	--[[
+	C_Timer.After(2, function() 
+		removeGlow();
+	end);]]
+	--[[
 	C_Timer.After(2.5, function()
 		if (isGlowing) then
 			print("timer removing glow " .. isGlowing)

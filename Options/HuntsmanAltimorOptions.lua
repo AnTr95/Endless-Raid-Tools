@@ -80,7 +80,7 @@ enabledText:SetText(L.OPTIONS_ENABLED);
 
 local playersPerLineText = EnRT_HuntsmanAltimorOptions:CreateFontString(nil, "ARTWORK", "GameFontWhite");
 playersPerLineText:SetText(L.OPTIONS_HUNTSMANALTIMOR_PLAYERSPERLINE);
-playersPerLineText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 0, -35);
+playersPerLineText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 0, -30);
 playersPerLineText:SetSize(400,100);
 playersPerLineText:SetWordWrap(true);
 playersPerLineText:SetJustifyH("LEFT");
@@ -112,6 +112,45 @@ UIDropDownMenu_SetWidth(playersPerLineStateMenu, 110);
 UIDropDownMenu_SetButtonWidth(playersPerLineStateMenu, 110);
 UIDropDownMenu_JustifyText(playersPerLineStateMenu, "CENTER");
 UIDropDownMenu_Initialize(playersPerLineStateMenu, Initialize_PlayersPerLineState);
+
+local infoTexture = EnRT_HuntsmanAltimorOptions:CreateTexture(nil, "BACKGROUND");
+infoTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\HuntsmanAltimor1.tga");
+infoTexture:SetPoint("TOPLEFT", enabledButton, "TOP", -40, -105);
+infoTexture:SetSize(256, 118);
+infoTexture:SetTexCoord(0,1,0,0.89);
+
+local starTexture1 = EnRT_HuntsmanAltimorOptions:CreateTexture(nil, "BACKGROUND");
+starTexture1:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_1");
+starTexture1:SetPoint("TOPLEFT", infoTexture, "TOPLEFT", -20, 2);
+starTexture1:SetSize(20, 20);
+
+local starTexture2 = EnRT_HuntsmanAltimorOptions:CreateTexture(nil, "BACKGROUND");
+starTexture2:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_1");
+starTexture2:SetPoint("TOPLEFT", infoTexture, "TOPRIGHT", 2, 2);
+starTexture2:SetSize(20, 20);
+
+local infoTexture2 = EnRT_HuntsmanAltimorOptions:CreateTexture(nil, "BACKGROUND");
+infoTexture2:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\HuntsmanAltimor2.tga");
+infoTexture2:SetPoint("TOPLEFT", infoTexture, "TOPLEFT", 330, 0);
+infoTexture2:SetSize(168, 118);
+infoTexture2:SetTexCoord(0,0.66,0,0.89);
+
+local starTexture3 = EnRT_HuntsmanAltimorOptions:CreateTexture(nil, "BACKGROUND");
+starTexture3:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_1");
+starTexture3:SetPoint("TOPLEFT", infoTexture2, "TOPLEFT", -20, 1);
+starTexture3:SetSize(20, 20);
+
+local starTexture4 = EnRT_HuntsmanAltimorOptions:CreateTexture(nil, "BACKGROUND");
+starTexture4:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_1");
+starTexture4:SetPoint("TOPLEFT", infoTexture2, "TOPRIGHT", 1, 1);
+starTexture4:SetSize(20, 20);
+
+local previewText = EnRT_HuntsmanAltimorOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+previewText:SetPoint("TOP", infoTexture, "TOP", 150, 30);
+previewText:SetText(L.OPTIONS_HUNTSMANALTIMOR_PREVIEW);
+previewText:SetJustifyH("CENTER");
+previewText:SetSize(570,25);
+previewText:SetWordWrap(true);
 
 
 EnRT_HuntsmanAltimorOptions:SetScript("OnShow", function(self)
