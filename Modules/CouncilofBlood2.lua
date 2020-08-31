@@ -7,9 +7,7 @@ local text = nil;
 local ticks = 0;
 local debuffed = false;
 local safe = true;
-local leader = "";
 local nearby = {};
-local debuffedPlayers = {};
 
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("ENCOUNTER_START");
@@ -123,15 +121,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "UNIT_AURA" and inEncounter) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
-		if (UnitIsUnit(leader, unitName) and EnRT_TCOBDFEnabled) then
-			if (EnRT_UnitDebuff(unit, GetSpellInfo(342859)) and not EnRT_Contains(debuffedPlayers, unitName)) then
-				debuffedPlayers[#debuffedPlayers+1] = unitName;
-				SetRaidTarget(unitName, #debuffedPlayers);
-			elseif (EnRT_Contains(debuffedPlayers, unitName)) then
-				SetRaidTarget(unitName, 0);
-				debuffedPlayers[EnRT_Contains(debuffedPlayers, unitName)] = nil;
-			end
-		end
 		if (UnitIsUnit(unitName, playerName)) then
 			if (EnRT_TCOBDMEnabled) then
 				if ((not EnRT_UnitDebuff(unit, GetSpellInfo(328495)) or EnRT_UnitDebuff(unit, GetSpellInfo(330848))) and isGlowing) then
@@ -200,7 +189,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 			nearby = {};
 			ticks = 0;
 			text = nil;
-			leader = EnRT_GetRaidLeader();
 			f:SetScript("OnUpdate", nil);
 		end
 	elseif (event == "ENCOUNTER_END" and inEncounter and (EnRT_TCOBDFEnabled or EnRT_TCOBDMEnabled)) then
