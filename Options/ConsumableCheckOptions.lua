@@ -53,16 +53,16 @@ enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
 
 local infoTexture = EnRT_ConsumableCheckOptions:CreateTexture(nil, "BACKGROUND");
-infoTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\ConsumableCheck1.tga");
+infoTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\cc1.tga");
 infoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 130, -60);
-infoTexture:SetSize(315, 95);
-infoTexture:SetTexCoord(0,0.65,0,0.72);
+infoTexture:SetSize(352, 128);
+infoTexture:SetTexCoord(0,0.69,0,1);
 
 local infoTexture2 = EnRT_ConsumableCheckOptions:CreateTexture(nil, "BACKGROUND");
-infoTexture2:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\ConsumableCheck2.tga");
-infoTexture2:SetPoint("TOPLEFT", infoTexture, "TOPLEFT", 0, -110);
-infoTexture2:SetSize(315, 95);
-infoTexture2:SetTexCoord(0,0.65,0,0.72);
+infoTexture2:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\cc2.tga");
+infoTexture2:SetPoint("TOPLEFT", infoTexture, "TOPLEFT", 0, -140);
+infoTexture2:SetSize(352, 128);
+infoTexture2:SetTexCoord(0,0.69,0,1);
 
 local previewText = EnRT_ConsumableCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
 previewText:SetPoint("TOP", infoTexture, "TOP", 0, 25);

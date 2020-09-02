@@ -175,6 +175,7 @@ function armorKit()
 	end
 	if (shortest == nil) then
 		shortest = "";
+		count = CROSS;
 	else
 		if (shortest == 61) then
 			shortest = GREEN .. "2hrs|r";
@@ -287,7 +288,7 @@ local function updateConsumables()
 			ReadyCheckFrameText:SetSize(320, 40);
 			ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
 		else
-			f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -15);
+			f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -17);
 			f2:Show();
 			rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
 		end
@@ -300,7 +301,7 @@ local function updateConsumables()
 			ReadyCheckFrameText:SetSize(320, 40);
 			ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS));
 		else
-			f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -15);
+			f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -17);
 			f2:Show();
 			rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS));
 		end
