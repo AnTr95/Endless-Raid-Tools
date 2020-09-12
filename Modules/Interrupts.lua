@@ -53,7 +53,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and nextInterrupter and inEncounter and EnRT_InterruptEnabled) then
 		local unit, _, spell = ...;
 		if (unit == "player") then
-			if (EnRT_Contains(spellNames, spell)) then
+			if (Endless_Contains(spellNames, spell)) then
 				if (interruptNext) then
 					EnRT_PopupHide();
 					interruptNext = false;
@@ -65,3 +65,23 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	end
 end)
+--[[
+	Checking if a table contains a given value and if it does, what index is the value located at
+	param(arr) table
+	param(value) T - value to check exists
+	return boolean or integer / returns false if the table does not contain the value otherwise it returns the index of where the value is locatedd
+]]
+function Endless_Contains(arr, value)
+	if (value == nil) then
+		return false;
+	end
+	if (arr == nil) then
+		return false;
+	end
+	for k, v in pairs(arr) do
+		if (v == value) then
+			return k;
+		end
+	end
+	return false;
+end

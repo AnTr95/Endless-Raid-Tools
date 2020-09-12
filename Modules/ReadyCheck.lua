@@ -271,28 +271,26 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 		if (rcSender == UnitName("player") and select(2, GetInstanceInfo()) == "raid") then
 			for raider, response in pairs(raiders) do
-				if (UnitInRaid(raider)) then
-					if (response == 0) then
-						if not rcText:IsShown() then 
-							rcText:Show()
-						end
+				if (response == 0) then
+					if not rcText:IsShown() then 
+						rcText:Show()
+					end
 
-						if not rcCloseButton:IsShown() then
-							rcCloseButton:Show()
-						end
+					if not rcCloseButton:IsShown() then
+						rcCloseButton:Show()
+					end
 
-						if not f:IsShown() then
-							f:Show()
-							f:SetBackdropColor(0,0,0,1)
-							f:SetBackdropBorderColor(169,169,169,1)
-						end
+					if not f:IsShown() then
+						f:Show()
+						f:SetBackdropColor(0,0,0,1)
+						f:SetBackdropBorderColor(169,169,169,1)
+					end
 
-						local playerText = string.format("|c%s%s", RAID_CLASS_COLORS[select(2, UnitClass(raider))].colorStr, Ambiguate(raider, "short"));
-						if (rcText:GetText() == nil) then
-							rcText:SetText("Players not ready or afk: \n" .. playerText .. '\n');
-						elseif (not rcText:GetText():match(playerText)) then
-							rcText:SetText(rcText:GetText() .. playerText .. '\n');
-						end
+					local playerText = string.format("|c%s%s", RAID_CLASS_COLORS[select(2, UnitClass(raider))].colorStr, Ambiguate(raider, "short"));
+					if (rcText:GetText() == nil) then
+						rcText:SetText("Players not ready or afk: \n" .. playerText .. '\n');
+					elseif (not rcText:GetText():match(playerText)) then
+						rcText:SetText(rcText:GetText() .. playerText .. '\n');
 					end
 				end
 			end

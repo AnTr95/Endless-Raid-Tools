@@ -6,7 +6,6 @@ SLASH_ENDLESSRAIDTOOLS1 = "/endlessraidtools";
 SLASH_ENDLESSRAIDTOOLS2 = "/enrt";
 local playersChecked = {};
 local initCheck = false;
-local recievedOutOfDateMessage = false;
 local function handler(msg, editbox)
 	local arg = string.lower(msg);
 	if (arg ~= nil and arg == "vc") then
@@ -22,9 +21,7 @@ SlashCmdList["ENDLESSRAIDTOOLS"] = handler;
 f:RegisterEvent("CHAT_MSG_ADDON");
 f:RegisterEvent("ADDON_LOADED");
 f:RegisterEvent("PLAYER_LOGIN");
-f:RegisterEvent("GROUP_ROSTER_UPDATE");
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_VC");
---C_ChatInfo.RegisterAddonMessagePrefix("EnRT_UPDATE");
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "CHAT_MSG_ADDON") then
 		local prefix, msg, channel, sender = ...;
@@ -53,22 +50,17 @@ f:SetScript("OnEvent", function(self, event, ...)
 				playersChecked[#playersChecked+1] = sender;
 				print(sender .. "-" .. msg);
 			end
-		elseif (prefix == "EnRT_UPDATE" and UnitName("player") ~= Ambiguate(sender, "short") and not recievedOutOfDateMessage) then
-			if (tonumber(msg) ~= nil) then
-				if (tonumber(msg) > tonumber(version)) then
-					DEFAULT_CHAT_FRAME:AddMessage("|cFFFF0000" .. L.WARNING_OUTOFDATEMESSAGE);
-					recievedOutOfDateMessage = true;
-				end
-			end
 		end
+	--[[
 	elseif (event == "GROUP_ROSTER_UPDATE") then
 		if (IsInRaid(LE_PARTY_CATEGORY_INSTANCE) or IsInGroup(LE_PARTY_CATEGORY_INSTANCE)) then
-			C_ChatInfo.SendAddonMessage("EnRT_UPDATE", version, "INSTANCE_CHAT");
+			C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "INSTANCE_CHAT");
 		elseif (IsInRaid(LE_PARTY_CATEGORY_HOME)) then
-			C_ChatInfo.SendAddonMessage("EnRT_UPDATE", version, "RAID");
+			C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "RAID");
 		elseif (IsInGroup(LE_PARTY_CATEGORY_HOME)) then
-			C_ChatInfo.SendAddonMessage("EnRT_UPDATE", version, "PARTY");
+			C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "PARTY");
 		end
+	]]
 	elseif (event == "ADDON_LOADED" and addon == ...) then
 		if (EnRT_PopupTextPosition ~= nil) then
 			EnRT_PopupSetPosition(EnRT_PopupTextPosition.point, EnRT_PopupTextPosition.relativeTo, EnRT_PopupTextPosition.relativePoint, EnRT_PopupTextPosition.xOffset, EnRT_PopupTextPosition.yOffset);
@@ -86,9 +78,11 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (EnRT_MinimapMode == nil) then EnRT_MinimapMode = "Always"; end
 		EnRT_PopupUpdateFontSize();
 		EnRT_InfoBoxUpdateFontSize();
+		--[[
 		if (IsInGuild()) then
-			C_ChatInfo.SendAddonMessage("EnRT_UPDATE", version, "GUILD");
+			C_ChatInfo.SendAddonMessage("EnRT_VC", "vco-"..version, "GUILD");
 		end
+		]]
 	elseif (event == "PLAYER_LOGIN") then
 		if (EnRT_MinimapMode == "Always") then
 			EnRT_MinimapButton:Show();
@@ -110,7 +104,7 @@ end
 	param(value) T - value to check exists
 	return boolean or integer / returns false if the table does not contain the value otherwise it returns the index of where the value is locatedd
 ]]
-function EnRT_Contains(arr, value)
+function Endless_Contains(arr, value)
 	if (value == nil) then
 		return false;
 	end
@@ -124,7 +118,6 @@ function EnRT_Contains(arr, value)
 	end
 	return false;
 end
-
 --[[
 	Checking if a table contains a given value and if it does, what index is the value located at
 	param(arr) table
