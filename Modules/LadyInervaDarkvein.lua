@@ -1,5 +1,6 @@
 local f = CreateFrame("Frame");
 local inEncounter = false;
+local hasAssigned = false;
 local leader = "";
 local debuffed = {};
 local playerName = GetUnitName("player");
@@ -44,7 +45,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (EnRT_UnitDebuff(unit, GetSpellInfo(325064))) then
 				if (not EnRT_Contains(debuffed, unitName)) then
 					debuffed[#debuffed+1] = unitName;
-					if (#debuffed == 3) then
+					if (#debuffed == 3 and not hasAssigned) then
+						hasAssigned = true;
 						assignMarks();
 					end
 				end
@@ -52,10 +54,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (EnRT_Contains(debuffed, unitName)) then
 					debuffed[EnRT_Contains(debuffed, unitName)] = nil;
 					SetRaidTarget(unitName, 0);
-					if (timer) then
-						timer:Cancel();
-						timer = nil;
-					end
+					hasAssigned = false;
+					timer:Cancel();
+					timer = nil;
 				end
 			end
 		end
@@ -69,11 +70,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local eID = ...;
 		if (eID == 0000) then
 			inEncounter = true;
+			hasAssigned = false;
 			leader = EnRT_GetRaidLeader();
 			debuffed = {};
 		end
 	elseif (event == "ENCOUNTER_END" and EnRT_LadyInervaDarkveinEnabled) then
 		inEncounter = false;
 		debuffed = {};
+		hasAssigned = false;
 	end
 end);
