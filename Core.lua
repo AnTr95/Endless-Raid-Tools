@@ -24,7 +24,7 @@ f:RegisterEvent("ADDON_LOADED");
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("GROUP_ROSTER_UPDATE");
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_VC");
---C_ChatInfo.RegisterAddonMessagePrefix("EnRT_UPDATE");
+C_ChatInfo.RegisterAddonMessagePrefix("EnRT_UPDATE");
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "CHAT_MSG_ADDON") then
 		local prefix, msg, channel, sender = ...;
