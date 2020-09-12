@@ -1,6 +1,6 @@
 ## Interface: 90000
 ## Title: Endless Raid Tools
-## Version: 8.61
+## Version: 8.54
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: EnRT_InterruptEnabled

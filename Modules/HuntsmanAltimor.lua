@@ -5,6 +5,7 @@ local debuffed = {};
 local raid = nil;
 local playerName = GetUnitName("player");
 local assignment = "";
+local printDebug = false;
 local groupIcons = {
 	["1"] = "STAR",
 	["2"] = "CIRCLE",
@@ -73,6 +74,14 @@ local function initRaid()
 		end
 	end
 	resetAssignmentsData();
+end
+
+function EnRT_HA_Debug()
+	if (printDebug) then
+		printDebug = false;
+	else
+		printDebug = true;
+	end
 end
 
 local function resetAssignmentsData()
@@ -146,92 +155,179 @@ local function printAssignments()
 		end
 	end]]
 	--print(starText .. circleText .. diamondText);
-	C_ChatInfo.SendAddonMessage("EnRT_HA", "reset", "RAID");
-	C_ChatInfo.SendAddonMessage("EnRT_HA", "reset", "WHISPER", "Ant");
 end
 
 local function assignMarks()
 	for mark = 1, #debuffed do
-		print("assign round " .. mark)
+		if (printDebug) then
+			print("assign round " .. mark)
+		end
 		local debuffsInGroup = debuffsPerGroup[mark+1];
 		local requireBackup = 0;
 		for index, player in pairs(raid[mark+1]) do
-			print("itr group " .. mark+1)
+			if (printDebug) then
+				print("itr group " .. mark+1)
+			end
 			if (index == 5) then
 				break;
 			end
 			if (#debuffed < 3) then
 				if (not EnRT_Contains(debuffed, player) and assignments[player].mark == mark) then
-					print(player .. " passed " .. groupIcons[tostring(mark)] .. " " .. positions[index-requireBackup]);
+					if (printDebug) then
+						print(player .. " passed " .. groupIcons[tostring(mark)] .. " " .. positions[index-requireBackup]);
+					end
 					assignments[player].mark = mark;
 					assignments[player].pos = positions[index-requireBackup];
-					C_ChatInfo.SendAddonMessage("EnRT_HA", mark .. " " .. positions[index-requireBackup], "WHISPER", player);
+					if (UnitIsConnected(player)) then
+						C_ChatInfo.SendAddonMessage("EnRT_HA", mark .. " " .. positions[index-requireBackup], "WHISPER", player);
+					end
 				else
-					print(player .. " did not pass " .. groupIcons[tostring(mark)] .. " " .. positions[index-requireBackup]);
-					print("player is debuffed or assigned to another group")
+					if (printDebug) then
+						print(player .. " did not pass " .. groupIcons[tostring(mark)] .. " " .. positions[index-requireBackup]);
+						print("player is debuffed or assigned to another group")
+					end
 					requireBackup = requireBackup + 1;
 					local nextGroup = mark+1+(requireBackup);
 					local backupPlayer = "";
-					print("next group: " .. nextGroup);
+					if (printDebug) then
+						print("next group: " .. nextGroup);
+					end
 					if (nextGroup == 5) then
 						nextGroup = 4;
 						backupPlayer = raid[nextGroup][3];
-						print("group was 5 so changed it to 4");
-						print("and backup player was changed to " .. backupPlayer);
+						if (printDebug) then
+							print("group was 5 so changed it to 4");
+							print("and backup player was changed to " .. backupPlayer);
+						end
 					end
 					if (backupPlayer == "") then
 						backupPlayer = raid[nextGroup][4];
-						print("backup player " .. backupPlayer);
+						if (printDebug) then
+							print("backup player " .. backupPlayer);
+						end
+					end
+					if (EnRT_Contains(debuffed, backupPlayer)) then
+						if (printDebug) then
+							print("backupPlayer " .. " is debuffed");
+						end
+						nextGroup = nextGroup + 1;
+						if (printDebug) then
+							print("taking from next group " .. nextGroup);
+						end
+						if (nextGroup == 5) then
+							nextGroup = 4;
+							backupPlayer = raid[nextGroup][3];
+							if (printDebug) then
+								print("there was no next group, taking from group " ..  nextGroup);
+								print("new backup is " .. backupPlayer);
+							end
+						else
+							backupPlayer = raid[nextGroup][4];
+							if (printDebug) then
+								print("new backup is " .. backupPlayer);
+							end
+						end
 					end
 					local backupPos = 4-debuffsInGroup+1;
-					if (mark == 2 and debuffsInGroup > 0 and debuffsPerGroup[2] > 0) then
+					if (mark == 2 and debuffsInGroup > 0 and debuffsPerGroup[2] > 0 and not EnRT_Contains(debuffed, raid[mark+1][4]) and not EnRT_Contains(debuffed, raid[mark][4])) then --if debuffed player is only backup dont move position forward
+						if (printDebug) then
+							print("debuffs in grp 3 and in grp 2 has a backup player");
+						end
 						backupPos = 3;
+					elseif (mark == 2 and debuffsInGroup == 0 and debuffsPerGroup[2] > 1) then
+						backupPlayer = raid[nextGroup][3];
+						if (printDebug) then
+							print("backup player changed to " .. backupPlayer);
+						end
+					elseif (mark == 2 and EnRT_Contains(debuffed, raid[mark+1][4]) and EnRT_Contains(debuffed, raid[mark][4])) then
+						backupPlayer = raid[nextGroup][3];
+						if (printDebug) then
+							print("backup player changed to " .. backupPlayer);
+						end
 					end
 					if (backupPos == 5) then --nobody in the grp is debuffed but 1 party member was moved to another party and we still need a backup
-						print("grp has no debuffs but is a player short");
+						if (printDebug) then
+							print("grp has no debuffs but is a player short");
+						end
 						backupPos = 4;
-						print("new backup position " .. positions[backupPos]);
+						if (printDebug) then
+							print("new backup position " .. positions[backupPos]);
+						end
 					end
 					assignments[backupPlayer].mark = mark;
 					assignments[backupPlayer].pos = positions[backupPos];
-					print("backup player assigned " .. groupIcons[tostring(mark)] .. " " .. positions[backupPos]);
-					C_ChatInfo.SendAddonMessage("EnRT_HA", mark .. " " .. positions[backupPos], "WHISPER", backupPlayer);
+					if (printDebug) then
+						print("backup player assigned " .. groupIcons[tostring(mark)] .. " " .. positions[backupPos]);
+					end
+					if (UnitIsConnected(player)) then
+						C_ChatInfo.SendAddonMessage("EnRT_HA", mark .. " " .. positions[backupPos], "WHISPER", backupPlayer);
+					end
 					debuffsInGroup = debuffsInGroup - 1;
 				end
 			else
 				if (not EnRT_Contains(debuffed, player) and assignments[player].mark == mark and soaksPerGroup[mark+1] < 3) then
-					print(player .. " passed " .. groupIcons[tostring(mark)] .. " " .. positions[index-requireBackup]);
+					if (printDebug) then
+						print(player .. " passed " .. groupIcons[tostring(mark)] .. " " .. positions[index-requireBackup]);
+					end
 					assignments[player].mark = mark;
 					assignments[player].pos = positions[soaksPerGroup[assignments[player].mark+1]+1];
 					soaksPerGroup[mark+1] = soaksPerGroup[mark+1] + 1;
-					C_ChatInfo.SendAddonMessage("EnRT_HA", mark .. " " .. positions[index-requireBackup], "WHISPER", player);
+					if (UnitIsConnected(player)) then
+						C_ChatInfo.SendAddonMessage("EnRT_HA", mark .. " " .. positions[index-requireBackup], "WHISPER", player);
+					end
 				elseif (EnRT_Contains(debuffed, player)) then
-					print(player .. " did not pass " .. groupIcons[tostring(mark)] .. " " .. assignments[player].pos);
+					if (printDebug) then
+						print(player .. " did not pass " .. groupIcons[tostring(mark)] .. " " .. assignments[player].pos);
+					end
 					requireBackup = requireBackup + 1;
 				elseif (assignments[player].mark ~= mark and soaksPerGroup[assignments[player].mark+1] < 3) then
-					if (positionsLex[assignments[player].pos] == 5 and positionsLex[assignments[raid[mark+1][index+1]].pos] <= 3 and assignments[player].mark == assignments[raid[mark+1][index+1]].mark) then
+					if (positionsLex[assignments[player].pos] == 5 and positionsLex[tostring(assignments[raid[mark+1][index+1]].pos)] <= 3 and assignments[player].mark == assignments[raid[mark+1][index+1]].mark) then
 						local nextPlayer = raid[mark+1][index+1];
-						print(nextPlayer .. " from grp " .. mark .. " skipped queue and is now confirmed to join " .. groupIcons[tostring(assignments[nextPlayer].mark)] .. " in position " .. assignments[nextPlayer].pos);
+						if (printDebug) then
+							print(nextPlayer .. " from grp " .. mark .. " skipped queue and is now confirmed to join " .. groupIcons[tostring(assignments[nextPlayer].mark)] .. " in position " .. assignments[nextPlayer].pos);
+						end
 						assignments[nextPlayer].pos = positions[soaksPerGroup[assignments[nextPlayer].mark+1]+1];
-						print(nextPlayer .. " got new position " .. assignments[nextPlayer].pos .. " in " .. groupIcons[tostring(assignments[nextPlayer].mark)]);
+						if (printDebug) then
+							print(nextPlayer .. " got new position " .. assignments[nextPlayer].pos .. " in " .. groupIcons[tostring(assignments[nextPlayer].mark)]);
+						end
 						soaksPerGroup[assignments[nextPlayer].mark+1] = soaksPerGroup[assignments[nextPlayer].mark+1] + 1;
-						print(groupIcons[tostring(assignments[nextPlayer].mark)] .. " now has " .. soaksPerGroup[assignments[nextPlayer].mark+1] .. " soakers");
-						C_ChatInfo.SendAddonMessage("EnRT_HA", assignments[nextPlayer].mark .. " " .. assignments[nextPlayer].pos, "WHISPER", nextPlayer);
+						if (printDebug) then
+							print(groupIcons[tostring(assignments[nextPlayer].mark)] .. " now has " .. soaksPerGroup[assignments[nextPlayer].mark+1] .. " soakers");
+						end
+						if (UnitIsConnected(nextPlayer)) then
+							C_ChatInfo.SendAddonMessage("EnRT_HA", assignments[nextPlayer].mark .. " " .. assignments[nextPlayer].pos, "WHISPER", nextPlayer);
+						end
 						if (soaksPerGroup[assignments[player].mark+1] < 3) then
-							print(player .. " from grp " .. mark .. " is now confirmed to join " .. groupIcons[tostring(assignments[player].mark)] .. " in position " .. assignments[player].pos);
+							if (printDebug) then
+								print(player .. " from grp " .. mark .. " is now confirmed to join " .. groupIcons[tostring(assignments[player].mark)] .. " in position " .. assignments[player].pos);
+							end
 							assignments[player].pos = positions[soaksPerGroup[assignments[player].mark+1]+1];
-							print(player .. " got new position " .. assignments[player].pos .. " in " .. groupIcons[tostring(assignments[player].mark)]);
+							if (printDebug) then
+								print(player .. " got new position " .. assignments[player].pos .. " in " .. groupIcons[tostring(assignments[player].mark)]);
+							end
 							soaksPerGroup[assignments[player].mark+1] = soaksPerGroup[assignments[player].mark+1] + 1;
-							print(groupIcons[tostring(assignments[player].mark)] .. " now has " .. soaksPerGroup[assignments[player].mark+1] .. " soakers");
-							C_ChatInfo.SendAddonMessage("EnRT_HA", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
+							if (printDebug) then
+								print(groupIcons[tostring(assignments[player].mark)] .. " now has " .. soaksPerGroup[assignments[player].mark+1] .. " soakers");
+							end
+							if (UnitIsConnected(player)) then
+								C_ChatInfo.SendAddonMessage("EnRT_HA", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
+							end
 						end
 					else
-						print(player .. " from grp " .. mark .. " is now confirmed to join " .. groupIcons[tostring(assignments[player].mark)] .. " in position " .. assignments[player].pos);
+						if (printDebug) then
+							print(player .. " from grp " .. mark .. " is now confirmed to join " .. groupIcons[tostring(assignments[player].mark)] .. " in position " .. assignments[player].pos);
+						end
 						assignments[player].pos = positions[soaksPerGroup[assignments[player].mark+1]+1];
-						print(player .. " got new position " .. assignments[player].pos .. " in " .. groupIcons[tostring(assignments[player].mark)]);
+						if (printDebug) then
+							print(player .. " got new position " .. assignments[player].pos .. " in " .. groupIcons[tostring(assignments[player].mark)]);
+						end
 						soaksPerGroup[assignments[player].mark+1] = soaksPerGroup[assignments[player].mark+1] + 1;
-						print(groupIcons[tostring(assignments[player].mark)] .. " now has " .. soaksPerGroup[assignments[player].mark+1] .. " soakers");
-						C_ChatInfo.SendAddonMessage("EnRT_HA", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
+						if (printDebug) then
+							print(groupIcons[tostring(assignments[player].mark)] .. " now has " .. soaksPerGroup[assignments[player].mark+1] .. " soakers");
+						end
+						if (UnitIsConnected(player)) then
+							C_ChatInfo.SendAddonMessage("EnRT_HA", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
+						end
 					end
 				end
 			end
@@ -240,7 +336,9 @@ local function assignMarks()
 	if(#debuffed == 3) then
 		for grp = 2, 4 do
 			if (soaksPerGroup[grp] < 3) then
-				print("group " .. grp .. " still missing soakers");
+				if (printDebug) then
+					print("group " .. grp .. " still missing soakers");
+				end
 				for nextGroup = 2, 4 do
 					if (grp ~= nextGroup or grp == 4) then
 						for index, player in pairs(raid[nextGroup]) do
@@ -248,9 +346,13 @@ local function assignMarks()
 								assignments[player].mark = grp-1;
 								assignments[player].pos = positions[soaksPerGroup[grp]+1];
 								soaksPerGroup[grp] = soaksPerGroup[grp] + 1;
-								print(player .. " in grp " .. nextGroup .. " is now confirmed soaker of mark " .. groupIcons[tostring(grp-1)] .. " with position " .. assignments[player].pos);
-								print(groupIcons[tostring(grp-1)] .. " now has " .. soaksPerGroup[grp] .. " soakers");
-								C_ChatInfo.SendAddonMessage("EnRT_HA", grp-1 .. " " .. assignments[player].pos, "WHISPER", player);
+								if (printDebug) then
+									print(player .. " in grp " .. nextGroup .. " is now confirmed soaker of mark " .. groupIcons[tostring(grp-1)] .. " with position " .. assignments[player].pos);
+									print(groupIcons[tostring(grp-1)] .. " now has " .. soaksPerGroup[grp] .. " soakers");
+								end
+								if (UnitIsConnected(player)) then
+									C_ChatInfo.SendAddonMessage("EnRT_HA", grp-1 .. " " .. assignments[player].pos, "WHISPER", player);
+								end
 								if (soaksPerGroup[grp] >= 3) then
 									break;
 									--goto continue;
@@ -268,9 +370,13 @@ local function assignMarks()
 		for grp = 2, 4 do
 			for index, player in pairs(raid[grp]) do
 				if (assignments[player].pos == positions[4]) then
-					print(player .. " in " .. grp .. " with mark " .. groupIcons[tostring(assignments[player].mark)] .. " should not soak");
+					if (printDebug) then
+						print(player .. " in " .. grp .. " with mark " .. groupIcons[tostring(assignments[player].mark)] .. " should not soak");
+					end
 					assignments[player].pos = positions[5];
-					C_ChatInfo.SendAddonMessage("EnRT_HA", grp-1 .. " " .. assignments[player].pos, "WHISPER", player);
+					if (UnitIsConnected(player)) then
+						C_ChatInfo.SendAddonMessage("EnRT_HA", grp-1 .. " " .. assignments[player].pos, "WHISPER", player);
+					end
 				end
 			end
 		end
@@ -294,8 +400,8 @@ local function playerNotification(mark, pos, duration)
 	SendChatMessage(chatText, "YELL");
 	timer = C_Timer.NewTicker(1, function()
 		if (UnitIsDead("player")) then
-			ticker:Cancel();
-			ticker = nil;
+			timer:Cancel();
+			timer = nil;
 		elseif (tonumber(pos)) then
 			chatText = "{rt" .. mark .. "} " .. math.ceil(pos-GetTime()) .. " {rt" .. mark .. "}";
 			SendChatMessage(chatText, "YELL");
@@ -349,7 +455,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
-	elseif (event == "CHAT_MSG_ADDON" and EnRT_HuntsmanAltimorEnabled) then
+	elseif (event == "CHAT_MSG_ADDON" and EnRT_HuntsmanAltimorEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "EnRT_HA") then
 			if(msg == "reset") then
@@ -377,20 +483,42 @@ f:SetScript("OnEvent", function(self, event, ...)
 			inEncounter = true;
 			leader = EnRT_GetRaidLeader();
 			debuffed = {};
-			assignment = nil;
+			assignment = "";
 			initRaid();
-			timer = nil;
+			if (timer) then
+				timer:Cancel();
+				timer = nil;
+			end
 		end
 	elseif (event == "ENCOUNTER_END" and EnRT_HuntsmanAltimorEnabled and inEncounter) then
 		inEncounter = false;
 		debuffed = {};
-		assignment = nil;
-		timer = nil;
+		assignment = "";
+		if (timer) then
+			timer:Cancel();
+			timer = nil;
+		end
 	end
 end);
 
 function testResults(test)
-	if (test == 1) then
+	if (test == 0) then
+		local printT = "Tested test 1 to 21\n";
+		local count = 0;
+		for i = 1, 21 do 
+			C_Timer.After((i-1)*4, function() 
+				local passed = testResults(i);
+				if (not passed) then
+					count = count + 1;
+					printT = printT .. "Test " .. i .. " failed\n";
+				end
+			end);
+		end
+		C_Timer.After(21*4, function()
+			printT = printT .. count .. "/21 tests failed";
+			print(printT);
+		end);
+	elseif (test == 1) then
 		HA_Test(1,2,3);
 		C_Timer.After(3, function()
 			if (assignments["Ala"].mark == 1 and assignments["Ant"].mark == 1 and assignments["Blink"].mark == 1 and assignments["Fed"].mark == 1 
@@ -400,8 +528,10 @@ function testResults(test)
 			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == positions[5]
 			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == positions[2] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == positions[5]) then
 				print("TEST" ..test.. " PASS");
+				return true;
 			else
 				print("TEST" ..test.. " FAIL");
+				return false;
 			end
 		end)
 	elseif (test == 2) then
@@ -414,8 +544,10 @@ function testResults(test)
 			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == positions[2]
 			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == positions[2] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == positions[3]) then
 				print("TEST" ..test.. " PASS");
+				return true;
 			else
 				print("TEST" ..test.. " FAIL");
+				return false;
 			end
 		end)
 	elseif (test == 3) then
@@ -428,8 +560,10 @@ function testResults(test)
 			and assignments["Natu"].pos == 5 and assignments["Cakk"].pos == 5 and assignments["Moon"].pos == 5 and assignments["Mvk"].pos == positions[1]
 			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == positions[2] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == positions[2]) then
 				print("TEST" ..test.. " PASS");
+				return true;
 			else
 				print("TEST" ..test.. " FAIL");
+				return false;
 			end
 		end)
 	elseif (test == 4) then
@@ -442,8 +576,10 @@ function testResults(test)
 			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == positions[3]
 			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == 5 and assignments["Sejuka"].pos == 5 and assignments["Emnity"].pos == 5) then
 				print("TEST" ..test.. " PASS");
+				return true;
 			else
 				print("TEST" ..test.. " FAIL");
+				return false;
 			end
 		end)
 	elseif (test == 5) then
@@ -456,8 +592,10 @@ function testResults(test)
 			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == positions[5]
 			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == positions[2] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == positions[5]) then
 				print("TEST" ..test.. " PASS");
+				return true;
 			else
 				print("TEST" ..test.. " FAIL");
+				return false;
 			end
 		end)
 	elseif (test == 6) then
@@ -470,8 +608,10 @@ function testResults(test)
 			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == 5
 			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == positions[2] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == positions[3]) then
 				print("TEST" ..test.. " PASS");
+				return true;
 			else
 				print("TEST" ..test.. " FAIL");
+				return false;
 			end
 		end)
 	elseif (test == 7) then
@@ -484,8 +624,10 @@ function testResults(test)
 			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == 5 and assignments["Moon"].pos == positions[2] and assignments["Mvk"].pos == positions[2]
 			and assignments["Sloni"].pos == 5 and assignments["Janga"].pos == positions[1] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == positions[3]) then
 				print("TEST" ..test.. " PASS");
+				return true;
 			else
-				print("TEST" ..test.. " FAIL");
+				print("TEST" .. test.. " FAIL");
+				return false;
 			end
 		end)
 	elseif (test == 8) then
@@ -512,8 +654,10 @@ function testResults(test)
 			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == positions[3]
 			and assignments["Sloni"].pos == 5 and assignments["Janga"].pos == positions[1] and assignments["Sejuka"].pos == positions[2] and assignments["Emnity"].pos == positions[3]) then
 				print("TEST" ..test.. " PASS");
+				return true;
 			else
 				print("TEST" ..test.. " FAIL");
+				return false;
 			end
 		end)
 	elseif (test == 10) then
@@ -526,8 +670,10 @@ function testResults(test)
 			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == 5
 			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == 5 and assignments["Sejuka"].pos == positions[2] and assignments["Emnity"].pos == positions[3]) then
 				print("TEST" ..test.. " PASS");
+				return true;
 			else
 				print("TEST" ..test.. " FAIL");
+				return false;
 			end
 		end)
 	elseif (test == 11) then
@@ -540,8 +686,10 @@ function testResults(test)
 			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == positions[5]
 			and assignments["Sloni"].pos == 5 and assignments["Janga"].pos == positions[1] and assignments["Sejuka"].pos == 5 and assignments["Emnity"].pos == positions[2]) then
 				print("TEST" ..test.. " PASS");
+				return true;
 			else
 				print("TEST" ..test.. " FAIL");
+				return false;
 			end
 		end)
 	elseif (test == 12) then
@@ -554,8 +702,170 @@ function testResults(test)
 			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == positions[3]
 			and assignments["Sloni"].pos == 5 and assignments["Janga"].pos == positions[1] and assignments["Sejuka"].pos == 5 and assignments["Emnity"].pos == positions[2]) then
 				print("TEST" ..test.. " PASS");
+				return true;
 			else
 				print("TEST" ..test.. " FAIL");
+				return false;
+			end
+		end)
+	elseif (test == 13) then
+		HA_Test(11,12,19);
+		C_Timer.After(3, function()
+			if (assignments["Ala"].mark == 1 and assignments["Ant"].mark == 1 and assignments["Blink"].mark == 1 and assignments["Fed"].mark == 3
+			and assignments["Natu"].mark == 1 and assignments["Cakk"].mark == 2 and assignments["Moon"].mark == 2 and assignments["Mvk"].mark == 2
+			and assignments["Sloni"].mark == 3 and assignments["Janga"].mark == 3 and assignments["Sejuka"].mark == 2 and assignments["Emnity"].mark == 3
+			and assignments["Ala"].pos == positions[1] and assignments["Ant"].pos == positions[2] and assignments["Blink"].pos == positions[3] and assignments["Fed"].pos == positions[3]
+			and assignments["Natu"].pos == 5 and assignments["Cakk"].pos == 5 and assignments["Moon"].pos == positions[1] and assignments["Mvk"].pos == positions[2]
+			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == positions[2] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == 5) then
+				print("TEST" ..test.. " PASS");
+				return true;
+			else
+				print("TEST" ..test.. " FAIL");
+				return false;
+			end
+		end)
+	elseif (test == 14) then
+		HA_Test(9,14,19);
+		C_Timer.After(3, function()
+			if (assignments["Ala"].mark == 1 and assignments["Ant"].mark == 1 and assignments["Blink"].mark == 1 and assignments["Fed"].mark == 1 
+			and assignments["Natu"].mark == 2 and assignments["Cakk"].mark == 2 and assignments["Moon"].mark == 2 and assignments["Mvk"].mark == 2
+			and assignments["Sloni"].mark == 3 and assignments["Janga"].mark == 3 and assignments["Sejuka"].mark == 3 and assignments["Emnity"].mark == 3
+			and assignments["Ala"].pos == positions[1] and assignments["Ant"].pos == positions[2] and assignments["Blink"].pos == positions[3] and assignments["Fed"].pos == 5
+			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == 5
+			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == positions[2] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == 5) then
+				print("TEST" ..test.. " PASS");
+				return true;
+			else
+				print("TEST" ..test.. " FAIL");
+				return false;
+			end
+		end)
+	elseif (test == 15) then
+		HA_Test(2,12,13);
+		C_Timer.After(3, function()
+			if (assignments["Ala"].mark == 1 and assignments["Ant"].mark == 1 and assignments["Blink"].mark == 1 and assignments["Fed"].mark == 1
+			and assignments["Natu"].mark == 2 and assignments["Cakk"].mark == 2 and assignments["Moon"].mark == 3 and assignments["Mvk"].mark == 2
+			and assignments["Sloni"].mark == 3 and assignments["Janga"].mark == 3 and assignments["Sejuka"].mark == 3 and assignments["Emnity"].mark == 2
+			and assignments["Ala"].pos == positions[1] and assignments["Ant"].pos == positions[2] and assignments["Blink"].pos == positions[3] and assignments["Fed"].pos == positions[5]
+			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == 5 and assignments["Moon"].pos == 5 and assignments["Mvk"].pos == positions[2]
+			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == positions[2] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == positions[3]) then
+				print("TEST" ..test.. " PASS");
+				return true;
+			else
+				print("TEST" ..test.. " FAIL");
+				return false;
+			end
+		end)
+	elseif (test == 16) then
+		HA_Test(6,7,11);
+		C_Timer.After(3, function()
+			if (assignments["Ala"].mark == 1 and assignments["Ant"].mark == 2 and assignments["Blink"].mark == 1 and assignments["Fed"].mark == 1
+			and assignments["Natu"].mark == 3 and assignments["Cakk"].mark == 2 and assignments["Moon"].mark == 2 and assignments["Mvk"].mark == 1
+			and assignments["Sloni"].mark == 3 and assignments["Janga"].mark == 3 and assignments["Sejuka"].mark == 2 and assignments["Emnity"].mark == 3
+			and assignments["Ala"].pos == 5 and assignments["Ant"].pos == 5 and assignments["Blink"].pos == positions[1] and assignments["Fed"].pos == positions[2]
+			and assignments["Natu"].pos == 5 and assignments["Cakk"].pos == positions[1] and assignments["Moon"].pos == positions[2] and assignments["Mvk"].pos == positions[3]
+			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == positions[2] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == positions[3]) then
+				print("TEST" ..test.. " PASS");
+				return true;
+			else
+				print("TEST" ..test.. " FAIL");
+				return false;
+			end
+		end)
+	elseif (test == 17) then
+		HA_Test(14,19,9);
+		C_Timer.After(3, function()
+			if (assignments["Ala"].mark == 1 and assignments["Ant"].mark == 1 and assignments["Blink"].mark == 1 and assignments["Fed"].mark == 3 
+			and assignments["Natu"].mark == 2 and assignments["Cakk"].mark == 2 and assignments["Moon"].mark == 2 and assignments["Mvk"].mark == 1
+			and assignments["Sloni"].mark == 3 and assignments["Janga"].mark == 3 and assignments["Sejuka"].mark == 3 and assignments["Emnity"].mark == 2
+			and assignments["Ala"].pos == positions[1] and assignments["Ant"].pos == positions[2] and assignments["Blink"].pos == positions[3] and assignments["Fed"].pos == 5
+			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == 5
+			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == positions[2] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == 5) then
+				print("TEST" ..test.. " PASS");
+				return true;
+			else
+				print("TEST" ..test.. " FAIL");
+				return false;
+			end
+		end)
+	elseif (test == 18) then
+		HA_Test(14,9,19);
+		C_Timer.After(3, function()
+			if (assignments["Ala"].mark == 1 and assignments["Ant"].mark == 1 and assignments["Blink"].mark == 1 and assignments["Fed"].mark == 2 
+			and assignments["Natu"].mark == 2 and assignments["Cakk"].mark == 2 and assignments["Moon"].mark == 2 and assignments["Mvk"].mark == 1
+			and assignments["Sloni"].mark == 3 and assignments["Janga"].mark == 3 and assignments["Sejuka"].mark == 3 and assignments["Emnity"].mark == 3
+			and assignments["Ala"].pos == positions[1] and assignments["Ant"].pos == positions[2] and assignments["Blink"].pos == positions[3] and assignments["Fed"].pos == 5
+			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == 5
+			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == positions[2] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == 5) then
+				print("TEST" ..test.. " PASS");
+				return true;
+			else
+				print("TEST" ..test.. " FAIL");
+				return false;
+			end
+		end)
+	elseif (test == 19) then
+		HA_Test(19,9,14);
+		C_Timer.After(3, function()
+			if (assignments["Ala"].mark == 1 and assignments["Ant"].mark == 1 and assignments["Blink"].mark == 1 and assignments["Fed"].mark == 2
+			and assignments["Natu"].mark == 2 and assignments["Cakk"].mark == 2 and assignments["Moon"].mark == 2 and assignments["Mvk"].mark == 3
+			and assignments["Sloni"].mark == 3 and assignments["Janga"].mark == 3 and assignments["Sejuka"].mark == 3 and assignments["Emnity"].mark == 1
+			and assignments["Ala"].pos == positions[1] and assignments["Ant"].pos == positions[2] and assignments["Blink"].pos == positions[3] and assignments["Fed"].pos == 5
+			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == 5
+			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == positions[2] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == 5) then
+				print("TEST" ..test.. " PASS");
+				return true;
+			else
+				print("TEST" ..test.. " FAIL");
+				return false;
+			end
+		end)
+	elseif (test == 20) then
+		HA_Test(19,14,9);
+		C_Timer.After(3, function()
+			if (assignments["Ala"].mark == 1 and assignments["Ant"].mark == 1 and assignments["Blink"].mark == 1 and assignments["Fed"].mark == 3 
+			and assignments["Natu"].mark == 2 and assignments["Cakk"].mark == 2 and assignments["Moon"].mark == 2 and assignments["Mvk"].mark == 2
+			and assignments["Sloni"].mark == 3 and assignments["Janga"].mark == 3 and assignments["Sejuka"].mark == 3 and assignments["Emnity"].mark == 1
+			and assignments["Ala"].pos == positions[1] and assignments["Ant"].pos == positions[2] and assignments["Blink"].pos == positions[3] and assignments["Fed"].pos == 5
+			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == 5
+			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == positions[2] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == 5) then
+				print("TEST" ..test.. " PASS");
+				return true;
+			else
+				print("TEST" ..test.. " FAIL");
+				return false;
+			end
+		end)
+	elseif (test == 21) then
+		HA_Test(14,9,20);
+		C_Timer.After(3, function()
+			if (assignments["Ala"].mark == 1 and assignments["Ant"].mark == 1 and assignments["Blink"].mark == 1 and assignments["Fed"].mark == 2 
+			and assignments["Natu"].mark == 2 and assignments["Cakk"].mark == 2 and assignments["Moon"].mark == 2 and assignments["Mvk"].mark == 1
+			and assignments["Sloni"].mark == 3 and assignments["Janga"].mark == 3 and assignments["Sejuka"].mark == 3 and assignments["Emnity"].mark == 1
+			and assignments["Ala"].pos == positions[1] and assignments["Ant"].pos == positions[2] and assignments["Blink"].pos == positions[3] and assignments["Fed"].pos == 5
+			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == 5
+			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == positions[2] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == positions[5]) then
+				print("TEST" ..test.. " PASS");
+				return true;
+			else
+				print("TEST" ..test.. " FAIL");
+				return false;
+			end
+		end)
+	elseif (test == 22) then
+		HA_Test(5,19,14);
+		C_Timer.After(3, function()
+			if (assignments["Ala"].mark == 1 and assignments["Ant"].mark == 1 and assignments["Blink"].mark == 1 and assignments["Fed"].mark == 1 
+			and assignments["Natu"].mark == 2 and assignments["Cakk"].mark == 2 and assignments["Moon"].mark == 2 and assignments["Mvk"].mark == 3
+			and assignments["Sloni"].mark == 3 and assignments["Janga"].mark == 3 and assignments["Sejuka"].mark == 3 and assignments["Emnity"].mark == 2
+			and assignments["Ala"].pos == positions[1] and assignments["Ant"].pos == positions[2] and assignments["Blink"].pos == positions[3] and assignments["Fed"].pos == positions[5]
+			and assignments["Natu"].pos == positions[1] and assignments["Cakk"].pos == positions[2] and assignments["Moon"].pos == positions[3] and assignments["Mvk"].pos == 5
+			and assignments["Sloni"].pos == positions[1] and assignments["Janga"].pos == positions[2] and assignments["Sejuka"].pos == positions[3] and assignments["Emnity"].pos == positions[5]) then
+				print("TEST" ..test.. " PASS");
+				return true;
+			else
+				print("TEST" ..test.. " FAIL");
+				return false;
 			end
 		end)
 	end
