@@ -1,4 +1,4 @@
-local f = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate");
+local f = CreateFrame("Frame");
 local inEncounter = false;
 local pendingAssignments = false;
 local shrunkPlayers = {};

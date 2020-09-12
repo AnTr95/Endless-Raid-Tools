@@ -1,4 +1,4 @@
-local f = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate");
+local f = CreateFrame("Frame")
 f:RegisterEvent("READY_CHECK_CONFIRM")
 f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("READY_CHECK_FINISHED")
