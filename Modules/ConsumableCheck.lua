@@ -187,8 +187,6 @@ function armorKit()
 			shortest = RED .. shortest .. "min|r";
 		end
 	end
-	print(count)
-	print(shortest)
 	return count, shortest;
 	--3528447
 	--Reinforced (+48 Stamina)

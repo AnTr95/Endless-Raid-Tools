@@ -138,7 +138,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 					debuffed = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(342859)));
 					nearby = {};
 					f:SetScript("OnUpdate", onUpdate);
-				elseif (debuffed) then
+				elseif (not EnRT_UnitDebuff(unit, GetSpellInfo(342859)) and debuffed) then
 					debuffed = false;
 					nearby = {};
 					timer = nil;
