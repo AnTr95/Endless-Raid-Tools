@@ -1,6 +1,6 @@
 ## Interface: 90001
 ## Title: Endless Raid Tools
-## Version: 9.0
+## Version: 8.54
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: EnRT_InterruptEnabled
@@ -8,10 +8,6 @@
 ## SavedVariables: EnRT_InnervateEnabled
 ## SavedVariables: EnRT_PopupTextFontSize
 ## SavedVariables: EnRT_PopupTextPosition
-## SavedVariables: EnRT_HungeringDestroyerEnabled
-## SavedVariables: EnRT_LadyInervaDarkveinEnabled
-## SavedVariables: EnRT_CouncilofBloodEnabled
-## SavedVariables: EnRT_HuntsmanAltimorEnabled
 ## SavedVariablesPerCharacter: EnRT_BonusRollCurrentRaid
 ## SavedVariablesPerCharacter: EnRT_ConsumableCheckEnabled
 ## SavedVariablesPerCharacter: EnRT_CalendarNotificationEnabled
@@ -23,7 +19,19 @@
 ## SavedVariablesPerCharacter: EnRT_MinimapMode
 ## SavedVariablesPerCharacter: EnRT_MinimapDegree
 ## SavedVariablesPerCharacter: EnRT_InfoBoxPosition
-## SavedVariablesPerCharacter: EnRT_HuntsmanAltimorPlayersPerLine
+## SavedVariables: EnRT_HTMEnabled
+## SavedVariables: EnRT_MOTHEREnabled
+## SavedVariables: EnRT_OpulenceEnabled
+## SavedVariables: EnRT_UunatEnabled
+## SavedVariables: EnRT_UunatStormMark
+## SavedVariables: EnRT_UunatOceanMark
+## SavedVariables: EnRT_UunatVoidMark
+## SavedVariables: EnRT_LadyAshvaneEnabled
+## SavedVariables: EnRT_QueenAzsharaEnabled
+## SavedVariables: EnRT_RadenEnabled
+## SavedVariables: EnRT_RadenColors
+## SavedVariables: EnRT_MautEnabled
+
 Localization\Localization.enUS.lua
 Core.lua
 Options\Options.lua
@@ -34,22 +42,28 @@ InfoBox.lua
 Modules\Interrupts.lua
 Modules\Innervate.lua
 Modules\CalendarNotification.lua
+Options\CalendarNotificationOptions.lua
 Options\InnervateOptions.lua
 Options\InterruptOptions.lua
-Options\CalendarNotificationOptions.lua
 Modules\ReadyCheck.lua
 Options\ReadyCheckOptions.lua
 Modules\ConsumableCheck.lua
 Options\ConsumableCheckOptions.lua
 Modules\BonusRoll.lua
 Options\BonusRollOptions.lua
-Modules\huntsmanlogic.lua
-Options\HuntsmanAltimorOptions.lua
-Modules\LadyInervaDarkvein.lua
-Options\LadyInervaDarkveinOptions.lua
-Modules\HungeringDestroyer2.lua
-Options\HungeringDestroyerOptions.lua
-Modules\CouncilofBlood2.lua
-Options\CouncilofBloodOptions.lua
-Modules\Sludgefist.lua
-Options\SludgefistOptions.lua
+Modules\MOTHER.lua
+Options\MOTHEROptions.lua
+Modules\HighTinkerMekkatorque.lua
+Options\HighTinkerMekkatorqueOptions.lua
+Modules\Opulence.lua
+Options\OpulenceOptions.lua
+Modules\Uunat.lua
+Options\UunatOptions.lua
+Modules\LadyAshvane.lua
+Options\LadyAshvaneOptions.lua
+Modules\QueenAzshara.lua
+Options\QueenAzsharaOptions.lua
+Modules\Maut.lua
+Options\MautOptions.lua
+Modules\Raden.lua
+Options\RadenOptions.lua

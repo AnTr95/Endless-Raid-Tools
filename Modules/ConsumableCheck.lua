@@ -1,5 +1,5 @@
 local f = CreateFrame("Frame");
-local flasks = {307185,307187};
+local flasks = {298839,298836,298837,298841,251836, 251837, 251839, 251838};
 local RED = "\124cFFFF0000";
 local YELLOW = "\124cFFFFFF00";
 local GREEN = "\124cFF00FF00";
@@ -20,7 +20,7 @@ f:RegisterEvent("READY_CHECK");
 f:RegisterEvent("UNIT_AURA");
 
 local function updateConsumables()
-	local flask, flaskIcon, _, _, _, flaskTime = EnRT_UnitBuff("player", GetSpellInfo(307185));
+	local flask, flaskIcon, _, _, _, flaskTime = EnRT_UnitBuff("player", GetSpellInfo(298839));
 	for i = 1, #flasks do
 		flask, flaskIcon, _, _, _, flaskTime = EnRT_UnitBuff("player", GetSpellInfo(flasks[i]));
 		if (flask) then
@@ -29,7 +29,7 @@ local function updateConsumables()
 	end
 	local food, foodIcon, _, _, _, foodTime = EnRT_UnitBuff("player", GetSpellInfo(297039)); -- Random Well Fed Buff
 	local rune, runeIcon, _, _, _, runeTime = EnRT_UnitBuff("player", GetSpellInfo(270058));
-	flaskIcon = flaskIcon and flaskIcon or 2057568;
+	flaskIcon = flaskIcon and flaskIcon or 134877;
 	foodIcon = foodIcon and foodIcon or 136000;
 	runeIcon = runeIcon and runeIcon or 519379;
 

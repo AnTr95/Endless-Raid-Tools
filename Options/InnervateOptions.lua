@@ -54,12 +54,22 @@ enabledText:SetText(L.OPTIONS_ENABLED);
 
 local infoTexture = EnRT_InnervateOptions:CreateTexture(nil, "BACKGROUND");
 infoTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\Innervate.tga");
-infoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 130, -50);
-infoTexture:SetSize(320, 100);
-infoTexture:SetTexCoord(0,1,0,0.2);
+infoTexture:SetPoint("TOPLEFT", enabledButton, "TOP", 100, -70);
+infoTexture:SetSize(256, 16);
+infoTexture:SetTexCoord(0,0.95,0,0.59);
+
+local innervateTexture1 = EnRT_InnervateOptions:CreateTexture(nil, "BACKGROUND");
+innervateTexture1:SetTexture("Interface\\Icons\\spell_nature_lightning");
+innervateTexture1:SetPoint("TOPLEFT", infoTexture, "TOPLEFT", -50, 10);
+innervateTexture1:SetSize(40, 40);
+
+local innervateTexture2 = EnRT_InnervateOptions:CreateTexture(nil, "BACKGROUND");
+innervateTexture2:SetTexture("Interface\\Icons\\spell_nature_lightning");
+innervateTexture2:SetPoint("TOPLEFT", infoTexture, "TOPRIGHT", 10, 10);
+innervateTexture2:SetSize(40, 40);
 
 local previewText = EnRT_InnervateOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
-previewText:SetPoint("TOP", infoTexture, "TOP", 0, 20);
+previewText:SetPoint("TOP", infoTexture, "TOP", 0, 30);
 previewText:SetText(L.OPTIONS_INNERVATE_PREVIEW);
 previewText:SetJustifyH("CENTER");
 

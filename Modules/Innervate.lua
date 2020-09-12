@@ -18,6 +18,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local prefix, msg, channel, sender = ...;
 		sender = Ambiguate(sender, "short");
 		if (prefix == "ENDLESS_INN") then
+			sender = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, sender);
 			timer = EnRT_PopupShow("\124TInterface\\Icons\\spell_nature_lightning:30\124t INNERVATE ON " .. sender .. " \124TInterface\\Icons\\spell_nature_lightning:30\124t" , 5);
 			f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 			C_Timer.After(5, function()
