@@ -63,7 +63,7 @@ Modules\LadyAshvane.lua
 Options\LadyAshvaneOptions.lua
 Modules\QueenAzshara.lua
 Options\QueenAzsharaOptions.lua
-Modules\Raden.lua
-Options\RadenOptions.lua
 Modules\Maut.lua
 Options\MautOptions.lua
+Modules\Raden.lua
+Options\RadenOptions.lua
