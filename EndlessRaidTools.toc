@@ -71,11 +71,10 @@ Modules\Raden.lua
 Options\RadenOptions.lua
 Modules\Maut.lua
 Options\MautOptions.lua
-Modules\HuntsmanAltimor.lua
-Options\HuntsmanAltimorOptions.lua
 Modules\HungeringDestroyer2.lua
 Options\HungeringDestroyerOptions.lua
 Modules\LadyInervaDarkvein.lua
 Options\LadyInervaDarkveinOptions.lua
 Modules\CouncilofBlood2.lua
 Options\CouncilofBloodOptions.lua
+Modules\HuntsmanAltimor.lua

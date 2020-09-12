@@ -83,7 +83,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "ENCOUNTER_START" and EnRT_CouncilofBloodEnabled) then
 		local eID = ...;
-		if (eID == 2412) then
+		if (eID == 0000) then
 			inEncounter = true;
 			isGlowing = false;
 		end

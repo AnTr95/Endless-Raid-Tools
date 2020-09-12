@@ -66,8 +66,6 @@ L.OPTIONS_HUNGERINGDESTROYER_INFO = "Evenly distributes players for gluttonous m
 L.OPTIONS_LADYINERVADARKVEIN_TITLE = "Lady Inerva Darkvein Module";
 L.OPTIONS_LADYINERVADARKVEIN_INFO = "Marks players with Sins and suffering pointing them to star, circle and diamond. Raid leader can then use world marks to tell people where to go.";
 L.BONUSROLL_INFO = "Pick bosses to coin";
-L.OPTIONS_COUNCILOFBLOOD_TITLE = "Council of Blood Module";
+L.OPTIONS_COUNCILOFBLOOD_TITLE = "Council of Blood Modules";
 L.OPTIONS_COUNCILOFBLOOD_INFO = "Makes the raiders action buttons glow based of what the raid leader is pressing during the Danse Macabre.";
-L.OPTIONS_HUNTSMANALTIMOR_TITLE = "Huntsman Altimor Module";
-L.OPTIONS_HUNTSMANALTIMOR_INFO = "(Mythic Only) Summary: Evenly distributes players to soak Sinseeker, 3 soakers per line.\nDetailed: The debuffed player should always be the furthest player. Always using the first 4 players in group 2, 3 and 4 to soak each player has a standard position.\nAbbrevations:G=Group P=Player index in group\n        ----------G2P4(Backup)-G2P3-G2P2-G2P1-Star Debuffed Player\nBOSS----------G3P4(Backup)-G3P3-G3P2-G3P1-Circle Debuffed Player\n        ----------G4P4(Backup)-G4P3-G4P2-G4P1-Diamond Debuffed Player\n Because of the staggered application of debuffs might cause players to get reassigned in the case that one of the active soakers get debuffed. In the case of reassignment players will be prioritized closest to the boss to reduce distance";
 L.WARNING_OUTOFDATEMESSAGE = "There is a newer version of Endless Raid Tools available on twitch/curse!";
