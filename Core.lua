@@ -24,7 +24,7 @@ f:RegisterEvent("ADDON_LOADED");
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("GROUP_ROSTER_UPDATE");
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_VC");
---C_ChatInfo.RegisterAddonMessagePrefix("EnRT_UPDATE");
+C_ChatInfo.RegisterAddonMessagePrefix("EnRT_UPDATE");
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "CHAT_MSG_ADDON") then
 		local prefix, msg, channel, sender = ...;
@@ -99,7 +99,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 end);
 function EnRT_FindMissingPlayers()
 	for i = 1, GetNumGroupMembers() do
-		if (not Endless_Contains(playersChecked, UnitName("raid"..i)) and UnitName("raid"..i) ~= UnitName("player")) then
+		if (not EnRT_Contains(playersChecked, UnitName("raid"..i)) and UnitName("raid"..i) ~= UnitName("player")) then
 			print(GetUnitName("raid"..i, true) .. "-not installed");
 		end
 	end

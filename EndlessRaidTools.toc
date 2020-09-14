@@ -1,6 +1,6 @@
 ## Interface: 90002
 ## Title: Endless Raid Tools
-## Version: 9.0
+## Version: 9.01
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: EnRT_InterruptEnabled
@@ -36,9 +36,9 @@ InfoBox.lua
 Modules\Interrupts.lua
 Modules\Innervate.lua
 Modules\CalendarNotification.lua
+Options\CalendarNotificationOptions.lua
 Options\InnervateOptions.lua
 Options\InterruptOptions.lua
-Options\CalendarNotificationOptions.lua
 Modules\ReadyCheck.lua
 Options\ReadyCheckOptions.lua
 Modules\ConsumableCheck.lua

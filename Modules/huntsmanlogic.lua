@@ -266,7 +266,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 						expTime = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(335113)));
 					end
 					if (UnitIsConnected(unitName)) then
-						C_ChatInfo.SendAddonMessage("EnRT_HA", #debuffed .. " " .. expTime, "WHISPER", unitName);
+						C_ChatInfo.SendAddonMessage("EnRT_HA", #debuffed .. " " .. math.floor(expTime), "WHISPER", unitName);
 					end
 					assignMarks();
 				end

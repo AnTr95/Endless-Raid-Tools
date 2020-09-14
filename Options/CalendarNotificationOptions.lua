@@ -52,8 +52,6 @@ local enabledText = EnRT_CalendarNotificationOptions:CreateFontString(nil, "ARTW
 enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
 
-
-
 EnRT_CalendarNotificationOptions:SetScript("OnShow", function(self)
 	enabledButton:SetChecked(EnRT_CalendarNotificationEnabled)
 end)

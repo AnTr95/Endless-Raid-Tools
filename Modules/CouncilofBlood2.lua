@@ -9,15 +9,14 @@ local debuffed = false;
 local safe = true;
 local nearby = {};
 
+local dfID = GetSpellInfo(342859);
+
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("ENCOUNTER_START");
 f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("CHAT_MSG_ADDON");
-f:RegisterEvent("CHAT_MSG_SYSTEM");
-f:RegisterEvent("CHAT_MSG_RESTRICTED");
-f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
-f:RegisterEvent("CHAT_MSG_RAID_BOSS_WHISPER");
+--f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 f:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE");
 
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_TCOB");
@@ -100,18 +99,34 @@ local function onUpdate(self, elapsed)
 					end
 				end
 			end
-			if (safe and EnRT_UnitDebuff(player, GetSpellInfo(342859))) then
-				text = "SAFE - " .. debuffed;
+			if (safe and EnRT_UnitDebuff(playerName, dfID)) then
+				if (text == nil) then
+					text = "SAFE - " .. math.ceil(debuffed-GetTime());
+					SendChatMessage(text, "YELL");
+				elseif (text:match("NOT")) then
+					text = "SAFE - " .. math.ceil(debuffed-GetTime());
+					SendChatMessage(text, "YELL");
+				end
 				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "SHOW", "RAID");
-			elseif (not safe and EnRT_UnitDebuff(player, GetSpellInfo(342859))) then
-				text = "NOT SAFE - " .. debuffed;
+			elseif (not safe and EnRT_UnitDebuff(playerName, dfID)) then
+				if (text == nil) then
+					text = "NOT SAFE - " .. math.ceil(debuffed-GetTime());
+					SendChatMessage(text, "YELL");
+				elseif (not text:match("NOT")) then
+					text = "NOT SAFE - " .. math.ceil(debuffed-GetTime());
+					SendChatMessage(text, "YELL");
+				end
 				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "HIDE", "RAID");
 			end
 			if (timer == nil) then
-				SendChatMessage(text, "YELL");
-				timer = C_Timer.NewTicker(1, function()
+				timer = C_Timer.NewTicker(2, function()
+					if(safe) then
+						text = "SAFE - " .. math.ceil(debuffed-GetTime());
+					else
+						text = "NOT SAFE - " .. math.ceil(debuffed-GetTime());
+					end
 					SendChatMessage(text, "YELL");
-				end, 4);
+				end, 2);
 			end
 			ticks = 0;
 		end
@@ -134,14 +149,18 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 			if (EnRT_TCOBDFEnabled) then
-				if (EnRT_UnitDebuff(unit, GetSpellInfo(342859)) and not debuffed) then -- unknown spellid Dancing Fever
-					debuffed = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(342859)));
+				if (EnRT_UnitDebuff(unit, dfID) and not debuffed) then -- unknown spellid Dancing Fever
+					debuffed = math.floor(select(7, EnRT_UnitDebuff(playerName, dfID)));
 					nearby = {};
 					f:SetScript("OnUpdate", onUpdate);
-				elseif (not EnRT_UnitDebuff(unit, GetSpellInfo(342859)) and debuffed) then
+				elseif (not EnRT_UnitDebuff(unit, dfID) and debuffed) then
 					debuffed = false;
 					nearby = {};
+					if (timer) then
+						timer:Cancel();
+					end
 					timer = nil;
+					text = nil;
 					f:SetScript("OnUpdate", nil);
 					C_ChatInfo.SendAddonMessage("EnRT_TCOB", "HIDE", "RAID");
 				end
