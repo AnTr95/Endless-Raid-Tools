@@ -1,6 +1,6 @@
 ## Interface: 90001
 ## Title: Endless Raid Tools
-## Version: 9.0
+## Version: 9.01
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: EnRT_InterruptEnabled

@@ -25,6 +25,44 @@ f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("GROUP_ROSTER_UPDATE");
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_VC");
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_UPDATE");
+
+local function renameWarning()
+	local warningFrame = CreateFrame("Frame", nil, nil, BackdropTemplateMixin and "BackdropTemplate");
+	warningFrame:SetSize(1000, 150);
+	warningFrame:SetPoint("CENTER");
+	warningFrame:SetMovable(false);
+	warningFrame:EnableMouse(false);
+	warningFrame:SetFrameLevel(3);
+	warningFrame:SetFrameStrata("TOOLTIP");
+	warningFrame:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", --Set the background and border textures
+		edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
+		tile = true, tileSize = 16, edgeSize = 16, 
+		insets = { left = 4, right = 4, top = 4, bottom = 4 }
+	});
+	warningFrame:SetBackdropColor(0.27,0.5,1,1);
+	--warningFrame:SetBackdropColor(0.2,0.4,0.92,1);
+	--warningFrame:SetBackdropColor(0.27,0.56,0.92,1);
+	--warningFrame:SetBackdropColor(0.13,0.29,0.60,1);
+
+	local warningText = warningFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+	warningText:SetPoint("TOP", 0, -10);
+	warningText:SetJustifyV("TOP");
+	warningText:SetJustifyH("CENTER");
+	warningText:SetSpacing(8);
+	warningText:SetText("|cFFFFFFFFHello dear |r|cFF00FFFFEndless Raid Tools|r|cFFFFFFFF user!\n|cFF00FFFFEndless Raid Tools|r |cFFFFFFFFhas changed name to |r|cFF00FFFF[PH]|r, |cFF00FFFF/enrt|r |cFFFFFFFFwill still work for now but will eventually be removed, the new command is: |cFF00FFFF/[PH]|r.\n|cFFFF0000Please delete the Endless Raid Tools folder to avoid possible bugs and interference.|r\n|cFFFFFFFFThe folder can be found from your WoW installation then _retail_/Interface/AddOns\n Thank you for using|r |cFF00FFFF[PH]|r! Coming in |cFFFFFFFFShadowlands: update to Consumable Check and 5 new boss modules for Castle Nathria!|r");
+
+	local closeButton = CreateFrame("Button", nil, warningFrame, "UIPanelButtonTemplate");
+	closeButton:SetPoint("BOTTOM", 0, 10);
+	closeButton:SetSize(60,25);
+	closeButton:SetText("Okay!");
+	closeButton:SetScript("OnClick", function(self)
+		closeButton:Hide();
+		warningText:Hide();
+		warningFrame:Hide();
+	end);
+	warningFrame:Show();
+end
+
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "CHAT_MSG_ADDON") then
 		local prefix, msg, channel, sender = ...;
@@ -69,25 +107,33 @@ f:SetScript("OnEvent", function(self, event, ...)
 		elseif (IsInGroup(LE_PARTY_CATEGORY_HOME)) then
 			C_ChatInfo.SendAddonMessage("EnRT_UPDATE", version, "PARTY");
 		end
-	elseif (event == "ADDON_LOADED" and addon == ...) then
-		if (EnRT_PopupTextPosition ~= nil) then
-			EnRT_PopupSetPosition(EnRT_PopupTextPosition.point, EnRT_PopupTextPosition.relativeTo, EnRT_PopupTextPosition.relativePoint, EnRT_PopupTextPosition.xOffset, EnRT_PopupTextPosition.yOffset);
-		end
-		if (EnRT_PopupTextFontSize == nil) then
-			EnRT_PopupTextFontSize = 28;
-		end
-		if (EnRT_InfoBoxTextPosition ~= nil) then
-			EnRT_InfoBoxSetPosition(EnRT_InfoBoxTextPosition.point, EnRT_InfoBoxTextPosition.relativeTo, EnRT_InfoBoxTextPosition.relativePoint, EnRT_InfoBoxTextPosition.xOffset, EnRT_InfoBoxTextPosition.yOffset);
-		end
-		if (EnRT_InfoBoxTextFontSize == nil) then
-			EnRT_InfoBoxTextFontSize = 14;
-		end
-		if (EnRT_MinimapDegree) then EnRT_SetMinimapPoint(EnRT_MinimapDegree); end
-		if (EnRT_MinimapMode == nil) then EnRT_MinimapMode = "Always"; end
-		EnRT_PopupUpdateFontSize();
-		EnRT_InfoBoxUpdateFontSize();
-		if (IsInGuild()) then
-			C_ChatInfo.SendAddonMessage("EnRT_UPDATE", version, "GUILD");
+	elseif (event == "ADDON_LOADED") then
+		local loadedAddon = ...;
+		if (loadedAddon == "PGFinder") then
+			renameWarning();
+		elseif (loadedAddon == addon) then
+			if (IsAddOnLoaded("PGFinder")) then
+				renameWarning();
+			end
+			if (EnRT_PopupTextPosition ~= nil) then
+				EnRT_PopupSetPosition(EnRT_PopupTextPosition.point, EnRT_PopupTextPosition.relativeTo, EnRT_PopupTextPosition.relativePoint, EnRT_PopupTextPosition.xOffset, EnRT_PopupTextPosition.yOffset);
+			end
+			if (EnRT_PopupTextFontSize == nil) then
+				EnRT_PopupTextFontSize = 28;
+			end
+			if (EnRT_InfoBoxTextPosition ~= nil) then
+				EnRT_InfoBoxSetPosition(EnRT_InfoBoxTextPosition.point, EnRT_InfoBoxTextPosition.relativeTo, EnRT_InfoBoxTextPosition.relativePoint, EnRT_InfoBoxTextPosition.xOffset, EnRT_InfoBoxTextPosition.yOffset);
+			end
+			if (EnRT_InfoBoxTextFontSize == nil) then
+				EnRT_InfoBoxTextFontSize = 14;
+			end
+			if (EnRT_MinimapDegree) then EnRT_SetMinimapPoint(EnRT_MinimapDegree); end
+			if (EnRT_MinimapMode == nil) then EnRT_MinimapMode = "Always"; end
+			EnRT_PopupUpdateFontSize();
+			EnRT_InfoBoxUpdateFontSize();
+			if (IsInGuild()) then
+				C_ChatInfo.SendAddonMessage("EnRT_UPDATE", version, "GUILD");
+			end
 		end
 	elseif (event == "PLAYER_LOGIN") then
 		if (EnRT_MinimapMode == "Always") then
