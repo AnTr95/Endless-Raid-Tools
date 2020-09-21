@@ -30,7 +30,7 @@ C_ChatInfo.RegisterAddonMessagePrefix("IRT_UPDATE");
 
 local function renameWarning()
 	local warningFrame = CreateFrame("Frame", nil, nil, BackdropTemplateMixin and "BackdropTemplate");
-	warningFrame:SetSize(1000, 150);
+	warningFrame:SetSize(1000, 170);
 	warningFrame:SetPoint("CENTER");
 	warningFrame:SetMovable(false);
 	warningFrame:EnableMouse(false);
@@ -52,15 +52,14 @@ local function renameWarning()
 	warningText:SetJustifyH("CENTER");
 	warningText:SetSpacing(8);
 	warningText:SetText(L.WARNING_DELETE_OLD_FOLDER);
+	DisableAddOn("EndlessRaidTools");
 
 	local closeButton = CreateFrame("Button", nil, warningFrame, "UIPanelButtonTemplate");
 	closeButton:SetPoint("BOTTOM", 0, 10);
-	closeButton:SetSize(60,25);
-	closeButton:SetText("Okay!");
+	closeButton:SetSize(80,25);
+	closeButton:SetText("Reload UI");
 	closeButton:SetScript("OnClick", function(self)
-		closeButton:Hide();
-		warningText:Hide();
-		warningFrame:Hide();
+		ReloadUI();
 	end);
 	warningFrame:Show();
 end
