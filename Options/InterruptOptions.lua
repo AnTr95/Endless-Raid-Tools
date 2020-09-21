@@ -86,7 +86,7 @@ enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
 --[[
 local infoTexture = EnRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
-infoTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\Interrupt.tga");
+infoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\Interrupt.tga");
 infoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 130, -50);
 infoTexture:SetSize(320, 100);
 infoTexture:SetTexCoord(0,1,0,0.2);

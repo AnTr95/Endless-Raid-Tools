@@ -53,13 +53,13 @@ enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
 
 local readyCheckListInfoTexture = EnRT_ReadyCheckOptions:CreateTexture(nil, "BACKGROUND");
-readyCheckListInfoTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\ReadyCheckList.tga");
+readyCheckListInfoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\ReadyCheckList.tga");
 readyCheckListInfoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 275, -145);
 readyCheckListInfoTexture:SetSize(200,200);
 readyCheckListInfoTexture:SetTexCoord(0,1,0,1);
 
 local readyCheckButtonInfoTexture = EnRT_ReadyCheckOptions:CreateTexture(nil, "BACKGROUND");
-readyCheckButtonInfoTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\ReadyCheckButton.tga");
+readyCheckButtonInfoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\ReadyCheckButton.tga");
 readyCheckButtonInfoTexture:SetPoint("TOPLEFT", readyCheckListInfoTexture, "TOPLEFT", -200, 2);
 readyCheckButtonInfoTexture:SetSize(180, 34);
 readyCheckButtonInfoTexture:SetTexCoord(0,0.7,0,1);

@@ -4,6 +4,8 @@ local addon = ...; -- The name of the addon folder
 local version = GetAddOnMetadata(addon, "Version");
 SLASH_ENDLESSRAIDTOOLS1 = "/endlessraidtools";
 SLASH_ENDLESSRAIDTOOLS2 = "/enrt";
+SLASH_ENDLESSRAIDTOOLS3 = "/irt";
+SLASH_ENDLESSRAIDTOOLS4 = "/infiniteraidtools";
 local playersChecked = {};
 local initCheck = false;
 local recievedOutOfDateMessage = false;
@@ -49,7 +51,7 @@ local function renameWarning()
 	warningText:SetJustifyV("TOP");
 	warningText:SetJustifyH("CENTER");
 	warningText:SetSpacing(8);
-	warningText:SetText("|cFFFFFFFFHello dear |r|cFF00FFFFEndless Raid Tools|r|cFFFFFFFF user!\n|cFF00FFFFEndless Raid Tools|r |cFFFFFFFFhas changed name to |r|cFF00FFFF[PH]|r, |cFF00FFFF/enrt|r |cFFFFFFFFwill still work for now but will eventually be removed, the new command is: |cFF00FFFF/[PH]|r.\n|cFFFF0000Please delete the Endless Raid Tools folder to avoid possible bugs and interference.|r\n|cFFFFFFFFThe folder can be found from your WoW installation then _retail_/Interface/AddOns\n Thank you for using|r |cFF00FFFF[PH]|r! Coming in |cFFFFFFFFShadowlands: update to Consumable Check and 5 new boss modules for Castle Nathria!|r");
+	warningText:SetText(L.WARNING_DELETE_OLD_FOLDER);
 
 	local closeButton = CreateFrame("Button", nil, warningFrame, "UIPanelButtonTemplate");
 	closeButton:SetPoint("BOTTOM", 0, 10);
@@ -109,10 +111,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "ADDON_LOADED") then
 		local loadedAddon = ...;
-		if (loadedAddon == "PGFinder") then
+		if (loadedAddon == "EndlessRaidTools") then
 			renameWarning();
 		elseif (loadedAddon == addon) then
-			if (IsAddOnLoaded("PGFinder")) then
+			if (IsAddOnLoaded("EndlessRaidTools")) then
 				renameWarning();
 			end
 			if (EnRT_PopupTextPosition ~= nil) then

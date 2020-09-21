@@ -64,13 +64,13 @@ showButton:HookScript("OnClick", function(self)
 end)
 
 local infoTexture = EnRT_BonusRollOptions:CreateTexture(nil, "BACKGROUND");
-infoTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\BonusRoll.tga");
+infoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\BonusRoll.tga");
 infoTexture:SetPoint("TOPLEFT", showButton, "TOPLEFT", 120, -60);
 infoTexture:SetSize(420, 50);
 infoTexture:SetTexCoord(0,1,0,1);
 
 local infoTexture2 = EnRT_BonusRollOptions:CreateTexture(nil, "BACKGROUND");
-infoTexture2:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\BonusRollBLP.tga");
+infoTexture2:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\BonusRollBLP.tga");
 infoTexture2:SetPoint("TOPLEFT", infoTexture, "TOPLEFT", 35, -50);
 infoTexture2:SetSize(280, 70);
 infoTexture2:SetTexCoord(0,0.55,0,0.56);

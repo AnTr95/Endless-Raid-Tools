@@ -53,7 +53,7 @@ enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
 
 local infoTexture = EnRT_InnervateOptions:CreateTexture(nil, "BACKGROUND");
-infoTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\Innervate.tga");
+infoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\Innervate.tga");
 infoTexture:SetPoint("TOPLEFT", enabledButton, "TOP", 100, -70);
 infoTexture:SetSize(256, 16);
 infoTexture:SetTexCoord(0,0.95,0,0.59);

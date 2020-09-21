@@ -1,5 +1,6 @@
 local f = CreateFrame("Frame");
 SLASH_ENDLESSINNERVATE1 = "/endlessinnervate";
+SLASH_ENDLESSINNERVATE1 = "/irtinnervate";
 f:RegisterEvent("CHAT_MSG_ADDON");
 f:RegisterEvent("PLAYER_LOGIN");
 local timer = nil;

@@ -1,7 +1,7 @@
 local L = EnRTLocals;
 
 EnRT_Options = CreateFrame("Frame", "EnRT_OptionsFrame", InterfaceOptionsFramePanelContainer)
-EnRT_Options.name = "Endless Raid Tools"
+EnRT_Options.name = "Infinite Raid Tools"
 EnRT_Options:Hide()
 
 local title = EnRT_Options:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
@@ -24,7 +24,7 @@ InterfaceOptions_AddCategory(EnRT_Options)
 
 EnRT_GeneralModules = CreateFrame("Frame", "EnRT_GeneralModulesFrame")
 EnRT_GeneralModules.name = "|cFFFFFF00General Modules|r"
-EnRT_GeneralModules.parent = "Endless Raid Tools"
+EnRT_GeneralModules.parent = "Infinite Raid Tools"
 EnRT_GeneralModules:SetScript("OnShow", function(EnRT_GeneralModules)
 	InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralOptions)
 end)
@@ -32,7 +32,7 @@ InterfaceOptions_AddCategory(EnRT_GeneralModules)
 
 EnRT_UldirModules = CreateFrame("Frame", "EnRT_UldirModulesFrame")
 EnRT_UldirModules.name = "|cFFFFFF00Uldir Modules"
-EnRT_UldirModules.parent = "Endless Raid Tools"
+EnRT_UldirModules.parent = "Infinite Raid Tools"
 EnRT_UldirModules:SetScript("OnShow", function(EnRT_UldirModules)
 	InterfaceOptionsFrame_OpenToCategory(EnRT_MOTHEROptions)
 end)
@@ -41,7 +41,7 @@ InterfaceOptions_AddCategory(EnRT_UldirModules)
 
 EnRT_BoDModules = CreateFrame("Frame", "EnRT_BoDModulesFrame")
 EnRT_BoDModules.name = "|cFFFFFF00Battle of Dazar'alor Modules"
-EnRT_BoDModules.parent = "Endless Raid Tools"
+EnRT_BoDModules.parent = "Infinite Raid Tools"
 EnRT_BoDModules:SetScript("OnShow", function(EnRT_BoDModules)
 	InterfaceOptionsFrame_OpenToCategory(EnRT_HighTinkerMekkatorqueOptions)
 end)
@@ -49,7 +49,7 @@ InterfaceOptions_AddCategory(EnRT_BoDModules)
 
 EnRT_CoSModules = CreateFrame("Frame", "EnRT_CoSModulesFrame")
 EnRT_CoSModules.name = "|cFFFFFF00Crucible of Storms Modules"
-EnRT_CoSModules.parent = "Endless Raid Tools"
+EnRT_CoSModules.parent = "Infinite Raid Tools"
 EnRT_CoSModules:SetScript("OnShow", function(EnRT_CoSModules)
 	InterfaceOptionsFrame_OpenToCategory(EnRT_UunatOptions)
 end)
@@ -57,7 +57,7 @@ InterfaceOptions_AddCategory(EnRT_CoSModules)
 
 EnRT_EPModules = CreateFrame("Frame", "EnRT_EPModulesFrame")
 EnRT_EPModules.name = "|cFFFFFF00The Eternal Palace Modules"
-EnRT_EPModules.parent = "Endless Raid Tools"
+EnRT_EPModules.parent = "Infinite Raid Tools"
 EnRT_EPModules:SetScript("OnShow", function(EnRT_EPModules)
 	InterfaceOptionsFrame_OpenToCategory(EnRT_QueenAzsharaOptions);
 end)
@@ -66,7 +66,7 @@ InterfaceOptions_AddCategory(EnRT_EPModules)
 
 EnRT_NyalothaModules = CreateFrame("Frame", "EnRT_NyalothaModulesFrame")
 EnRT_NyalothaModules.name = "|cFFFFFF00Ny'alotha, the Waking City Modules"
-EnRT_NyalothaModules.parent = "Endless Raid Tools"
+EnRT_NyalothaModules.parent = "Infinite Raid Tools"
 EnRT_NyalothaModules:SetScript("OnShow", function(EnRT_NyalothaModules)
 	InterfaceOptionsFrame_OpenToCategory(EnRT_MautOptions);
 end)
