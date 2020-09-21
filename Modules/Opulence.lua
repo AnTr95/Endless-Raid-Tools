@@ -8,12 +8,12 @@ f:SetFrameLevel(3);
 f:SetScript("OnDragStart", f.StartMoving);
 f:SetScript("OnDragStop", function(self)
 	local point, relativeTo, relativePoint, xOffset, yOffset = self:GetPoint(1)
-	EnRT_OpulenceUIPosition = {}
-	EnRT_OpulenceUIPosition.point = point
-	EnRT_OpulenceUIPosition.relativeTo = relativeTo
-	EnRT_OpulenceUIPosition.relativePoint = relativePoint
-	EnRT_OpulenceUIPosition.xOffset = xOffset
-	EnRT_OpulenceUIPosition.yOffset = yOffset
+	IRT_OpulenceUIPosition = {}
+	IRT_OpulenceUIPosition.point = point
+	IRT_OpulenceUIPosition.relativeTo = relativeTo
+	IRT_OpulenceUIPosition.relativePoint = relativePoint
+	IRT_OpulenceUIPosition.xOffset = xOffset
+	IRT_OpulenceUIPosition.yOffset = yOffset
 	self:StopMovingOrSizing()
 end);
 f:Hide();
@@ -146,7 +146,7 @@ local function initRaid()
 end
 
 f:SetScript("OnUpdate", function(self, elapsed, ...)
-	if (inEncounter and role == "HEALER" and EnRT_OpulenceEnabled) then
+	if (inEncounter and role == "HEALER" and IRT_OpulenceEnabled) then
 		ticks = ticks + elapsed;
 		if (ticks > 1) then
 			for raider, data in pairs(raid) do
@@ -162,14 +162,14 @@ end);
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
-		if (EnRT_OpulenceEnabled == nil) then EnRT_OpulenceEnabled = true; end
-		if (EnRT_OpulenceUIPosition) then setMainFramePosition(EnRT_OpulenceUIPosition.point, EnRT_OpulenceUIPosition.relativeTo, EnRT_OpulenceUIPosition.relativePoint, EnRT_OpulenceUIPosition.xOffset, EnRT_OpulenceUIPosition.yOffset); end
-	elseif (event == "UNIT_AURA" and role == "HEALER" and inEncounter and EnRT_OpulenceEnabled) then
+		if (IRT_OpulenceEnabled == nil) then IRT_OpulenceEnabled = true; end
+		if (IRT_OpulenceUIPosition) then setMainFramePosition(IRT_OpulenceUIPosition.point, IRT_OpulenceUIPosition.relativeTo, IRT_OpulenceUIPosition.relativePoint, IRT_OpulenceUIPosition.xOffset, IRT_OpulenceUIPosition.yOffset); end
+	elseif (event == "UNIT_AURA" and role == "HEALER" and inEncounter and IRT_OpulenceEnabled) then
 		local unit = ...;
 		if (UnitIsPlayer(unit) and UnitGroupRolesAssigned(unit) == "DAMAGER") then
 			local raider = UnitName(unit);
-			local tailwinds, icon, stacks = EnRT_UnitDebuff(unit, GetSpellInfo(284573));
-			local soothing = EnRT_UnitDebuff(unit, GetSpellInfo(290654));
+			local tailwinds, icon, stacks = IRT_UnitDebuff(unit, GetSpellInfo(284573));
+			local soothing = IRT_UnitDebuff(unit, GetSpellInfo(290654));
 			if (soothing) then
 				if (raid[raider].Stacks ~= 5) then
 					raid[raider].Stacks = 5;
@@ -180,14 +180,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 				raid[raider].Stacks = 0;
 			end
 		end
-	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and role == "HEALER" and inEncounter and EnRT_OpulenceEnabled) then
+	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and role == "HEALER" and inEncounter and IRT_OpulenceEnabled) then
 		local unit, _, spellID = ...;
 		local raider = UnitName(unit);
-		if (EnRT_ContainsKey(spellIDs, spellID)) then
+		if (IRT_ContainsKey(spellIDs, spellID)) then
 			raid[raider].CD = spellIDs[spellID];
 			updateCooldowns();
 		end
-	elseif (event == "ENCOUNTER_START" and EnRT_OpulenceEnabled) then
+	elseif (event == "ENCOUNTER_START" and IRT_OpulenceEnabled) then
 		local eID = ...;
 		role = UnitGroupRolesAssigned("player");
 		if (eID == 2271 and role == "HEALER") then
@@ -195,7 +195,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			initRaid();
 			f:Show();
 		end
-	elseif (event == "ENCOUNTER_END" and role == "HEALER" and inEncounter and EnRT_OpulenceEnabled) then
+	elseif (event == "ENCOUNTER_END" and role == "HEALER" and inEncounter and IRT_OpulenceEnabled) then
 		inEncounter = false;
 		f:Hide();
 	end

@@ -61,10 +61,10 @@ f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("CHAT_MSG_ADDON");
-C_ChatInfo.RegisterAddonMessagePrefix("EnRT_Maut");
+C_ChatInfo.RegisterAddonMessagePrefix("IRT_Maut");
 
 local function mautRangeCheck(self, elapsed)
-	if (debuffed and EnRT_MautEnabled) then
+	if (debuffed and IRT_MautEnabled) then
 		ticks = ticks + elapsed;
 		if (ticks > 0.05) then
 			local safe = false;
@@ -80,12 +80,12 @@ local function mautRangeCheck(self, elapsed)
 					end
 				end
 			end
-			if (safe and UnitIsConnected(master) and EnRT_UnitDebuff(player, GetSpellInfo(314992)) and plState ~= "GREEN") then
+			if (safe and UnitIsConnected(master) and IRT_UnitDebuff(player, GetSpellInfo(314992)) and plState ~= "GREEN") then
 				plState = "GREEN";
-				C_ChatInfo.SendAddonMessage("EnRT_Maut", "GREEN", "RAID");
-			elseif (not safe and UnitIsConnected(master) and EnRT_UnitDebuff(player, GetSpellInfo(314992)) and plState ~= "RED") then
+				C_ChatInfo.SendAddonMessage("IRT_Maut", "GREEN", "RAID");
+			elseif (not safe and UnitIsConnected(master) and IRT_UnitDebuff(player, GetSpellInfo(314992)) and plState ~= "RED") then
 				plState = "RED";
-				C_ChatInfo.SendAddonMessage("EnRT_Maut", "RED", "RAID");
+				C_ChatInfo.SendAddonMessage("IRT_Maut", "RED", "RAID");
 			end
 			ticks = 0;
 		end
@@ -114,31 +114,31 @@ local function updateDebuffText()
 		end
 	end
 	if (text ~= "Drain Essence:\n") then
-		EnRT_InfoBoxShow(text, 10);
+		IRT_InfoBoxShow(text, 10);
 	else
-		EnRT_InfoBoxHide();
+		IRT_InfoBoxHide();
 	end
 end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
-		if (EnRT_MautEnabled == nil) then EnRT_MautEnabled = true; end
-	elseif (event == "CHAT_MSG_ADDON" and EnRT_MautEnabled and inEncounter) then
+		if (IRT_MautEnabled == nil) then IRT_MautEnabled = true; end
+	elseif (event == "CHAT_MSG_ADDON" and IRT_MautEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
-		if (prefix == "EnRT_Maut") then
+		if (prefix == "IRT_Maut") then
 			sender = Ambiguate(sender, "none");
 			if (msg == "GREEN" or msg == "RED") then
-				if (EnRT_ContainsKey(debuffedPlayers, sender) and debuffedPlayers[sender].state ~= msg) then
+				if (IRT_ContainsKey(debuffedPlayers, sender) and debuffedPlayers[sender].state ~= msg) then
 					debuffedPlayers[sender].state = msg;
 				end
 				updateDebuffText();
 			end
 		end
-	elseif (event == "UNIT_AURA" and EnRT_MautEnabled and inEncounter) then
+	elseif (event == "UNIT_AURA" and IRT_MautEnabled and inEncounter) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
-		if (EnRT_UnitDebuff(unit, GetSpellInfo(314992))) then
-			if (not EnRT_ContainsKey(debuffedPlayers, unitName)) then
+		if (IRT_UnitDebuff(unit, GetSpellInfo(314992))) then
+			if (not IRT_ContainsKey(debuffedPlayers, unitName)) then
 				debuffedPlayers[unitName] = {};
 				debuffedPlayers[unitName].state = "RED";
 				if (UnitIsUnit(player, master)) then
@@ -163,7 +163,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				]]
 				updateDebuffText();
 			end
-		elseif (EnRT_ContainsKey(debuffedPlayers, unitName)) then
+		elseif (IRT_ContainsKey(debuffedPlayers, unitName)) then
 			if (UnitIsUnit(player, master)) then
 				marks[debuffedPlayers[unitName].mark].unused = true;
 				SetRaidTarget(unitName, 0);
@@ -172,10 +172,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 			updateDebuffText();
 		end
 		if (UnitIsUnit(player, unitName)) then
-			if (EnRT_UnitDebuff(player, GetSpellInfo(314992)) and not debuffed) then
+			if (IRT_UnitDebuff(player, GetSpellInfo(314992)) and not debuffed) then
 				debuffed = true;
 				f:SetScript("OnUpdate", mautRangeCheck);
-			elseif (not EnRT_UnitDebuff(player, GetSpellInfo(314992)) and debuffed) then
+			elseif (not IRT_UnitDebuff(player, GetSpellInfo(314992)) and debuffed) then
 				debuffed = false;
 				f:SetScript("OnUpdate", nil);
 				plState = "";
@@ -183,13 +183,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "ENCOUNTER_START") then
 		local eID = ...;
-		if (eID == 2327 and EnRT_MautEnabled) then
+		if (eID == 2327 and IRT_MautEnabled) then
 			debuffedPlayers = {};
 			inEncounter = true;
-			master = EnRT_GetRaidLeader();
+			master = IRT_GetRaidLeader();
 			plState = "";
 		end
-	elseif (event == "ENCOUNTER_END" and inEncounter and EnRT_MautEnabled) then
+	elseif (event == "ENCOUNTER_END" and inEncounter and IRT_MautEnabled) then
 		inEncounter = false;
 		debuffedPlayers = {};
 		plState = "";

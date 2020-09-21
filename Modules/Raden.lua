@@ -60,9 +60,9 @@ local function updateTargetText()
 		local maxHP = UnitHealthMax(pl);
 		local subHP = maxHP-hp;
 		local color = "";
-		if (subHP < tonumber(EnRT_RadenColors.RED)) then
+		if (subHP < tonumber(IRT_RadenColors.RED)) then
 			color = RED;
-		elseif (subHP < tonumber(EnRT_RadenColors.YELLOW)) then
+		elseif (subHP < tonumber(IRT_RadenColors.YELLOW)) then
 			color = YELLOW;
 		else
 			color = GREEN;
@@ -70,35 +70,35 @@ local function updateTargetText()
 		local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pl))].colorStr, Ambiguate(pl, "short"));
 		msg = msg .. name .. WHITE .. " - " .. color .. heals .. "\n";
 	end	
-	EnRT_InfoBoxUpdate(msg);
+	IRT_InfoBoxUpdate(msg);
 end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
-		if EnRT_RadenEnabled == nil then EnRT_RadenEnabled = true; end
-		if EnRT_RadenColors == nil then EnRT_RadenColors = {}; end
-		if EnRT_RadenColors.RED == nil then EnRT_RadenColors.RED = 50000; end
-		if EnRT_RadenColors.YELLOW == nil then EnRT_RadenColors.YELLOW = 100000; end
+		if IRT_RadenEnabled == nil then IRT_RadenEnabled = true; end
+		if IRT_RadenColors == nil then IRT_RadenColors = {}; end
+		if IRT_RadenColors.RED == nil then IRT_RadenColors.RED = 50000; end
+		if IRT_RadenColors.YELLOW == nil then IRT_RadenColors.YELLOW = 100000; end
 	--[[
-	elseif (event == "UNIT_TARGET" and EnRT_RadenEnabled) then
+	elseif (event == "UNIT_TARGET" and IRT_RadenEnabled) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
-		if (EnRT_Contains(healers, unitName)) then
-			if (EnRT_ContainsKey(debuffed, healers[unitName])) then
+		if (IRT_Contains(healers, unitName)) then
+			if (IRT_ContainsKey(debuffed, healers[unitName])) then
 				local pl = healers[unitName];
 				debuffed[pl] = debuffed[pl] -1; 
 			end
 			healers[unitName] = GetUnitName(unit.."target", true);
-			if (EnRT_ContainsKey(debuffed, healers[unitName])) then
-				local pl = EnRT_ContainsKey(debuffed, healers[unitName]);
+			if (IRT_ContainsKey(debuffed, healers[unitName])) then
+				local pl = IRT_ContainsKey(debuffed, healers[unitName]);
 				debuffed[pl] = debuffed[pl] + 1; 
 			end
 		end
 	]]
-	elseif (event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" and EnRT_RadenEnabled and inEncounter) then
+	elseif (event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" and IRT_RadenEnabled and inEncounter) then
 		local caster = ...;
 		local unitName = GetUnitName(caster, true);
-		if (EnRT_Contains(healers, unitName)) then
+		if (IRT_Contains(healers, unitName)) then
 			for pl, heals in pairs(debuffed) do
 				C_Timer.After(0.1, function()
 					local incHeal = UnitGetIncomingHeals(pl);
@@ -117,39 +117,39 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end]]
 			end
 			--[[
-			if (EnRT_ContainsKey(debuffed, healers[unitName])) then
+			if (IRT_ContainsKey(debuffed, healers[unitName])) then
 				local pl = healers[unitName];
 				debuffed[pl] = debuffed[pl] -1; 
 			end
 			healers[unitName] = GetUnitName(unit.."target", true);
-			if (EnRT_ContainsKey(debuffed, healers[unitName])) then
-				local pl = EnRT_ContainsKey(debuffed, healers[unitName]);
+			if (IRT_ContainsKey(debuffed, healers[unitName])) then
+				local pl = IRT_ContainsKey(debuffed, healers[unitName]);
 				debuffed[pl] = debuffed[pl] + 1; 
 			end]]
 			updateTargetText();
 		end
-	elseif (event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_CHANNEL_STOP" and EnRT_RadenEnabled and inEncounter) then
+	elseif (event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_CHANNEL_STOP" and IRT_RadenEnabled and inEncounter) then
 		local caster = ...;
-	elseif (event == "UNIT_AURA" and EnRT_RadenEnabled and inEncounter) then
+	elseif (event == "UNIT_AURA" and IRT_RadenEnabled and inEncounter) then
 		local unit = ...;
-		if (EnRT_UnitDebuff(unit, GetSpellInfo(316065)) and not EnRT_ContainsKey(debuffed, GetUnitName(unit, true))) then
+		if (IRT_UnitDebuff(unit, GetSpellInfo(316065)) and not IRT_ContainsKey(debuffed, GetUnitName(unit, true))) then
 			debuffed[GetUnitName(unit, true)] = checkInitTargets(unit);
-			if (not EnRT_InfoBoxIsShown()) then
-				EnRT_InfoBoxShow("Player - Incoming Heals (excl. yours):\n", 30);
+			if (not IRT_InfoBoxIsShown()) then
+				IRT_InfoBoxShow("Player - Incoming Heals (excl. yours):\n", 30);
 			end
 			updateTargetText();
-		elseif (not EnRT_UnitDebuff(unit, GetSpellInfo(316065)) and EnRT_ContainsKey(debuffed, GetUnitName(unit, true))) then
+		elseif (not IRT_UnitDebuff(unit, GetSpellInfo(316065)) and IRT_ContainsKey(debuffed, GetUnitName(unit, true))) then
 			debuffed[GetUnitName(unit, true)] = nil;
 			updateTargetText();
 		end
-	elseif (event == "ENCOUNTER_START" and EnRT_RadenEnabled) then
+	elseif (event == "ENCOUNTER_START" and IRT_RadenEnabled) then
 		local eID = ...;
 		if (eID == 2331) then --difficulty
 			inEncounter = true;
 			debuffed = {};
 			initHealers();
 		end
-	elseif (event == "ENCOUNTER_END" and EnRT_RadenEnabled and inEncounter) then
+	elseif (event == "ENCOUNTER_END" and IRT_RadenEnabled and inEncounter) then
 		inEncounter = false;
 		debuffed = {};
 	end

@@ -20,15 +20,15 @@ f:RegisterEvent("READY_CHECK");
 f:RegisterEvent("UNIT_AURA");
 
 local function updateConsumables()
-	local flask, flaskIcon, _, _, _, flaskTime = EnRT_UnitBuff("player", GetSpellInfo(298839));
+	local flask, flaskIcon, _, _, _, flaskTime = IRT_UnitBuff("player", GetSpellInfo(298839));
 	for i = 1, #flasks do
-		flask, flaskIcon, _, _, _, flaskTime = EnRT_UnitBuff("player", GetSpellInfo(flasks[i]));
+		flask, flaskIcon, _, _, _, flaskTime = IRT_UnitBuff("player", GetSpellInfo(flasks[i]));
 		if (flask) then
 			break;
 		end
 	end
-	local food, foodIcon, _, _, _, foodTime = EnRT_UnitBuff("player", GetSpellInfo(297039)); -- Random Well Fed Buff
-	local rune, runeIcon, _, _, _, runeTime = EnRT_UnitBuff("player", GetSpellInfo(270058));
+	local food, foodIcon, _, _, _, foodTime = IRT_UnitBuff("player", GetSpellInfo(297039)); -- Random Well Fed Buff
+	local rune, runeIcon, _, _, _, runeTime = IRT_UnitBuff("player", GetSpellInfo(270058));
 	flaskIcon = flaskIcon and flaskIcon or 134877;
 	foodIcon = foodIcon and foodIcon or 136000;
 	runeIcon = runeIcon and runeIcon or 519379;
@@ -65,7 +65,7 @@ local function updateConsumables()
 				unit = "raid"..i;
 				if (UnitIsVisible(unit)) then
 					total = total + 1;
-					if (EnRT_UnitBuff(unit, GetSpellInfo(buffSpellIDs[class]))) then
+					if (IRT_UnitBuff(unit, GetSpellInfo(buffSpellIDs[class]))) then
 						count = count + 1;
 					end
 				end
@@ -75,13 +75,13 @@ local function updateConsumables()
 				unit = "party"..i;
 				if (UnitIsVisible(unit)) then
 					total = total + 1;
-					if (EnRT_UnitBuff(unit, GetSpellInfo(buffSpellIDs[class]))) then
+					if (IRT_UnitBuff(unit, GetSpellInfo(buffSpellIDs[class]))) then
 						count = count + 1;
 					end
 				end
 			end
 			total = total + 1;
-			if (EnRT_UnitBuff("player", GetSpellInfo(buffSpellIDs[class]))) then
+			if (IRT_UnitBuff("player", GetSpellInfo(buffSpellIDs[class]))) then
 				count = count + 1;
 			end
 		end
@@ -93,13 +93,13 @@ end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
-		if (EnRT_ConsumableCheckEnabled == nil) then EnRT_ConsumableCheckEnabled = true; end
-	elseif (event == "READY_CHECK" and EnRT_ConsumableCheckEnabled) then
+		if (IRT_ConsumableCheckEnabled == nil) then IRT_ConsumableCheckEnabled = true; end
+	elseif (event == "READY_CHECK" and IRT_ConsumableCheckEnabled) then
 		local sender = ...
-		if (not UnitIsUnit(sender, UnitName("player")) and EnRT_ConsumableCheckEnabled) then
+		if (not UnitIsUnit(sender, UnitName("player")) and IRT_ConsumableCheckEnabled) then
 			updateConsumables();
 		end
-	elseif (event == "UNIT_AURA" and EnRT_ConsumableCheckEnabled and ReadyCheckFrame:IsShown()) then
+	elseif (event == "UNIT_AURA" and IRT_ConsumableCheckEnabled and ReadyCheckFrame:IsShown()) then
 		local unit = ...;
 		if (UnitInRaid(unit) or UnitInParty(unit)) then
 			updateConsumables();

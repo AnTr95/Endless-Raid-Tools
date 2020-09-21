@@ -9,12 +9,12 @@ f:SetFrameLevel(3);
 f:SetScript("OnDragStart", f.StartMoving);
 f:SetScript("OnDragStop", function(self)
 	local point, relativeTo, relativePoint, xOffset, yOffset = self:GetPoint(1);
-	EnRT_InfoBoxPosition = {};
-	EnRT_InfoBoxPosition.point = point;
-	EnRT_InfoBoxPosition.relativeTo = relativeTo;
-	EnRT_InfoBoxPosition.relativePoint = relativePoint;
-	EnRT_InfoBoxPosition.xOffset = xOffset;
-	EnRT_InfoBoxPosition.yOffset = yOffset;
+	IRT_InfoBoxPosition = {};
+	IRT_InfoBoxPosition.point = point;
+	IRT_InfoBoxPosition.relativeTo = relativeTo;
+	IRT_InfoBoxPosition.relativePoint = relativePoint;
+	IRT_InfoBoxPosition.xOffset = xOffset;
+	IRT_InfoBoxPosition.yOffset = yOffset;
 	self:StopMovingOrSizing();
 end);
 f:SetFrameStrata("TOOLTIP");
@@ -37,11 +37,11 @@ text:SetJustifyH("LEFT");
 text:SetSpacing(8);
 text:SetText("");
 
-function EnRT_InfoBoxUpdateFontSize()
-	text:SetFont("Fonts\\ARIALN.TTF", EnRT_InfoBoxTextFontSize, "OUTLINE");
+function IRT_InfoBoxUpdateFontSize()
+	text:SetFont("Fonts\\ARIALN.TTF", IRT_InfoBoxTextFontSize, "OUTLINE");
 end
 --TO:DO Create instances of text so multiple texts can be shown at the same time (1 way would be to create an array and keep all visible texts there)
-function EnRT_InfoBoxShow(message, sec)
+function IRT_InfoBoxShow(message, sec)
 	text:SetText(message);
 	f:SetSize(15 + text:GetStringWidth(), 20 + text:GetStringHeight());
 	f:Show();
@@ -56,12 +56,12 @@ function EnRT_InfoBoxShow(message, sec)
 	return timer;
 end
 
-function EnRT_InfoBoxUpdate(message)
+function IRT_InfoBoxUpdate(message)
 	text:SetText(message);
 	f:SetSize(15 + text:GetStringWidth(), 15 + text:GetStringHeight());
 end
 
-function EnRT_InfoBoxMove()
+function IRT_InfoBoxMove()
 	text:SetText("MOVE ME");
 	f:SetMovable(true);
 	f:EnableMouse(true);
@@ -73,22 +73,22 @@ function EnRT_InfoBoxMove()
 	end)
 end
 
-function EnRT_InfoBoxHide()
+function IRT_InfoBoxHide()
 	if (timer) then
 		timer:Cancel();
 	end
 	f:Hide();
 end
 
-function EnRT_InfoBoxGetSize()
+function IRT_InfoBoxGetSize()
 	return f:GetSize();
 end
 
-function EnRT_InfoBoxSetPosition(point, relativeTo, relativePoint, xOffset, yOffset)
+function IRT_InfoBoxSetPosition(point, relativeTo, relativePoint, xOffset, yOffset)
 	f:SetPoint(point, relativeTo, relativePoint, xOffset, yOffset);
 end
 
-function EnRT_InfoBoxIsShown()
+function IRT_InfoBoxIsShown()
 	if f:IsShown() then
 		return true;
 	else
@@ -96,6 +96,6 @@ function EnRT_InfoBoxIsShown()
 	end
 end
 
-function EnRT_InfoBoxGetText()
+function IRT_InfoBoxGetText()
 	return text:GetText();
 end

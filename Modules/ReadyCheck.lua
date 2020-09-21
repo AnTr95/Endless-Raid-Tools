@@ -27,7 +27,7 @@ rcButtonText:SetPoint("CENTER");
 local font = select(1, rcButtonText:GetFont());
 rcButtonText:SetFont(font, 13);
 
-local rcButton = CreateFrame("Button", "EnRT_ReadyCheckButton", f, "UIGoldBorderButtonTemplate");
+local rcButton = CreateFrame("Button", "IRT_ReadyCheckButton", f, "UIGoldBorderButtonTemplate");
 rcButton:SetPoint("CENTER");
 rcButton:SetSize(180,45);
 rcButton:SetText("I am ready now!");
@@ -49,7 +49,7 @@ aniAppear:SetFromAlpha(0.5);
 aniAppear:SetOrder(2);
 
 rcButton:SetScript("OnClick", function(self)
-	SendChatMessage("EnRT: I am ready now!", "RAID")
+	SendChatMessage("IRT: I am ready now!", "RAID")
 	rcStatus = true
 	f:Hide()
 	ag:Stop();
@@ -57,7 +57,7 @@ rcButton:SetScript("OnClick", function(self)
 end)
 
 rcButton:SetScript("OnShow", function (self)
-	if(EnRT_ReadyCheckFlashing) then
+	if(IRT_ReadyCheckFlashing) then
 		ag:Play();
 	end
 end)
@@ -68,7 +68,7 @@ rcText:SetPoint("TOP", 0, -10)
 rcText:SetJustifyV("TOP")
 rcText:SetText("")
 
-local rcCloseButton = CreateFrame("Button", "EnRT_ReadyCheckCloseButton", f, "UIPanelButtonTemplate")
+local rcCloseButton = CreateFrame("Button", "IRT_ReadyCheckCloseButton", f, "UIPanelButtonTemplate")
 rcCloseButton:SetPoint("BOTTOM", 0, 10)
 rcCloseButton:SetSize(60,25)
 rcCloseButton:SetText("Close")
@@ -86,10 +86,10 @@ rcButton:Hide()
 f:Hide()
 
 f:SetScript("OnEvent", function(self, event, ...)
-	if event == "READY_CHECK_CONFIRM" and EnRT_ReadyCheckEnabled then
+	if event == "READY_CHECK_CONFIRM" and IRT_ReadyCheckEnabled then
 		local id, response = ...
 		local player = UnitName("player")
-		local playerIndex = EnRT_GetRaidMemberIndex(player)
+		local playerIndex = IRT_GetRaidMemberIndex(player)
 		--Sender part
 		if rcSender == UnitName("player") and select(2,GetInstanceInfo()) == "raid" and UnitIsVisible(id) then
 			local playerTargeted = GetUnitName(id, true);
@@ -124,11 +124,11 @@ f:SetScript("OnEvent", function(self, event, ...)
 		elseif playerIndex == id and response then
 			rcStatus = true
 		end
-	elseif (event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER") and EnRT_ReadyCheckEnabled and rcText:IsShown() then
+	elseif (event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER") and IRT_ReadyCheckEnabled and rcText:IsShown() then
 		if rcSender == UnitName("player") then
 			local msg, sender = ...
 			sender = Ambiguate(sender, "short")
-			if msg == "EnRT: I am ready now!" and rcText:GetText():match(sender) then
+			if msg == "IRT: I am ready now!" and rcText:GetText():match(sender) then
 				local playerText = string.format("|c%s%s", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, UnitName(sender))
 				local currentText = ""
 				local players = {}
@@ -152,7 +152,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
-	elseif event == "READY_CHECK" and EnRT_ReadyCheckEnabled then
+	elseif event == "READY_CHECK" and IRT_ReadyCheckEnabled then
 		local sender = ...
 		rcStatus = false
 		rcSender = sender
@@ -167,7 +167,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			raiders[rcSender] = true;
 			rcStatus = true
 		end
-	elseif event == "READY_CHECK_FINISHED" and EnRT_ReadyCheckEnabled then
+	elseif event == "READY_CHECK_FINISHED" and IRT_ReadyCheckEnabled then
 		if not rcStatus and not f:IsShown() and select(2,GetInstanceInfo()) == "raid" then
 			f:Show()
 			rcButton:Show()
@@ -202,12 +202,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 		end
 	elseif event == "PLAYER_LOGIN" then
-		if EnRT_ReadyCheckEnabled == nil then EnRT_ReadyCheckEnabled = true end
-		if EnRT_ReadyCheckFlashing == nil then EnRT_ReadyCheckFlashing = false end
+		if IRT_ReadyCheckEnabled == nil then IRT_ReadyCheckEnabled = true end
+		if IRT_ReadyCheckFlashing == nil then IRT_ReadyCheckFlashing = false end
 	end
 end)
 
-function EnRT_GetRaidMemberIndex(name)
+function IRT_GetRaidMemberIndex(name)
 	for i = 1, GetNumGroupMembers() do
 		local raider = "raid"..i
 		if UnitName(raider) == name then

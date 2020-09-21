@@ -13,7 +13,7 @@ local ticks = 0;
 local inEncounter = false;
 
 f:SetScript("OnUpdate", function(self, elapsed)
-	if (hasRelic and EnRT_UunatEnabled and inEncounter) then
+	if (hasRelic and IRT_UunatEnabled and inEncounter) then
 		ticks = ticks + elapsed;
 		if (ticks > 1.5 and resonanceActive > 0) then
 			SendChatMessage(hasRelic, "YELL");
@@ -22,7 +22,7 @@ f:SetScript("OnUpdate", function(self, elapsed)
 		elseif (resonanceActive < 0) then
 			resonanceActive = 0;
 		end
-	elseif (yellText and EnRT_UunatEnabled and inEncounter) then
+	elseif (yellText and IRT_UunatEnabled and inEncounter) then
 		ticks = ticks + elapsed;
 		if (ticks > 1.5) then
 			SendChatMessage(yellText, "YELL");
@@ -32,32 +32,32 @@ f:SetScript("OnUpdate", function(self, elapsed)
 end)
 
 f:SetScript("OnEvent", function(self, event, ...)
-	if (event == "UNIT_AURA" and EnRT_UunatEnabled and inEncounter) then
+	if (event == "UNIT_AURA" and IRT_UunatEnabled and inEncounter) then
 		local target = UnitName(...);
 		if (target == player) then
-			if (EnRT_UnitBuff(player, GetSpellInfo(284569))) then
-				hasRelic = EnRT_UunatStormMark .. " STORM " .. EnRT_UunatStormMark;
-			elseif (EnRT_UnitBuff(player, GetSpellInfo(284684))) then
-				hasRelic = EnRT_UunatVoidMark .. " VOID " .. EnRT_UunatVoidMark;
-			elseif (EnRT_UnitBuff(player, GetSpellInfo(284768))) then
-				hasRelic = EnRT_UunatOceanMark .. " OCEAN " .. EnRT_UunatOceanMark;
+			if (IRT_UnitBuff(player, GetSpellInfo(284569))) then
+				hasRelic = IRT_UunatStormMark .. " STORM " .. IRT_UunatStormMark;
+			elseif (IRT_UnitBuff(player, GetSpellInfo(284684))) then
+				hasRelic = IRT_UunatVoidMark .. " VOID " .. IRT_UunatVoidMark;
+			elseif (IRT_UnitBuff(player, GetSpellInfo(284768))) then
+				hasRelic = IRT_UunatOceanMark .. " OCEAN " .. IRT_UunatOceanMark;
 			elseif (hasRelic) then
 				hasRelic = nil;
 			end
-			if (EnRT_UnitDebuff(player, GetSpellInfo(293661))) then
-				yellText = EnRT_UunatStormMark;
-			elseif (EnRT_UnitDebuff(player, GetSpellInfo(293663))) then
-				yellText = EnRT_UunatVoidMark;
-			elseif (EnRT_UnitDebuff(player, GetSpellInfo(293662))) then
-				yellText = EnRT_UunatOceanMark;
+			if (IRT_UnitDebuff(player, GetSpellInfo(293661))) then
+				yellText = IRT_UunatStormMark;
+			elseif (IRT_UnitDebuff(player, GetSpellInfo(293663))) then
+				yellText = IRT_UunatVoidMark;
+			elseif (IRT_UnitDebuff(player, GetSpellInfo(293662))) then
+				yellText = IRT_UunatOceanMark;
 			elseif (yellText) then
 				yellText = nil;
 			end
 		end
-		if (EnRT_UnitDebuff(target, GetSpellInfo(293661)) and resonanceActive == 0) then
+		if (IRT_UnitDebuff(target, GetSpellInfo(293661)) and resonanceActive == 0) then
 			resonanceActive = 16;
 		end
-	elseif (event == "ENCOUNTER_START" and EnRT_UunatEnabled) then
+	elseif (event == "ENCOUNTER_START" and IRT_UunatEnabled) then
 		local eID = ...;
 		if (eID == 2273) then
 			inEncounter = true;
@@ -66,7 +66,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			tikcs = 0;
 			resonanceActive = 0;
 		end
-	elseif (event == "ENCOUNTER_END" and EnRT_UunatEnabled) then
+	elseif (event == "ENCOUNTER_END" and IRT_UunatEnabled) then
 		local eID = ...;
 		if (eID == 2273) then
 			inEncounter = false;
@@ -76,9 +76,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 			resonanceActive = 0;
 		end
 	elseif (event == "PLAYER_LOGIN") then
-		if (EnRT_UunatEnabled == nil) then EnRT_UunatEnabled = true; end
-		if (EnRT_UunatStormMark == nil) then EnRT_UunatStormMark = "{rt6}"; end
-		if (EnRT_UunatVoidMark == nil) then EnRT_UunatVoidMark = "{rt3}"; end
-		if (EnRT_UunatOceanMark == nil) then EnRT_UunatOceanMark = "{rt4}"; end
+		if (IRT_UunatEnabled == nil) then IRT_UunatEnabled = true; end
+		if (IRT_UunatStormMark == nil) then IRT_UunatStormMark = "{rt6}"; end
+		if (IRT_UunatVoidMark == nil) then IRT_UunatVoidMark = "{rt3}"; end
+		if (IRT_UunatOceanMark == nil) then IRT_UunatOceanMark = "{rt4}"; end
 	end
 end);

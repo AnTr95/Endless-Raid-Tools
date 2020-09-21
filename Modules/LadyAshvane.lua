@@ -41,7 +41,7 @@ f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("CHAT_MSG_ADDON");
 
-C_ChatInfo.RegisterAddonMessagePrefix("EnRT_Ashvane");
+C_ChatInfo.RegisterAddonMessagePrefix("IRT_Ashvane");
 
 local function sortAssignments()
 	if (UnitInRaid(debuffs[296942].name) > UnitInRaid(debuffs[296939].name)) then
@@ -66,7 +66,7 @@ local function sortAssignments()
 		end
 	end
 	for spellID, data in pairs(debuffs) do
-		C_ChatInfo.SendAddonMessage("EnRT_Ashvane", data.msg, "WHISPER", data.name);
+		C_ChatInfo.SendAddonMessage("IRT_Ashvane", data.msg, "WHISPER", data.name);
 		SetRaidTarget(data.name, data.mark);
 		print(data.name .. " - \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. data.mark .. ":14\124t");
 	end
@@ -83,8 +83,8 @@ local function sortAssignments()
 end
 
 local function checkDebuffs(pl)
-	if (EnRT_UnitDebuff(pl, GetSpellInfo(296942))) then
-		local spellID = select(10, EnRT_UnitDebuff(pl, GetSpellInfo(296942)));
+	if (IRT_UnitDebuff(pl, GetSpellInfo(296942))) then
+		local spellID = select(10, IRT_UnitDebuff(pl, GetSpellInfo(296942)));
 		debuffs[spellID].name = pl;
 		if (madeAssignments == false) then
 			C_Timer.After(0.5, function() sortAssignments(); end);
@@ -96,25 +96,25 @@ end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then 
-		if (EnRT_LadyAshvaneEnabled == nil) then EnRT_LadyAshvaneEnabled = true; end
-	elseif (event == "UNIT_AURA" and EnRT_LadyAshvaneEnabled and inEncounter) then
+		if (IRT_LadyAshvaneEnabled == nil) then IRT_LadyAshvaneEnabled = true; end
+	elseif (event == "UNIT_AURA" and IRT_LadyAshvaneEnabled and inEncounter) then
 		local unit = ...;
 		if (GetUnitName("player", true) == master) then
 			checkDebuffs(GetUnitName(unit, true));
 		end
-	elseif (event == "CHAT_MSG_ADDON" and EnRT_LadyAshvaneEnabled and inEncounter) then
+	elseif (event == "CHAT_MSG_ADDON" and IRT_LadyAshvaneEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
-		if (prefix == "EnRT_Ashvane") then
-			EnRT_PopupShow(msg, 10);
+		if (prefix == "IRT_Ashvane") then
+			IRT_PopupShow(msg, 10);
 		end
-	elseif (event == "ENCOUNTER_START" and EnRT_LadyAshvaneEnabled) then
+	elseif (event == "ENCOUNTER_START" and IRT_LadyAshvaneEnabled) then
 		local eID = ...;
 		if (eID == 2304) then
 			inEncounter = true;
 			madeAssignments = false;
-			master = EnRT_GetRaidLeader();
+			master = IRT_GetRaidLeader();
 		end
-	elseif (event == "ENCOUNTER_END" and EnRT_LadyAshvaneEnabled) then
+	elseif (event == "ENCOUNTER_END" and IRT_LadyAshvaneEnabled) then
 		inEncounter = false;
 	end
 end);

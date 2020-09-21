@@ -1,5 +1,5 @@
-EnRTLocals = {};
-local L = EnRTLocals;
+IRTLocals = {};
+local L = IRTLocals;
 local addon = ...;
 
 L.OPTIONS_TITLE = "Infinite Raid Tools";
@@ -37,7 +37,7 @@ L.OPTIONS_INTERRUPT_INFO = "Makes you create interrupt orders and tells the next
 L.OPTIONS_INTERRUPT_PREVIEW = "|cFFFFFFFFPreview of the popup that appears on your screen when it is your turn to interrupt|r";
 L.OPTIONS_INNERVATE_INFO = "Tells your druid that you need innervate with a popup on your druids screen! By macroing: |cFF00FFFF/irtinnervate PlayerName|r.\nModify the size and position of the popup text in the general settings!";
 L.OPTIONS_INNERVATE_PREVIEW = "|cFFFFFFFFPreview of the popup that appears on the druids screen|r";
-L.OPTIONS_READYCHECK_INFO = "|cFF00FFFFRaiders:|r If you are in a raid and you are either AFK or decline a ready check you will get a button show up on your screen that will inform the raid that you are ready once you press it.\n|cFF00FFFFRaid leader(sender):|r If you have this enabled and send a ready check a list will show up of players that are AFK/not ready after the Blizzard ready check finished that updates in real time as the players presses their EnRT ready button.";
+L.OPTIONS_READYCHECK_INFO = "|cFF00FFFFRaiders:|r If you are in a raid and you are either AFK or decline a ready check you will get a button show up on your screen that will inform the raid that you are ready once you press it.\n|cFF00FFFFRaid leader(sender):|r If you have this enabled and send a ready check a list will show up of players that are AFK/not ready after the Blizzard ready check finished that updates in real time as the players presses their IRT ready button.";
 L.OPTIONS_READYCHECK_PREVIEW = "|cFF00FFFFRaiders:|r\n|cFFFFFFFFPreview of the button that appears if you press not ready or AFK for a ready check.|r\n\n|cFF00FFFFRaid leader(sender):|r\n|cFFFFFFFFPreview of the list that appears for the players that pressed not ready or was AFK\nThe list updates in real time.|r";
 L.OPTIONS_CONSUMABLECHECK_PREVIEW = "|cFFFFFFFFPreview of consumable check from |cff3ec6eaMage|r PoV (can buff) and |cfff38bb9Paladin|r PoV (cant buff)|r";
 L.OPTIONS_CONSUMABLECHECK_INFO = "Shows if the player has food, flask and rune. In addition classes that can buff can see if players are missing their buff.\nThe top picture is taken from a |cff3ec6eamage|r point of view, other classes would see their buff or none if they do not have any.\nThe bottom picture is taken from a |cfff38bb9paladin|r which can not buff and therefore no buffs are shown.";
@@ -63,7 +63,7 @@ L.OPTIONS_LADYASHVANE_TITLE = "Lady Ashvane Module";
 L.OPTIONS_LADYASHVANE_INFO = "Marks players with eagle debuff with red and purple, players with anchor debuff with star and circle and players with eye debuff with blue and green. Prioritizes players with low raid index (grp1-grp2) with star, cross and square so the raid leader can put melee in those groups and put world markers with those colors closest to melee.";	
 L.OPTIONS_MAUT_TITLE = "Maut Module";
 L.OPTIONS_MAUT_INFO = "Puts a marker on players with Drain Essence and allows you to pre place world markers for them to run to and whenever they are not within 8 yards of any other player (updates in realtime) the addon sends popups to healers telling them to dispel."
-L.OPTIONS_READYCHECK_FLASHING = "Flash EnRT Ready Check Button \nWarning for those sensitive to pulsating light.";
+L.OPTIONS_READYCHECK_FLASHING = "Flash IRT Ready Check Button \nWarning for those sensitive to pulsating light.";
 L.OPTIONS_RADEN_TITLE = "Ra-den Module";
 L.OPTIONS_RADEN_INFO = "Module for Ra-den Mythic only. Everyone that has this module enabled can see the 3 people affected by Corrupted Existence and shows how much incoming heals they are getting excluding from the player. From a healers perspective they can see if other healers are currently healing the targets to know if it is safe to heal them. For other players that are non healers they will see all healing made to those targets. Green means it is safe to heal them (they are missing more than 100 000 HP), yellow means they are missing between 100 000 and 50 000 HP and red is they are missing less than 50 000 hp. You can modify at which intervals the numbers should go red or yellow.";
 L.OPTIONS_RADEN_RED = "Amount of missing HP for red text.";

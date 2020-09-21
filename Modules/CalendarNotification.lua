@@ -4,8 +4,8 @@ f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("CALENDAR_UPDATE_PENDING_INVITES")
 f:SetScript("OnEvent", function(self, event, ...)
 	if event == "PLAYER_LOGIN" then
-		if EnRT_CalendarNotificationEnabled == nil then EnRT_CalendarNotificationEnabled = true end
-	elseif "CALENDAR_UPDATE_PENDING_INVITES" and EnRT_CalendarNotificationEnabled then
+		if IRT_CalendarNotificationEnabled == nil then IRT_CalendarNotificationEnabled = true end
+	elseif "CALENDAR_UPDATE_PENDING_INVITES" and IRT_CalendarNotificationEnabled then
 		local invites = C_Calendar.GetNumPendingInvites()
 		if invites > 0 then
 			if invites > 10 then

@@ -1,93 +1,93 @@
-local L = EnRTLocals;
+local L = IRTLocals;
 
-EnRT_GeneralOptions = CreateFrame("Frame", "EnRT_GeneralOptionsFrame", InterfaceOptionsFramePanelContainer)
-EnRT_GeneralOptions.name = L.OPTIONS_GENERAL_TITLE
-EnRT_GeneralOptions.parent = "|cFFFFFF00General Modules|r"
-EnRT_GeneralOptions:Hide()
+IRT_GeneralOptions = CreateFrame("Frame", "IRT_GeneralOptionsFrame", InterfaceOptionsFramePanelContainer)
+IRT_GeneralOptions.name = L.OPTIONS_GENERAL_TITLE
+IRT_GeneralOptions.parent = "|cFFFFFF00General Modules|r"
+IRT_GeneralOptions:Hide()
 
-local title = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+local title = IRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 title:SetPoint("TOP", 0, -16)
 title:SetText(L.OPTIONS_TITLE)
 	
-local tabinfo = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+local tabinfo = IRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 tabinfo:SetPoint("TOPLEFT", 16, -16)
 tabinfo:SetText(L.OPTIONS_GENERAL_TITLE)
 
-local author = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+local author = IRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 author:SetPoint("TOPLEFT", 450, -20)
 author:SetText(L.OPTIONS_AUTHOR)
 
-local version = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+local version = IRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 version:SetPoint("TOPLEFT", author, "BOTTOMLEFT", 0, -10)
 version:SetText(L.OPTIONS_VERSION)
 
-local infoBorder = EnRT_GeneralOptions:CreateTexture(nil, "BACKGROUND");
+local infoBorder = IRT_GeneralOptions:CreateTexture(nil, "BACKGROUND");
 infoBorder:SetTexture("Interface\\GMChatFrame\\UI-GMStatusFrame-Pulse.PNG");
 infoBorder:SetWidth(470);
 infoBorder:SetHeight(120);
 infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
 infoBorder:SetPoint("TOP", 0, -85);
 
-local info = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+local info = IRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25)
 info:SetSize(450, 200)
 info:SetText(L.OPTIONS_GENERAL_INFO)
 info:SetWordWrap(true)
 info:SetJustifyV("TOP");
 
-local fontOptionsText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+local fontOptionsText = IRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 fontOptionsText:SetPoint("TOPLEFT", 30, -230)
 fontOptionsText:SetText(L.OPTIONS_POPUPSETTINGS_TEXT);
 
-local fontText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+local fontText = IRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 fontText:SetPoint("TOPLEFT", fontOptionsText, "TOPLEFT", 0, -25)
 fontText:SetText(L.OPTIONS_FONTSIZE_TEXT)
 
-local fontSizeText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+local fontSizeText = IRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 fontSizeText:SetPoint("TOPLEFT", fontText, "TOPLEFT", 65, -27)
 
-local fontSlider = CreateFrame("Slider", "EnRT_FontSlider", EnRT_GeneralOptions, "OptionsSliderTemplate")
+local fontSlider = CreateFrame("Slider", "IRT_FontSlider", IRT_GeneralOptions, "OptionsSliderTemplate")
 fontSlider:SetPoint("TOPLEFT", fontText, "TOPLEFT", 0, -10)
 fontSlider:SetMinMaxValues(15, 80)
 fontSlider:SetValueStep(1)
-EnRT_FontSliderLow:SetText(15)
-EnRT_FontSliderHigh:SetText(80)
+IRT_FontSliderLow:SetText(15)
+IRT_FontSliderHigh:SetText(80)
 fontSlider:SetScript("OnValueChanged", function(self)
-	EnRT_PopupTextFontSize = math.floor(fontSlider:GetValue())
-	fontSizeText:SetText(EnRT_PopupTextFontSize)
-	EnRT_PopupUpdateFontSize()
+	IRT_PopupTextFontSize = math.floor(fontSlider:GetValue())
+	fontSizeText:SetText(IRT_PopupTextFontSize)
+	IRT_PopupUpdateFontSize()
 end)
 
-local popupToggleButton = CreateFrame("Button", "EnRT_PopupToggleButton", EnRT_GeneralOptions, "UIPanelButtonTemplate");
+local popupToggleButton = CreateFrame("Button", "IRT_PopupToggleButton", IRT_GeneralOptions, "UIPanelButtonTemplate");
 popupToggleButton:SetSize(150, 35);
 popupToggleButton:SetPoint("TOPLEFT", fontText, "TOPLEFT", 160, 0);
 popupToggleButton:SetText(L.OPTIONS_FONTSLIDER_BUTTON_TEXT);
 popupToggleButton:HookScript("OnClick", function(self)
-	EnRT_PopupMove();
+	IRT_PopupMove();
 end)
 
 
-local infoBoxText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
+local infoBoxText = IRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
 infoBoxText:SetPoint("TOPLEFT", fontText, "TOPLEFT", 0, -50);
 infoBoxText:SetText(L.OPTIONS_INFOBOXSETTINGS_TEXT);
 
-local infoBoxToggleButton = CreateFrame("Button", "EnRT_InfoBoxToggleButton", EnRT_GeneralOptions, "UIPanelButtonTemplate");
+local infoBoxToggleButton = CreateFrame("Button", "IRT_InfoBoxToggleButton", IRT_GeneralOptions, "UIPanelButtonTemplate");
 infoBoxToggleButton:SetSize(150, 35);
 infoBoxToggleButton:SetPoint("TOPLEFT", infoBoxText, "TOPLEFT", 0, -25);
 infoBoxToggleButton:SetText(L.OPTIONS_INFOBOX_BUTTON_TEXT);
 infoBoxToggleButton:HookScript("OnClick", function(self)
-	EnRT_InfoBoxMove();
+	IRT_InfoBoxMove();
 end);
 
-local generalText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
+local generalText = IRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
 generalText:SetPoint("TOPLEFT", infoBoxText, "TOPLEFT", 0, -70);
 generalText:SetText(L.OPTIONS_GENERALSETTINGS_TEXT);
 
-local minimapModeText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontWhite");
+local minimapModeText = IRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontWhite");
 minimapModeText:SetText(L.OPTIONS_MINIMAP_MODE_TEXT);
 minimapModeText:SetPoint("TOPLEFT", generalText, "TOPLEFT", 0, -25);
 
-local minimapStateMenu = CreateFrame("Button", nil, EnRT_GeneralOptions, "UIDropDownMenuTemplate");
+local minimapStateMenu = CreateFrame("Button", nil, IRT_GeneralOptions, "UIDropDownMenuTemplate");
 minimapStateMenu:SetPoint("TOPLEFT", minimapModeText, "TOPLEFT", 145, 8);
 
 local minimapStates = {"Always", "On Hover", "Never"};
@@ -95,11 +95,11 @@ local minimapStates = {"Always", "On Hover", "Never"};
 local function minimapState_OnClick(self)
 	UIDropDownMenu_SetSelectedID(minimapStateMenu, self:GetID());
 	local state = self:GetText();
-	EnRT_MinimapMode = state;
+	IRT_MinimapMode = state;
 	if (state == "Always") then
-		EnRT_MinimapButton:Show();
+		IRT_MinimapButton:Show();
 	else
-		EnRT_MinimapButton:Hide();
+		IRT_MinimapButton:Hide();
 	end
 end
 
@@ -119,23 +119,23 @@ UIDropDownMenu_SetButtonWidth(minimapStateMenu, 110)
 UIDropDownMenu_JustifyText(minimapStateMenu, "CENTER")
 UIDropDownMenu_Initialize(minimapStateMenu, Initialize_MinimapState)
 
-local vcText = EnRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontWhite");
+local vcText = IRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontWhite");
 vcText:SetText(L.OPTIONS_VERSIONCHECK_TEXT);
 vcText:SetPoint("TOPLEFT", generalText, "TOPLEFT", 0, -70);
 
-local vcButton = CreateFrame("Button", "EnRT_VCButton", EnRT_GeneralOptions, "UIPanelButtonTemplate");
+local vcButton = CreateFrame("Button", "IRT_VCButton", IRT_GeneralOptions, "UIPanelButtonTemplate");
 vcButton:SetSize(150, 35);
 vcButton:SetPoint("TOPLEFT", vcText, "TOPLEFT", 190, 15);
 vcButton:SetText(L.OPTIONS_VERSIONCHECK_BUTTON_TEXT);
 vcButton:HookScript("OnClick", function(self)
-	C_ChatInfo.SendAddonMessage("EnRT_VC", "vc", "RAID");
+	C_ChatInfo.SendAddonMessage("IRT_VC", "vc", "RAID");
 end);
 
-EnRT_GeneralOptions:SetScript("OnShow", function(self)
-	fontSlider:SetValue(EnRT_PopupTextFontSize)
-	fontSizeText:SetText(EnRT_PopupTextFontSize)
+IRT_GeneralOptions:SetScript("OnShow", function(self)
+	fontSlider:SetValue(IRT_PopupTextFontSize)
+	fontSizeText:SetText(IRT_PopupTextFontSize)
 	Initialize_MinimapState();
-	UIDropDownMenu_SetSelectedName(minimapStateMenu, EnRT_MinimapMode);
+	UIDropDownMenu_SetSelectedName(minimapStateMenu, IRT_MinimapMode);
 end)
 
-InterfaceOptions_AddCategory(EnRT_GeneralOptions)
+InterfaceOptions_AddCategory(IRT_GeneralOptions)
