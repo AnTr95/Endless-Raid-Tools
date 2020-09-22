@@ -15,8 +15,8 @@ local groupIcons = {
 
 local spellIDs = {
 	["Miasma"] = GetSpellInfo(329298),
-	--["Sap"] = GetSpellInfo(344755),
-	["Sap"] = GetSpellInfo(1459),
+	["Sap"] = GetSpellInfo(344755),
+	--["Sap"] = GetSpellInfo(1459),
 };
 
 
@@ -137,7 +137,7 @@ local function updateGroups()
 			else
 				printText = printText .. " ";
 			end
-			if (true) then -- add icons for 1st and 2nd soak and debuff & CHECK DEBUFF DOESNT TIME OUT NEXT 2s
+			if (UnitIsConnected(player)) then -- add icons for 1st and 2nd soak and debuff & CHECK DEBUFF DOESNT TIME OUT NEXT 2s
 				if (EnRT_ContainsKey(debuffed, player)) then
 					C_ChatInfo.SendAddonMessage("EnRT_HD", grp, "WHISPER", player);
 					printText = printText .. "|c296d98FF\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t" .. playerShort .. "\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t|cFFFFFFFF";
@@ -280,7 +280,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
-	elseif (event == "CHAT_MSG_ADDON" and EnRT_HungeringDestroyerEnabled) then
+	elseif (event == "CHAT_MSG_ADDON" and EnRT_HungeringDestroyerEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "EnRT_HD") then
 			if (msg:match("soon")) then

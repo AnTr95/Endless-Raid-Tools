@@ -278,7 +278,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				local text, mark = strsplit(" ", msg);
 				EnRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. ", |cFFFF0000DO NOT SOAK|cFFFFFFFF" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 8);
 			else
-				playerNotification(msg, 12);
+				playerNotification(msg, 24);
 			end
 		end
 	elseif (event == "ENCOUNTER_START" and EnRT_HungeringDestroyerEnabled) then

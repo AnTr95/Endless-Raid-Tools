@@ -16,7 +16,7 @@ minimapButton:RegisterForDrag("LeftButton", "RightButton");
 minimapButton:EnableDrawLayer("BACKGROUND");
 minimapButton:EnableDrawLayer("OVERLAY");
 
-normalTexture = minimapButton:CreateTexture("RAT_MinimapButton_BackgroundTexture", "BACKGROUND");
+local normalTexture = minimapButton:CreateTexture("RAT_MinimapButton_BackgroundTexture", "BACKGROUND");
 normalTexture:SetDrawLayer("BACKGROUND", 0);
 normalTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\minimap.tga");
 normalTexture:SetSize(21,21);

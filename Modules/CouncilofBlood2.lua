@@ -2,7 +2,7 @@ local f = CreateFrame("Frame");
 local inEncounter = false;
 local playerName = GetUnitName("player");
 local isGlowing = false;
-local timer = nil;
+--local timer = nil;
 local text = nil;
 local ticks = 0;
 local debuffed = false;
@@ -118,6 +118,7 @@ local function onUpdate(self, elapsed)
 				end
 				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "HIDE", "RAID");
 			end
+			--[[
 			if (timer == nil) then
 				timer = C_Timer.NewTicker(2, function()
 					if(safe) then
@@ -127,7 +128,7 @@ local function onUpdate(self, elapsed)
 					end
 					SendChatMessage(text, "YELL");
 				end, 2);
-			end
+			end]]
 			ticks = 0;
 		end
 	end
@@ -159,7 +160,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 					if (timer) then
 						timer:Cancel();
 					end
-					timer = nil;
+					--timer = nil;
 					text = nil;
 					f:SetScript("OnUpdate", nil);
 					C_ChatInfo.SendAddonMessage("EnRT_TCOB", "HIDE", "RAID");
@@ -207,7 +208,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (eID == 2412) then
 			inEncounter = true;
 			isGlowing = false;
-			timer = nil;
+			--timer = nil;
 			debuffed = false;
 			nearby = {};
 			ticks = 0;
@@ -217,7 +218,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_END" and inEncounter and (EnRT_TCOBDFEnabled or EnRT_TCOBDMEnabled)) then
 		inEncounter = false;
 		isGlowing = false;
-		timer = nil;
+		--timer = nil;
 		debuffed = false;
 		nearby = {};
 		ticks = 0;

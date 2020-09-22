@@ -1,7 +1,7 @@
 local f = CreateFrame("Frame")
 local timer = nil;
-f:SetPoint("TOP", 0, -75)
-f:SetSize(1080, 300)
+f:SetPoint("TOP", 0, -50)
+f:SetSize(1000, 300)
 f:SetMovable(false)
 f:EnableMouse(false)
 f:RegisterForDrag("LeftButton")
@@ -19,9 +19,10 @@ f:SetScript("OnDragStop", function(self)
 end)
 f:Hide()
 local text = f:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-text:SetPoint("TOPLEFT", 0, 0)
+text:SetPoint("TOP")
 text:SetJustifyH("CENTER");
-text:SetSize(1080,300);
+text:SetJustifyV("TOP");
+text:SetSize(1000,300);
 
 function EnRT_PopupUpdateFontSize()
 	text:SetFont("Fonts\\FRIZQT__.TTF", EnRT_PopupTextFontSize)

@@ -10,7 +10,6 @@ local ticks = 0;
 local debuffed = false;
 local pair = nil;
 local plMark = nil;
-local plPos = nil;
 local hasAssigned = false;
 local raid = {
 	["TANK"] = {},
@@ -39,11 +38,6 @@ local meleeLex = {
 	263,
 };
 
-local compareLex = {
-	["LARGE AND SMALL"] = 1,
-	["small"] = 2,
-};
-
 f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("ENCOUNTER_START");
 f:RegisterEvent("ENCOUNTER_END");
@@ -51,14 +45,6 @@ f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 f:RegisterEvent("CHAT_MSG_ADDON");
 
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_SLUDGEFIST");
-
-local function compare(a, b)
-	if (a[2] == b[2]) then
-		return compareLex[a[3]] < compareLex[b[3]]
-	else
-		return a[2] < b[2];
-	end
-end
 
 local function initRaid()
 	for i = 1, GetNumGroupMembers() do
@@ -86,14 +72,7 @@ end
 
 local function printAssignments()
 	local printText = "EnRT Assignments: Fractured Boulder Soaks";
-	local sortedTable = {};
-	for player, data in pairs(assignments) do
-		table.insert(sortedTable, {player, data.mark, data.pos});
-	end
-	table.sort(sortedTable, compare);
-	for i, data in pairs(sortedTable) do
-		local mark = data[2];
-		local pl = Ambiguate(data[1], "short");
+	for pl, mark in pairs(assignments) do
 		if (i%2 == 1) then
 			printText = printText .. "\n\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_".. mark .. ":12\124t";
 		end
@@ -102,9 +81,9 @@ local function printAssignments()
 	print(printText);
 end
 
-local function playerNotification(mark, pos, duration)
-	local chatText = "{rt" .. mark .. "} " .. pos .. " {rt" .. mark .. "}";
-	EnRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. ", " .. pos:upper() .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
+local function playerNotification(mark, duration)
+	local chatText = "{rt" .. mark .. "}";
+	EnRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
 	SendChatMessage(chatText, "YELL");
 	duration = math.ceil(duration/1.5)-1;
 	timer = C_Timer.NewTicker(1.5, function()
@@ -125,10 +104,10 @@ local function assignMarks()
 		local pl1 = Ambiguate(targetedPlayers[i], "short");
 		local pl2 = Ambiguate(hookedPlayers[i], "short");
 		if (UnitIsConnected(pl1)) then
-			C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", pl2, "WHISPER", pl1);
+			C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", "pair: " .. pl2, "WHISPER", pl1);
 		end
 		if (UnitIsConnected(pl2)) then
-			C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", pl1, "WHISPER", pl2);
+			C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", "pair: " .. pl1, "WHISPER", pl2);
 		end
 	end
 	for i = 1, 3 do -- do not assign melee
@@ -144,17 +123,13 @@ local function assignMarks()
 						chainedTo = hookedPlayers[idx];
 					end
 					if (chainedTo and not EnRT_Contains(raid["MELEE"], chainedTo)) then
-						assignments[player] = {};
-						assignments[player].mark = count;
-						assignments[player].pos = "LARGE AND SMALL";
-						assignments[chainedTo] = {};
-						assignments[chainedTo].mark = count;
-						assignments[chainedTo].pos = "small";
+						assignments[player] = count;
+						assignments[chainedTo] = count;
 						if (UnitIsConnected(player)) then
-							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
+							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", "mark: " .. count, "WHISPER", player);
 						end
 						if (UnitIsConnected(chainedTo)) then
-							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[chainedTo].mark .. " " .. assignments[chainedTo].pos, "WHISPER", chainedTo);
+							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", "mark: " .. count, "WHISPER", chainedTo);
 						end
 						count = count + 1;
 						if (count == 5) then
@@ -178,17 +153,13 @@ local function assignMarks()
 						else
 							chainedTo = hookedPlayers[idx];
 						end
-						assignments[player] = {};
-						assignments[player].mark = count;
-						assignments[player].pos = "LARGE AND SMALL";
-						assignments[chainedTo] = {};
-						assignments[chainedTo].mark = count;
-						assignments[chainedTo].pos = "small";
+						assignments[player] = count;
+						assignments[chainedTo] = count;
 						if (UnitIsConnected(player)) then
-							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
+							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", "mark: " .. count, "WHISPER", player);
 						end
 						if (UnitIsConnected(chainedTo)) then
-							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[chainedTo].mark .. " " .. assignments[chainedTo].pos, "WHISPER", chainedTo);
+							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", "mark: " .. count, "WHISPER", chainedTo);
 						end
 						count = count + 1;
 						if (count == 5) then
@@ -210,16 +181,14 @@ local function onUpdate(self, elapsed)
 			if (UnitIsConnected(pair) and UnitIsVisible(pair)) then
 				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pair))].colorStr, Ambiguate(pair, "short"));
 				if (not IsItemInRange(37727, pair)) then
-					if (plMark and plPos) then
-						local tempPos = plPos:lower();
-						tempPos = tempPos:sub(1,1):upper() .. tempPos:sub(2);
-						EnRT_InfoBoxShow("|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 6 yards|r\nYour soak: |cFFFFFFFF" .. tempPos .. "|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
+					if (plMark) then
+						EnRT_InfoBoxShow("|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 6 yards|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
 					else
 						EnRT_InfoBoxShow("|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 6 yards|r", 56);
 					end
 				else
-					if(plMark and plPos) then
-						EnRT_InfoBoxShow("|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 6 yards|r\nYour soak: |cFFFFFFFF" .. tempPos .. "|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
+					if(plMark) then
+						EnRT_InfoBoxShow("|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 6 yards|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
 					else
 						EnRT_InfoBoxShow("|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 6 yards|r", 56);
 					end
@@ -242,8 +211,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (UnitIsConnected(leader)) then
 					C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", specName, "WHISPER", leader);
 				end
-			elseif (msg == "notify" and plMark and plPos) then
-				playerNotification(plMark, plPos, 10);
+			elseif (msg == "notify" and plMark) then
+				playerNotification(plMark, 10);
 			elseif (tonumber(msg)) then
 				msg = tonumber(msg);
 				if (EnRT_Contains(meleeLex, msg)) then
@@ -253,10 +222,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 					sender = GetUnitName(sender, true);
 					table.insert(raid["RANGED"], sender);
 				end
-			elseif (not msg:find(" ")) then
-				pair = msg;
 			else
-				plMark, plPos = strsplit(" ", msg, 2);
+				k, v = strsplit(" ", msg, 2);
+				if (k == "mark:") then
+					plMark = v;
+				elseif (k == "pair:") then
+					pair = v;
+				end
 			end
 		end
 	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED" and EnRT_SludgefistEnabled and inEncounter) then
@@ -285,6 +257,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", "notify", "RAID");
 			elseif (logEvent == "SPELL_AURA_APPLIED" and spellID == 342420) then
 				hasAssigned = false;
+				EnRT_InfoBoxHide();
 			--elseif (logEvent == "SPELL_CAST_START" and spellID == 331209) then
 			end
 		end
@@ -302,7 +275,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 				debuffed = false;
 				pair = nil;
 				plMark = nil;
-				plPos = nil;
 			end
 		end
 	elseif (event == "ENCOUNTER_START" and EnRT_SludgefistEnabled) then
@@ -318,7 +290,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 			raid = {};
 			count = 1;
 			plMark = nil;
-			plPos = nil;
 			hasAssigned = false;
 			leader = EnRT_GetRaidLeader();
 			initRaid();
@@ -333,7 +304,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 		raid = {};
 		count = 1;
 		plMark = nil;
-		plPos = nil;
 		hasAssigned = false;
 	end
 end);
