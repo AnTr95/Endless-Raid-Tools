@@ -43,8 +43,6 @@ Modules\ReadyCheck.lua
 Options\ReadyCheckOptions.lua
 Modules\ConsumableCheck.lua
 Options\ConsumableCheckOptions.lua
-Modules\BonusRoll.lua
-Options\BonusRollOptions.lua
 Modules\huntsmanlogic.lua
 Options\HuntsmanAltimorOptions.lua
 Modules\HungeringDestroyer2.lua
