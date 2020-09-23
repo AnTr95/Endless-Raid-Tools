@@ -205,10 +205,49 @@ local function updateConsumables()
 			break;
 		end
 	end
-	local oil, oilTime, _, oilID = GetWeaponEnchantInfo();
+	local oil, oilTime, _, oilID, offhandOil, offhandOilTime, _, offhandOilID = GetWeaponEnchantInfo();
+	local offhand = GetInventoryItemID("player", GetInventorySlotInfo("SecondaryHandSlot"));
+	local oilCount = 0;
 	local oilIcon = nil;
 	if (oil) then
 		oilIcon = oilIconIDs[oilID];
+	elseif (offhandOil) then
+		oilIcon = oilIconIDs[offhandOilID];
+	end
+	if (oilTime and offhandOilTime) then
+		oilTime = math.floor(tonumber(oilTime)/1000/60);
+		offhandOilTime = math.floor(tonumber(offhandOilTime)/1000/60);
+		oilCount = 2;
+		if (oilTime > offhandOilTime) then
+			oilTime = offhandOilTime;
+		end
+	elseif (oilTime) then
+		oilTime = math.floor(tonumber(oilTime)/1000/60);
+		oilCount = 1;
+	elseif (offhandOilTime) then
+		oilTime = math.floor(tonumber(offhandOilTime)/1000/60);
+		oilCount = 1;
+	else
+		oilTime = nil;
+	end
+	if (oilTime) then
+		if (oilCount == 2) then
+			oilCount = GREEN .. "2/2 ";
+		elseif (offhand and select(6, GetItemInfo(offhand)) == "Weapon") then
+			oilCount = RED .. "1/2 ";
+		else
+			oilCount = "";
+		end
+		if (oilTime > 15) then
+			oilTime = GREEN .. oilTime .. "min|r";
+		elseif (oilTime <= 15 and oilTime > 8) then
+			oilTime = YELLOW .. oilTime .. "min|r";
+		elseif (oilTime <= 8) then
+			oilTime = RED .. oilTime .. "min|r";
+		end
+	else
+		oilCount = "";
+		oilTime = CROSS;
 	end
 	local food, foodIcon, _, _, _, foodTime = EnRT_UnitBuff("player", GetSpellInfo(297039)); -- Random Well Fed Buff
 	local rune, runeIcon, _, _, _, runeTime = EnRT_UnitBuff("player", GetSpellInfo(270058));
@@ -229,7 +268,6 @@ local function updateConsumables()
 	end
 	local currTime = GetTime();
 	flaskTime = flaskTime and math.floor((tonumber(flaskTime)-currTime)/60) or nil;
-	oilTime = oilTime and math.floor(tonumber(oilTime)/1000/60) or nil;
 	if (flaskTime) then
 		if (flaskTime > 15) then
 			flaskTime = GREEN .. flaskTime .. "min|r";
@@ -240,17 +278,6 @@ local function updateConsumables()
 		end
 	else
 		flaskTime = CROSS;
-	end
-	if (oilTime) then
-		if (oilTime > 15) then
-			oilTime = GREEN .. oilTime .. "min|r";
-		elseif (oilTime <= 15 and oilTime > 8) then
-			oilTime = YELLOW .. oilTime .. "min|r";
-		elseif (oilTime <= 8) then
-			oilTime = RED .. oilTime .. "min|r";
-		end
-	else
-		oilTime = CROSS;
 	end
 	local class = select(2, UnitClass("player"));
 	if (class == "MAGE" or class == "PRIEST" or class == "WARRIOR") then
@@ -284,11 +311,11 @@ local function updateConsumables()
 		end
 		if (ReadyCheckFrame.backdrop and ReadyCheckFrame.backdrop.backdropInfo and ReadyCheckFrame.backdrop.backdropInfo.bgFile and ReadyCheckFrame.backdrop.backdropInfo.bgFile:match("ElvUI")) then
 			ReadyCheckFrameText:SetSize(320, 40);
-			ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
+			ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
 		else
 			f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -17);
 			f2:Show();
-			rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
+			rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
 		end
 		--ReadyCheckFrameText:SetText(blizzText);
 		--text2:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. "  \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime);
@@ -297,11 +324,11 @@ local function updateConsumables()
 	else
 		if (ReadyCheckFrame.backdrop and ReadyCheckFrame.backdrop.backdropInfo and ReadyCheckFrame.backdrop.backdropInfo.bgFile and ReadyCheckFrame.backdrop.backdropInfo.bgFile:match("ElvUI")) then
 			ReadyCheckFrameText:SetSize(320, 40);
-			ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS));
+			ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS));
 		else
 			f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -17);
 			f2:Show();
-			rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS));
+			rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS));
 		end
 		--ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS)); 
 	end

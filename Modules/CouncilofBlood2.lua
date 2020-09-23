@@ -151,10 +151,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 			if (EnRT_TCOBDFEnabled) then
 				if (EnRT_UnitDebuff(unit, dfID) and not debuffed) then -- unknown spellid Dancing Fever
+					print("Found new debuff")
 					debuffed = math.floor(select(7, EnRT_UnitDebuff(playerName, dfID)));
 					nearby = {};
 					f:SetScript("OnUpdate", onUpdate);
 				elseif (not EnRT_UnitDebuff(unit, dfID) and debuffed) then
+					print("removed debuff")
 					debuffed = false;
 					nearby = {};
 					if (timer) then
@@ -186,6 +188,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		sender = Ambiguate(sender, "short");
 		if (prefix == "EnRT_TCOB") then
 			local class = select(2, UnitClass(sender));
+			print(msg .. " " .. sender);
 			if (class == "MONK" or class == "PALADIN" or class == "PRIEST") then
 				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, sender);
 				if (msg == "SHOW" and not UnitIsUnit(playerName, sender)) then
@@ -206,6 +209,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_START" and (EnRT_TCOBDMEnabled or EnRT_TCOBDFEnabled)) then
 		local eID = ...;
 		if (eID == 2412) then
+			print("Started TCOB Encounter")
 			inEncounter = true;
 			isGlowing = false;
 			--timer = nil;
