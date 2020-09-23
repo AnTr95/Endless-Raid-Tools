@@ -4,7 +4,7 @@ f2:EnableMouse(false);
 f2:SetFrameLevel(3);
 f2:SetFrameStrata("FULLSCREEN");
 f2:SetHeight(25);
-f2:SetWidth(250);
+f2:SetWidth(265);
 --[[
 f2:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", --Set the background and border textures
 	edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
@@ -27,18 +27,18 @@ ReadyCheckFrameNoButton:SetPoint(point, relativeTo, relativePoint, xOfs, yOfs-10
 ]]
 local buffBackgroundTextureTop1 = f2:CreateTexture(nil, "ARTWORK");
 buffBackgroundTextureTop1:SetTexture("Interface\\RAIDFRAME\\UI-ReadyCheckFrame");
-buffBackgroundTextureTop1:SetWidth(250);
+buffBackgroundTextureTop1:SetWidth(265);
 buffBackgroundTextureTop1:SetHeight(5);
 buffBackgroundTextureTop1:SetTexCoord(0.12,0.59,0.07,0.12);
 buffBackgroundTextureTop1:SetPoint("TOPLEFT", 0,-5);
 local buffBackgroundTextureCenter = f2:CreateTexture(nil, "BACKGROUND");
 buffBackgroundTextureCenter:SetTexture("Interface\\RAIDFRAME\\UI-ReadyCheckFrame");
-buffBackgroundTextureCenter:SetSize(250, 20);
+buffBackgroundTextureCenter:SetSize(265, 20);
 buffBackgroundTextureCenter:SetTexCoord(0.2,0.5,0.1,0.7);
 buffBackgroundTextureCenter:SetPoint("TOPLEFT", 0, -10);
 local buffBackgroundTextureBottom1 = f2:CreateTexture(nil, "ARTWORK");
 buffBackgroundTextureBottom1:SetTexture("Interface\\RAIDFRAME\\UI-ReadyCheckFrame");
-buffBackgroundTextureBottom1:SetWidth(250);
+buffBackgroundTextureBottom1:SetWidth(265);
 buffBackgroundTextureBottom1:SetHeight(5);
 buffBackgroundTextureBottom1:SetTexCoord(0.05,0.6,0.66,0.71);
 buffBackgroundTextureBottom1:SetPoint("BOTTOMLEFT", 0, -5);
@@ -216,7 +216,9 @@ local function updateConsumables()
 	end
 	if (oilTime and offhandOilTime) then
 		oilTime = math.floor(tonumber(oilTime)/1000/60);
+		print(oilTime)
 		offhandOilTime = math.floor(tonumber(offhandOilTime)/1000/60);
+		print(offhandOilTime)
 		oilCount = 2;
 		if (oilTime > offhandOilTime) then
 			oilTime = offhandOilTime;
