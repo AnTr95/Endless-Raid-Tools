@@ -49,24 +49,28 @@ local function assignDispels()
 	updateDispelText();
 end
 
-function updateDispelText()
+local function updateDispelText()
 	local text = "|cFFFFFFFFHeart Rend|r";
 	local count = 1;
 	for pl, healer in pairs(assignments) do
 		pl = Ambiguate(pl, "short");
-		--pl = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pl))].colorStr, pl);
+		pl = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pl))].colorStr, pl);
 		if (UnitIsUnit(healer, playerName) and countdown == -1 and count == 1) then
 			EnRT_PopupShow("Dispel " .. pl, 36);
 		end
 		healer = Ambiguate(healer, "short");
-		--healer = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(healer))].colorStr, healer);
+		healer = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(healer))].colorStr, healer);
 		text = text .. "\n" .. count .. ". " .. healer .. " -> " .. pl;
 		if (count == 1 and countdown ~= -1) then
 			text = text .. " " .. countdown .. "s";
 		end
 		count = count + 1;
 	end
-	EnRT_InfoBoxShow(text, 36);
+	if (text == "|cFFFFFFFFHeart Rend|r") then
+		EnRT_InfoBoxHide();
+	else
+		EnRT_InfoBoxShow(text, 36);
+	end
 end
 
 f:SetScript("OnEvent", function(self, event, ...)
