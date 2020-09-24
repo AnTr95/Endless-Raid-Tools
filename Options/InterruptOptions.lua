@@ -1,3 +1,5 @@
+local L = EnRTLocals;
+local GUI = nil;
 local raidDatabase = {
 	["Castle Nathria"] = {
 		["Shriekwing"] = 2398,
@@ -30,8 +32,6 @@ local bossLex = {
 		[10] = "Sire Denathrius",
 	},
 };
-local GUI = nil;
-local L = EnRTLocals;
 
 EnRT_InterruptOptions = CreateFrame("Frame", "EnRT_InterruptOptionsFrame", InterfaceOptionsFramePanelContainer);
 EnRT_InterruptOptions.name = "Interrupt Module";

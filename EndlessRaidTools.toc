@@ -13,15 +13,13 @@
 ## SavedVariables: EnRT_HuntsmanAltimorEnabled
 ## SavedVariables: EnRT_TCOBDMEnabled
 ## SavedVariables: EnRT_TCOBDFEnabled
+## SavedVariables: EnRT_StoneLegionGeneralsEnabled
 ## SavedVariablesPerCharacter: EnRT_PopupTextPosition
 ## SavedVariablesPerCharacter: EnRT_BonusRollCurrentRaid
 ## SavedVariablesPerCharacter: EnRT_ConsumableCheckEnabled
 ## SavedVariablesPerCharacter: EnRT_CalendarNotificationEnabled
 ## SavedVariablesPerCharacter: EnRT_ReadyCheckEnabled
 ## SavedVariablesPerCharacter: EnRT_ReadyCheckFlashing
-## SavedVariablesPerCharacter: EnRT_BonusRollBosses
-## SavedVariablesPerCharacter: EnRT_BonusRollEnabled
-## SavedVariablesPerCharacter: EnRT_BonusRollBLPCount
 ## SavedVariablesPerCharacter: EnRT_MinimapMode
 ## SavedVariablesPerCharacter: EnRT_MinimapDegree
 ## SavedVariablesPerCharacter: EnRT_InfoBoxPosition
@@ -53,3 +51,5 @@ Modules\CouncilofBlood2.lua
 Options\CouncilofBloodOptions.lua
 Modules\Sludgefist2.lua
 Options\SludgefistOptions.lua
+Modules\StoneLegionGenerals.lua
+Options\StoneLegionGeneralsOptions.lua

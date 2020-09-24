@@ -247,9 +247,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local unitName = GetUnitName(unit, true);
 		if (UnitIsUnit(unitName, playerName)) then
 			if (EnRT_UnitDebuff(unitName, spellIDs["Miasma"])) then
-				hasDebuff = true;
-			elseif (hasDebuff) then
-				hasDebuff = false;
+				if (not hasDebuff) then
+					hasDebuff = true;
+				end
+			else
+				if (hasDebuff) then
+					hasDebuff = false;
+				end
 			end
 		end
 		if (UnitIsUnit(leader, playerName)) then
