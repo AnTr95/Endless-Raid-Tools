@@ -32,8 +32,9 @@ local function assignDispels()
 	assignments = {};
 	for i, pl in pairs(debuffed) do -- ensure healers dont dispel themselves
 		for j, healer in pairs(healers) do
-			if (not UnitIsUnit(pl, healer)) then
+			if (EnRT_Contains(healers, pl) and not UnitIsUnit(pl, healer)) then
 				assignments[pl] = healer;
+				break;
 			end
 		end
 	end
@@ -42,6 +43,7 @@ local function assignDispels()
 			for j, healer in pairs(healers) do
 				if (not EnRT_Contains(assignments, healer)) then
 					assignments[pl] = healer;
+					break;
 				end
 			end
 		end
