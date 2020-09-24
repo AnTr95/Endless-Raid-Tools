@@ -55,7 +55,7 @@ infoBorder:SetPoint("TOP", 20, -85);
 
 local info = EnRT_HungeringDestroyerOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
 info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25);
-info:SetSize(450, 300);
+info:SetSize(430, 300);
 info:SetText(L.OPTIONS_HUNGERINGDESTROYER_INFO);
 info:SetWordWrap(true);
 info:SetJustifyH("LEFT");

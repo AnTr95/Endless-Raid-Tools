@@ -54,7 +54,7 @@ infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
 infoBorder:SetPoint("TOP", 20, -85);
 
 local info = EnRT_StoneLegionGeneralsOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
-info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -8);
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25);
 info:SetSize(430, 300);
 info:SetText(L.OPTIONS_STONELEGIONGENERALS_INFO);
 info:SetWordWrap(true);
