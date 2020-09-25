@@ -101,19 +101,19 @@ local function onUpdate(self, elapsed)
 			end
 			if (safe and EnRT_UnitDebuff(playerName, dfID)) then
 				if (text == nil) then
-					text = "SAFE - " .. math.ceil(debuffed-GetTime());
+					text = "SAFE - " .. math.ceil(debuffed-GetTime()) .. "s";
 					SendChatMessage(text, "YELL");
 				elseif (text:match("NOT")) then
-					text = "SAFE - " .. math.ceil(debuffed-GetTime());
+					text = "SAFE - " .. math.ceil(debuffed-GetTime()) .. "s";
 					SendChatMessage(text, "YELL");
 				end
 				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "SHOW", "RAID");
 			elseif (not safe and EnRT_UnitDebuff(playerName, dfID)) then
 				if (text == nil) then
-					text = "NOT SAFE - " .. math.ceil(debuffed-GetTime());
+					text = "NOT SAFE - " .. math.ceil(debuffed-GetTime()) .. "s";
 					SendChatMessage(text, "YELL");
 				elseif (not text:match("NOT")) then
-					text = "NOT SAFE - " .. math.ceil(debuffed-GetTime());
+					text = "NOT SAFE - " .. math.ceil(debuffed-GetTime()) .. "s";
 					SendChatMessage(text, "YELL");
 				end
 				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "HIDE", "RAID");
@@ -151,12 +151,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 			if (EnRT_TCOBDFEnabled) then
 				if (EnRT_UnitDebuff(unit, dfID) and not debuffed) then -- unknown spellid Dancing Fever
-					print("Found new debuff")
-					debuffed = math.floor(select(7, EnRT_UnitDebuff(playerName, dfID)));
+					debuffed = math.floor(GetTime())+5;
 					nearby = {};
 					f:SetScript("OnUpdate", onUpdate);
 				elseif (not EnRT_UnitDebuff(unit, dfID) and debuffed) then
-					print("removed debuff")
 					debuffed = false;
 					nearby = {};
 					if (timer) then
@@ -188,7 +186,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 		sender = Ambiguate(sender, "short");
 		if (prefix == "EnRT_TCOB") then
 			local class = select(2, UnitClass(sender));
-			print(msg .. " " .. sender);
 			if (class == "MONK" or class == "PALADIN" or class == "PRIEST") then
 				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, sender);
 				if (msg == "SHOW" and not UnitIsUnit(playerName, sender)) then
@@ -209,7 +206,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_START" and (EnRT_TCOBDMEnabled or EnRT_TCOBDFEnabled)) then
 		local eID = ...;
 		if (eID == 2412) then
-			print("Started TCOB Encounter")
 			inEncounter = true;
 			isGlowing = false;
 			--timer = nil;
