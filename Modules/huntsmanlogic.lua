@@ -258,13 +258,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (not EnRT_Contains(debuffed, unitName)) then
 					debuffed[#debuffed+1] = unitName;
 					SetRaidTarget(unitName, #debuffed);
-					local expTime = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(335111)));
-					if (not expTime) then
-						expTime = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(335112)));
-					end
-					if (not expTime) then
-						expTime = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(335113)));
-					end
+					local expTime = math.floor(GetTime()+5);
 					if (UnitIsConnected(unitName)) then
 						C_ChatInfo.SendAddonMessage("EnRT_HA", #debuffed .. " " .. math.floor(expTime), "WHISPER", unitName);
 					end
