@@ -131,7 +131,7 @@ local function assignMarks()
 			C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", pl1, "WHISPER", pl2);
 		end
 	end
-	for i = 1, 3 do -- do not assign melee
+	for i = 1, 3 do -- assign any non melee pait without crushed
 		for index, player in pairs(raid[priorityLex[i]]) do
 			if (not EnRT_ContainsKey(assignments, player)) then
 				local idx = EnRT_Contains(targetedPlayers, player) or EnRT_Contains(hookedPlayers, player);
@@ -144,22 +144,72 @@ local function assignMarks()
 						chainedTo = hookedPlayers[idx];
 					end
 					if (chainedTo and not EnRT_Contains(raid["MELEE"], chainedTo)) then
-						assignments[player] = {};
-						assignments[player].mark = count;
-						assignments[player].pos = "LARGE AND SMALL";
-						assignments[chainedTo] = {};
-						assignments[chainedTo].mark = count;
-						assignments[chainedTo].pos = "small";
-						if (UnitIsConnected(player)) then
-							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
+						if (not EnRT_UnitDebuff(player, GetSpellInfo(342410)) and not EnRT_UnitDebuff(chainedTo, GetSpellInfo(342410))) then
+							assignments[player] = {};
+							assignments[player].mark = count;
+							assignments[player].pos = "LARGE AND SMALL";
+							assignments[chainedTo] = {};
+							assignments[chainedTo].mark = count;
+							assignments[chainedTo].pos = "small";
+							if (UnitIsConnected(player)) then
+								C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
+							end
+							if (UnitIsConnected(chainedTo)) then
+								C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[chainedTo].mark .. " " .. assignments[chainedTo].pos, "WHISPER", chainedTo);
+							end
+							count = count + 1;
+							if (count == 5) then
+								printAssignments();
+								return;
+							end
 						end
-						if (UnitIsConnected(chainedTo)) then
-							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[chainedTo].mark .. " " .. assignments[chainedTo].pos, "WHISPER", chainedTo);
+					end
+				end
+			end
+		end
+	end
+	if (count < 5) then -- there is no pair with both players undebuffed, assign any non melee pair with 1 debuff
+		for i = 1, 3 do 
+			for index, player in pairs(raid[priorityLex[i]]) do
+				if (not EnRT_ContainsKey(assignments, player)) then
+					local idx = EnRT_Contains(targetedPlayers, player) or EnRT_Contains(hookedPlayers, player);
+					local isHooked = EnRT_Contains(hookedPlayers, player);
+					local chainedTo = nil;
+					if (idx) then
+						if (isHooked) then
+							chainedTo = targetedPlayers[idx];
+						else
+							chainedTo = hookedPlayers[idx];
 						end
-						count = count + 1;
-						if (count == 5) then
-							printAssignments();
-							return;
+						if (chainedTo and not EnRT_Contains(raid["MELEE"], chainedTo)) then
+							if (not EnRT_UnitDebuff(player, GetSpellInfo(342410)) or not EnRT_UnitDebuff(chainedTo, GetSpellInfo(342410))) then
+								if (not EnRT_UnitDebuff(player, GetSpellInfo(342410))) then
+									assignments[player] = {};
+									assignments[player].mark = count;
+									assignments[player].pos = "LARGE AND SMALL";
+									assignments[chainedTo] = {};
+									assignments[chainedTo].mark = count;
+									assignments[chainedTo].pos = "small";
+								else
+									assignments[chainedTo] = {};
+									assignments[chainedTo].mark = count;
+									assignments[chainedTo].pos = "LARGE AND SMALL";
+									assignments[player] = {};
+									assignments[player].mark = count;
+									assignments[player].pos = "small";
+								end
+								if (UnitIsConnected(player)) then
+									C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
+								end
+								if (UnitIsConnected(chainedTo)) then
+									C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[chainedTo].mark .. " " .. assignments[chainedTo].pos, "WHISPER", chainedTo);
+								end
+								count = count + 1;
+								if (count == 5) then
+									printAssignments();
+									return;
+								end
+							end
 						end
 					end
 				end
@@ -178,22 +228,70 @@ local function assignMarks()
 						else
 							chainedTo = hookedPlayers[idx];
 						end
-						assignments[player] = {};
-						assignments[player].mark = count;
-						assignments[player].pos = "LARGE AND SMALL";
-						assignments[chainedTo] = {};
-						assignments[chainedTo].mark = count;
-						assignments[chainedTo].pos = "small";
-						if (UnitIsConnected(player)) then
-							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
+						if (not EnRT_UnitDebuff(player, GetSpellInfo(342410)) or not EnRT_UnitDebuff(chainedTo, GetSpellInfo(342410))) then
+							if (not EnRT_UnitDebuff(player, GetSpellInfo(342410))) then
+								assignments[player] = {};
+								assignments[player].mark = count;
+								assignments[player].pos = "LARGE AND SMALL";
+								assignments[chainedTo] = {};
+								assignments[chainedTo].mark = count;
+								assignments[chainedTo].pos = "small";
+							else
+								assignments[chainedTo] = {};
+								assignments[chainedTo].mark = count;
+								assignments[chainedTo].pos = "LARGE AND SMALL";
+								assignments[player] = {};
+								assignments[player].mark = count;
+								assignments[player].pos = "small";
+							end
+							if (UnitIsConnected(player)) then
+								C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
+							end
+							if (UnitIsConnected(chainedTo)) then
+								C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[chainedTo].mark .. " " .. assignments[chainedTo].pos, "WHISPER", chainedTo);
+							end
+							count = count + 1;
+							if (count == 5) then
+								printAssignments();
+								return;
+							end
 						end
-						if (UnitIsConnected(chainedTo)) then
-							C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[chainedTo].mark .. " " .. assignments[chainedTo].pos, "WHISPER", chainedTo);
+					end
+				end
+			end
+		end
+	end
+	if (count < 5) then
+		for i = 1, 4 do -- assign any pair without crushed
+			for index, player in pairs(raid[priorityLex[i]]) do
+				if (not EnRT_ContainsKey(assignments, player)) then
+					local idx = EnRT_Contains(targetedPlayers, player) or EnRT_Contains(hookedPlayers, player);
+					local isHooked = EnRT_Contains(hookedPlayers, player);
+					local chainedTo = nil;
+					if (idx) then
+						if (isHooked) then
+							chainedTo = targetedPlayers[idx];
+						else
+							chainedTo = hookedPlayers[idx];
 						end
-						count = count + 1;
-						if (count == 5) then
-							printAssignments();
-							return;
+						if (not EnRT_UnitDebuff(player, GetSpellInfo(342410)) and not EnRT_UnitDebuff(chainedTo, GetSpellInfo(342410))) then
+							assignments[player] = {};
+							assignments[player].mark = count;
+							assignments[player].pos = "LARGE AND SMALL";
+							assignments[chainedTo] = {};
+							assignments[chainedTo].mark = count;
+							assignments[chainedTo].pos = "small";
+							if (UnitIsConnected(player)) then
+								C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
+							end
+							if (UnitIsConnected(chainedTo)) then
+								C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", assignments[chainedTo].mark .. " " .. assignments[chainedTo].pos, "WHISPER", chainedTo);
+							end
+							count = count + 1;
+							if (count == 5) then
+								printAssignments();
+								return;
+							end
 						end
 					end
 				end
