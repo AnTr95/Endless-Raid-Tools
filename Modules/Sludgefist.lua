@@ -131,7 +131,7 @@ local function assignMarks()
 			C_ChatInfo.SendAddonMessage("EnRT_SLUDGEFIST", pl1, "WHISPER", pl2);
 		end
 	end
-	for i = 1, 3 do -- assign any non melee pait without crushed
+	for i = 1, 3 do -- assign any non melee pair without crushed
 		for index, player in pairs(raid[priorityLex[i]]) do
 			if (not EnRT_ContainsKey(assignments, player)) then
 				local idx = EnRT_Contains(targetedPlayers, player) or EnRT_Contains(hookedPlayers, player);
@@ -217,7 +217,7 @@ local function assignMarks()
 		end
 	end
 	if (count < 5) then
-		for i = 1, 4 do --fill with anyone
+		for i = 1, 4 do --fill with anyone not debuffed
 			for index, player in pairs(raid[priorityLex[i]]) do
 				if (not EnRT_ContainsKey(assignments, player)) then
 					local idx = EnRT_Contains(targetedPlayers, player) or EnRT_Contains(hookedPlayers, player);
