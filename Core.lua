@@ -2,10 +2,10 @@ local L = IRTLocals;
 local f = CreateFrame("Frame");
 local addon = ...; -- The name of the addon folder
 local version = GetAddOnMetadata(addon, "Version");
-SLASH_INFINITERAIDTOOLS = "/endlessraidtools";
-SLASH_INFINITERAIDTOOLS = "/enrt";
-SLASH_INFINITERAIDTOOLS = "/irt";
-SLASH_INFINITERAIDTOOLS = "/infiniteraidtools";
+SLASH_INFINITERAIDTOOLS1 = "/endlessraidtools";
+SLASH_INFINITERAIDTOOLS2 = "/enrt";
+SLASH_INFINITERAIDTOOLS3 = "/irt";
+SLASH_INFINITERAIDTOOLS4 = "/infiniteraidtools";
 local playersChecked = {};
 local initCheck = false;
 local function handler(msg, editbox)
