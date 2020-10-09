@@ -1,0 +1,69 @@
+## Interface: 90001
+## Title: Infinite Raid Tools
+## Version: 9.01
+## Notes: Raid Tools
+## Author: Ant-Kazzak
+## SavedVariables: IRT_InterruptEnabled
+## SavedVariables: IRT_NextInterrupt
+## SavedVariables: IRT_InnervateEnabled
+## SavedVariables: IRT_PopupTextFontSize
+## SavedVariables: IRT_PopupTextPosition
+## SavedVariablesPerCharacter: IRT_BonusRollCurrentRaid
+## SavedVariablesPerCharacter: IRT_ConsumableCheckEnabled
+## SavedVariablesPerCharacter: IRT_CalendarNotificationEnabled
+## SavedVariablesPerCharacter: IRT_ReadyCheckEnabled
+## SavedVariablesPerCharacter: IRT_ReadyCheckFlashing
+## SavedVariablesPerCharacter: IRT_BonusRollBosses
+## SavedVariablesPerCharacter: IRT_BonusRollEnabled
+## SavedVariablesPerCharacter: IRT_BonusRollBLPCount
+## SavedVariablesPerCharacter: IRT_MinimapMode
+## SavedVariablesPerCharacter: IRT_MinimapDegree
+## SavedVariablesPerCharacter: IRT_InfoBoxPosition
+## SavedVariables: IRT_HTMEnabled
+## SavedVariables: IRT_MOTHEREnabled
+## SavedVariables: IRT_OpulenceEnabled
+## SavedVariables: IRT_UunatEnabled
+## SavedVariables: IRT_UunatStormMark
+## SavedVariables: IRT_UunatOceanMark
+## SavedVariables: IRT_UunatVoidMark
+## SavedVariables: IRT_LadyAshvaneEnabled
+## SavedVariables: IRT_QueenAzsharaEnabled
+## SavedVariables: IRT_RadenEnabled
+## SavedVariables: IRT_RadenColors
+## SavedVariables: IRT_MautEnabled
+
+Localization\Localization.enUS.lua
+Core.lua
+Options\Options.lua
+Options\GeneralOptions.lua
+Options\Minimap.lua
+Popup.lua
+InfoBox.lua
+Modules\Interrupts.lua
+Modules\Innervate.lua
+Modules\CalendarNotification.lua
+Options\CalendarNotificationOptions.lua
+Options\InnervateOptions.lua
+Options\InterruptOptions.lua
+Modules\ReadyCheck.lua
+Options\ReadyCheckOptions.lua
+Modules\ConsumableCheck.lua
+Options\ConsumableCheckOptions.lua
+Modules\BonusRoll.lua
+Options\BonusRollOptions.lua
+Modules\MOTHER.lua
+Options\MOTHEROptions.lua
+Modules\HighTinkerMekkatorque.lua
+Options\HighTinkerMekkatorqueOptions.lua
+Modules\Opulence.lua
+Options\OpulenceOptions.lua
+Modules\Uunat.lua
+Options\UunatOptions.lua
+Modules\LadyAshvane.lua
+Options\LadyAshvaneOptions.lua
+Modules\QueenAzshara.lua
+Options\QueenAzsharaOptions.lua
+Modules\Maut.lua
+Options\MautOptions.lua
+Modules\Raden.lua
+Options\RadenOptions.lua

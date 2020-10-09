@@ -1,8 +1,8 @@
 local addon = ...
 local _G = _G;
-local L = EnRTLocals;
+local L = IRTLocals;
 
-local minimapButton = CreateFrame("Button", "EnRT_MinimapButton", Minimap);
+local minimapButton = CreateFrame("Button", "IRT_MinimapButton", Minimap);
 minimapButton:SetPoint("TOPLEFT");
 minimapButton:SetSize(33, 33); --img needs to be multiple of 2
 minimapButton:SetMovable(true);
@@ -18,7 +18,7 @@ minimapButton:EnableDrawLayer("OVERLAY");
 
 normalTexture = minimapButton:CreateTexture("RAT_MinimapButton_BackgroundTexture", "BACKGROUND");
 normalTexture:SetDrawLayer("BACKGROUND", 0);
-normalTexture:SetTexture("Interface\\addons\\EndlessRaidTools\\Res\\minimap.tga");
+normalTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\minimap.tga");
 normalTexture:SetSize(21,21);
 normalTexture:SetPoint("TOPLEFT", 6, -5);
 
@@ -31,8 +31,8 @@ minimapButton:SetScript("OnClick", function(self)
 	if (self.dragging) then
 		self:SetScript("OnUpdate", nil);
 	end
-	InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralModules);
-	InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralOptions);
+	InterfaceOptionsFrame_OpenToCategory(IRT_GeneralModules);
+	InterfaceOptionsFrame_OpenToCategory(IRT_GeneralOptions);
 end);
 minimapButton:SetScript("OnDragStart", function(self)
 	self:LockHighlight();
@@ -50,8 +50,8 @@ minimapButton:SetScript("OnDragStart", function(self)
 		xpos = xmin-xpos/UIParent:GetScale()+(xLen/2); -- get coordinates as differences from the center of the minimap
 		ypos = ypos/UIParent:GetScale()-ymin-(yLen/2);
 
-		EnRT_MinimapDegree = math.deg(math.atan2(ypos,xpos)); -- save the degrees we are relative to the minimap center
-		EnRT_SetMinimapPoint(EnRT_MinimapDegree);
+		IRT_MinimapDegree = math.deg(math.atan2(ypos,xpos)); -- save the degrees we are relative to the minimap center
+		IRT_SetMinimapPoint(IRT_MinimapDegree);
 	end);
 end)
 minimapButton:SetScript("OnDragStop", function(self)
@@ -64,13 +64,13 @@ minimapButton:SetScript("OnEnter", function(self)
 	GameTooltip:SetText("|cFFFFFFFF" .. L.OPTIONS_TITLE);
 	GameTooltip:AddLine(L.OPTIONS_MINIMAP_CLICK);
 	GameTooltip:Show();
-	if (EnRT_MinimapMode == "On Hover") then
+	if (IRT_MinimapMode == "On Hover") then
 		minimapButton:Show();
 	end
 end);
 minimapButton:SetScript("OnLeave", function(self)
 	GameTooltip:Hide();
-	if (EnRT_MinimapMode == "On Hover" and not self.dragging) then
+	if (IRT_MinimapMode == "On Hover" and not self.dragging) then
 		if (not MouseIsOver(Minimap) and not MouseIsOver(minimapButton)) then
 			minimapButton:Hide();
 		end
@@ -78,13 +78,13 @@ minimapButton:SetScript("OnLeave", function(self)
 end);
 
 Minimap:HookScript("OnEnter", function(self)
-	if (EnRT_MinimapMode == "On Hover") then
+	if (IRT_MinimapMode == "On Hover") then
 		minimapButton:Show();
 	end
 end)
 
 Minimap:HookScript("OnLeave", function(self)
-	if (EnRT_MinimapMode == "On Hover") then
+	if (IRT_MinimapMode == "On Hover") then
 		if not (MouseIsOver(minimapButton)) then
 			minimapButton:Hide();
 		end
@@ -92,7 +92,7 @@ Minimap:HookScript("OnLeave", function(self)
 
 end)
 
-function EnRT_SetMinimapPoint(degree)
+function IRT_SetMinimapPoint(degree)
 	minimapButton:ClearAllPoints();
 	minimapButton:SetPoint("TOPLEFT", "Minimap","TOPLEFT",52-(80*cos(degree)),(80*sin(degree))-52);
 end

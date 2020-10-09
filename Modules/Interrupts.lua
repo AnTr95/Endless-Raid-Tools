@@ -29,33 +29,33 @@ local interruptNext = false;
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
-		if (EnRT_InterruptEnabled == nil) then EnRT_InterruptEnabled = true; end
-		if (EnRT_NextInterrupt == nil) then EnRT_NextInterrupt = {[1] = {bossID = 1}}; end
-		if (type(EnRT_NextInterrupt)) == "string" then  EnRT_NextInterrupt = {[1] = {bossID = 1}}; end-- convert people from older version
-	elseif (event == "ENCOUNTER_START" and EnRT_InterruptEnabled) then
+		if (IRT_InterruptEnabled == nil) then IRT_InterruptEnabled = true; end
+		if (IRT_NextInterrupt == nil) then IRT_NextInterrupt = {[1] = {bossID = 1}}; end
+		if (type(IRT_NextInterrupt)) == "string" then  IRT_NextInterrupt = {[1] = {bossID = 1}}; end-- convert people from older version
+	elseif (event == "ENCOUNTER_START" and IRT_InterruptEnabled) then
 		inEncounter = true;
 		local eID = ...;
-		for i = 1, #EnRT_NextInterrupt do
-			if (eID == EnRT_NextInterrupt[i].bossID) then
-				nextInterrupter = EnRT_NextInterrupt[i].NextInterrupter;
+		for i = 1, #IRT_NextInterrupt do
+			if (eID == IRT_NextInterrupt[i].bossID) then
+				nextInterrupter = IRT_NextInterrupt[i].NextInterrupter;
 			end
 		end
-	elseif (event == "ENCOUNTER_END" and inEncounter and EnRT_InterruptEnabled) then
+	elseif (event == "ENCOUNTER_END" and inEncounter and IRT_InterruptEnabled) then
 		inEncounter = false;
 		nextInterrupter = nil;
-	elseif (event == "CHAT_MSG_ADDON" and EnRT_InterruptEnabled) then
+	elseif (event == "CHAT_MSG_ADDON" and IRT_InterruptEnabled) then
 		local prefix, msg, channel, sender = ...;
 		sender = Ambiguate(sender, "short");
 		if (prefix == "EndlessInterrupt" and ((UnitInParty(sender) or UnitInRaid(sender)))) then
-			EnRT_PopupShow("NEXT INTERRUPT IS YOURS!", 7);
+			IRT_PopupShow("NEXT INTERRUPT IS YOURS!", 7);
 			interruptNext = true;
 		end
-	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and nextInterrupter and inEncounter and EnRT_InterruptEnabled) then
+	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and nextInterrupter and inEncounter and IRT_InterruptEnabled) then
 		local unit, _, spell = ...;
 		if (unit == "player") then
-			if (Endless_Contains(spellNames, spell)) then
+			if (IRT_Contains(spellNames, spell)) then
 				if (interruptNext) then
-					EnRT_PopupHide();
+					IRT_PopupHide();
 					interruptNext = false;
 				end
 				if (nextInterrupter and UnitIsConnected(nextInterrupter) and IsInGroup() and ((UnitInParty(nextInterrupter) or UnitInRaid(nextInterrupter)))) then

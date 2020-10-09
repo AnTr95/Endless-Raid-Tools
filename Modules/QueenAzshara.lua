@@ -8,7 +8,7 @@ f:RegisterEvent("CHAT_MSG_ADDON");
 f:RegisterEvent("ENCOUNTER_START");
 f:RegisterEvent("ENCOUNTER_END");
 
-C_ChatInfo.RegisterAddonMessagePrefix("EnRT_Azshara");
+C_ChatInfo.RegisterAddonMessagePrefix("IRT_Azshara");
 
 local function initAssignments()
 	local debuffs = {
@@ -29,58 +29,58 @@ local function initAssignments()
 	for i = 1, GetNumGroupMembers() do
 		local raider = "raid" .. i;
 		if (UnitExists(raider) and UnitIsVisible(raider)) then
-			if (EnRT_UnitDebuff(raider, GetSpellInfo(299254))) then
+			if (IRT_UnitDebuff(raider, GetSpellInfo(299254))) then
 				table.insert(debuffs.stack, raider);
-			elseif (EnRT_UnitDebuff(raider, GetSpellInfo(299255))) then
+			elseif (IRT_UnitDebuff(raider, GetSpellInfo(299255))) then
 				table.insert(debuffs.alone, raider);
 			else
 				table.insert(debuffs.cansoak, raider);
 			end
-			if (EnRT_UnitDebuff(raider, GetSpellInfo(299252))) then
+			if (IRT_UnitDebuff(raider, GetSpellInfo(299252))) then
 				table.insert(debuffs.move, raider);
-			elseif (EnRT_UnitDebuff(raider, GetSpellInfo(299253))) then
+			elseif (IRT_UnitDebuff(raider, GetSpellInfo(299253))) then
 				table.insert(debuffs.stay, raider);
 			end
-			if (EnRT_UnitDebuff(raider, GetSpellInfo(299249))) then
+			if (IRT_UnitDebuff(raider, GetSpellInfo(299249))) then
 				table.insert(debuffs.soak, raider);
-			elseif (EnRT_UnitDebuff(raider, GetSpellInfo(299251))) then
+			elseif (IRT_UnitDebuff(raider, GetSpellInfo(299251))) then
 				table.insert(debuffs.notsoak, raider);
 			end
 		end
 	end
 	table.sort(debuffs.stack);
 	for i, pl in pairs(debuffs.stack) do
-		if (EnRT_Contains(debuffs.soak, pl)) then
+		if (IRT_Contains(debuffs.soak, pl)) then
 			if (not mainSoaker) then
 				mainSoaker = pl;
 				SetRaidMark(pl, 1);
-				C_ChatInfo.SendAddonMessage("EnRT_Azshara", "{Star} SOAK LEADER {Star}", "WHISPER", pl);
+				C_ChatInfo.SendAddonMessage("IRT_Azshara", "{Star} SOAK LEADER {Star}", "WHISPER", pl);
 			else
-				C_ChatInfo.SendAddonMessage("EnRT_Azshara", "{Star} SOAK WITH {Star}", "WHISPER", pl);
+				C_ChatInfo.SendAddonMessage("IRT_Azshara", "{Star} SOAK WITH {Star}", "WHISPER", pl);
 			end
-		elseif (EnRT_Contains(debuffs.move, pl)) then
+		elseif (IRT_Contains(debuffs.move, pl)) then
 			if (not mainRunner) then
 				mainRunner = pl;
 				SetRaidMark(pl, 7);
-				C_ChatInfo.SendAddonMessage("EnRT_Azshara", "{Cross} MARCH LEADER {Cross}", "WHISPER", pl);
+				C_ChatInfo.SendAddonMessage("IRT_Azshara", "{Cross} MARCH LEADER {Cross}", "WHISPER", pl);
 			else
-				C_ChatInfo.SendAddonMessage("EnRT_Azshara", "{Cross} FOLLOW {Cross}", "WHISPER", pl);
+				C_ChatInfo.SendAddonMessage("IRT_Azshara", "{Cross} FOLLOW {Cross}", "WHISPER", pl);
 			end
-		elseif (EnRT_Contains(debuffs.stay, pl )) then
+		elseif (IRT_Contains(debuffs.stay, pl )) then
 			if (not mainStay) then
 				mainStay = pl;
 				SetRaidMark(pl, 8);
-				C_ChatInfo.SendAddonMessage("EnRT_Azshara", "{Skull} STACK LEADER {Skull}", "WHISPER", pl);
+				C_ChatInfo.SendAddonMessage("IRT_Azshara", "{Skull} STACK LEADER {Skull}", "WHISPER", pl);
 			else
-				C_ChatInfo.SendAddonMessage("EnRT_Azshara", "{Skull} STACK ON {Skull}", "WHISPER", pl);
+				C_ChatInfo.SendAddonMessage("IRT_Azshara", "{Skull} STACK ON {Skull}", "WHISPER", pl);
 			end
 		end
 	end
 	for i, pl in pairs(debuffs.alone) do
-		if (EnRT_Contains(debuffs.soak, pl)) then
+		if (IRT_Contains(debuffs.soak, pl)) then
 			table.remove(debuffs.cansoak, pl);
 			SetRaidMark(pl, aloneSoakers+2);
-			C_ChatInfo.SendAddonMessage("EnRT_Azshara", "{rt".. (aloneSoakers+2) .."} SOAKING ALONE {rt" .. (aloneSoakers+2) .. "}", "WHISPER", pl);
+			C_ChatInfo.SendAddonMessage("IRT_Azshara", "{rt".. (aloneSoakers+2) .."} SOAKING ALONE {rt" .. (aloneSoakers+2) .. "}", "WHISPER", pl);
 			aloneSoakers = aloneSoakers + 1;
 			--Add yell soak alone
 		end
@@ -94,10 +94,10 @@ local function initAssignments()
 	---------------------------------
 	for i = aloneSoakers+1, 5 do
 		for j, pl in pairs(deubffs.cansoak) do
-			if (not EnRT_Contains(deubffs.stack, pl) and not EnRT_Contains(debuffs.move)) then
+			if (not IRT_Contains(deubffs.stack, pl) and not IRT_Contains(debuffs.move)) then
 				table.remove(debuffs.cansoak, pl);
 				SetRaidMark(pl, aloneSoakers+2);
-				C_ChatInfo.SendAddonMessage("EnRT_Azshara", "{rt".. (aloneSoakers+2) .."} SOAKING ALONE {rt" .. (aloneSoakers+2) .. "}", "WHISPER", pl);
+				C_ChatInfo.SendAddonMessage("IRT_Azshara", "{rt".. (aloneSoakers+2) .."} SOAKING ALONE {rt" .. (aloneSoakers+2) .. "}", "WHISPER", pl);
 				aloneSoakers = aloneSoakers + 1;
 				break;
 			end
@@ -110,7 +110,7 @@ local function initAssignments()
 	local memberTwo = nil;
 	for i = aloneSoakers+1, 5 do
 		for j, pl in pairs(deubffs.cansoak) do
-			if (not EnRT_Contains(debuffs.move)) then
+			if (not IRT_Contains(debuffs.move)) then
 				if (memberOne) then
 					memberTwo = pl;
 					break;
@@ -123,8 +123,8 @@ local function initAssignments()
 			table.remove(debuffs.cansoak, memberOne);
 			table.remove(debuffs.cansoak, memberTwo);
 			SetRaidMark(memberOne, aloneSoakers+2);
-			C_ChatInfo.SendAddonMessage("EnRT_Azshara", "{rt".. (aloneSoakers+2) .."} STACK LEADER {rt" .. (aloneSoakers+2) .. "}", "WHISPER", memberOne);
-			C_ChatInfo.SendAddonMessage("EnRT_Azshara", "{rt".. (aloneSoakers+2) .."} SOAK WITH {rt" .. (aloneSoakers+2) .. "}", "WHISPER", memberTwo);
+			C_ChatInfo.SendAddonMessage("IRT_Azshara", "{rt".. (aloneSoakers+2) .."} STACK LEADER {rt" .. (aloneSoakers+2) .. "}", "WHISPER", memberOne);
+			C_ChatInfo.SendAddonMessage("IRT_Azshara", "{rt".. (aloneSoakers+2) .."} SOAK WITH {rt" .. (aloneSoakers+2) .. "}", "WHISPER", memberTwo);
 			aloneSoakers = aloneSoakers + 1;
 		end
 	end
@@ -133,10 +133,10 @@ local function initAssignments()
 	---------------------------------
 	for i = aloneSoakers+1, 5 do
 		for j, pl in pairs(deubffs.cansoak) do
-			if (not EnRT_Contains(deubffs.stack, pl)) then
+			if (not IRT_Contains(deubffs.stack, pl)) then
 				table.remove(debuffs.cansoak, pl);
 				SetRaidMark(pl, aloneSoakers+2);
-				C_ChatInfo.SendAddonMessage("EnRT_Azshara", "{rt".. (aloneSoakers+2) .."} SOAKING ALONE {rt" .. (aloneSoakers+2) .. "}", "WHISPER", pl);
+				C_ChatInfo.SendAddonMessage("IRT_Azshara", "{rt".. (aloneSoakers+2) .."} SOAKING ALONE {rt" .. (aloneSoakers+2) .. "}", "WHISPER", pl);
 				aloneSoakers = aloneSoakers + 1;
 				break;
 			end
@@ -160,8 +160,8 @@ local function initAssignments()
 			table.remove(debuffs.cansoak, memberOne);
 			table.remove(debuffs.cansoak, memberTwo);
 			SetRaidMark(memberOne, aloneSoakers+2);
-			C_ChatInfo.SendAddonMessage("EnRT_Azshara", "{rt".. (aloneSoakers+2) .."} STACK LEADER {rt" .. (aloneSoakers+2) .. "}", "WHISPER", memberOne);
-			C_ChatInfo.SendAddonMessage("EnRT_Azshara", "{rt".. (aloneSoakers+2) .."} SOAK WITH {rt" .. (aloneSoakers+2) .. "}", "WHISPER", memberTwo);
+			C_ChatInfo.SendAddonMessage("IRT_Azshara", "{rt".. (aloneSoakers+2) .."} STACK LEADER {rt" .. (aloneSoakers+2) .. "}", "WHISPER", memberOne);
+			C_ChatInfo.SendAddonMessage("IRT_Azshara", "{rt".. (aloneSoakers+2) .."} SOAK WITH {rt" .. (aloneSoakers+2) .. "}", "WHISPER", memberTwo);
 			aloneSoakers = aloneSoakers + 1;
 		end
 	end
@@ -169,24 +169,24 @@ end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
-		if (EnRT_QueenAzsharaEnabled == nil) then EnRT_QueenAzsharaEnabled = true; end
-	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and EnRT_QueenAzsharaEnabled and inEncounter) then
+		if (IRT_QueenAzsharaEnabled == nil) then IRT_QueenAzsharaEnabled = true; end
+	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and IRT_QueenAzsharaEnabled and inEncounter) then
 		local target, guid, spellID = ...;
 		if (GetUnitName("player", true) == master and spellID == 299250) then
 			initAssignments();
 		end
-	elseif (event == "CHAT_MSG_ADDON" and EnRT_QueenAzsharaEnabled and inEncounter) then
+	elseif (event == "CHAT_MSG_ADDON" and IRT_QueenAzsharaEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
-		if (prefix == "EnRT_Azshara" and EnRT_QueenAzsharaEnabled) then
-			EnRT_PopupShow(msg, 20); --change duration to debuff duration
+		if (prefix == "IRT_Azshara" and IRT_QueenAzsharaEnabled) then
+			IRT_PopupShow(msg, 20); --change duration to debuff duration
 		end
-	elseif (event == "ENCOUNTER_START" and EnRT_QueenAzsharaEnabled and inEncounter) then
+	elseif (event == "ENCOUNTER_START" and IRT_QueenAzsharaEnabled and inEncounter) then
 		local eID = ...;
 		if (eID == 2299) then
-			master = EnRT_GetRaidLeader();
+			master = IRT_GetRaidLeader();
 			inEncounter = true;
 		end
-	elseif (event == "ENCOUNTER_END" and EnRT_QueenAzsharaEnabled and inEncounter) then
+	elseif (event == "ENCOUNTER_END" and IRT_QueenAzsharaEnabled and inEncounter) then
 		inEncounter = false;
 	end
 end);

@@ -1,4 +1,4 @@
-local f = CreateFrame("Frame");
+local f = CreateFrame("Frame", nil, nil, BackdropTemplateMixin and "BackdropTemplate");
 local inEncounter = false;
 local pendingAssignments = false;
 local shrunkPlayers = {};
@@ -42,7 +42,18 @@ f:SetMovable(false);
 f:EnableMouse(false);
 f:SetClampedToScreen(true);
 f:RegisterForDrag("LeftButton");
-f:SetFrameLevel(1);
+f:SetFrameLevel(3);
+f:SetScript("OnDragStart", f.StartMoving);
+f:SetScript("OnDragStop", function(self)
+	local point, relativeTo, relativePoint, xOffset, yOffset = self:GetPoint(1);
+	IRT_HTMUIPosition = {};
+	IRT_HTMUIPosition.point = point;
+	IRT_HTMUIPosition.relativeTo = relativeTo;
+	IRT_HTMUIPosition.relativePoint = relativePoint;
+	IRT_HTMUIPosition.xOffset = xOffset;
+	IRT_HTMUIPosition.yOffset = yOffset;
+	self:StopMovingOrSizing();
+end);
 f:SetFrameStrata("TOOLTIP");
 f:SetBackdrop({
 	bgFile = "Interface/Tooltips/UI-Tooltip-Background", --Set the background and border textures
@@ -52,17 +63,6 @@ f:SetBackdrop({
 });
 f:SetBackdropColor(0,0,0,1);
 f:SetBackdropBorderColor(1,0,0,1);
-f:SetScript("OnDragStart", f.StartMoving);
-f:SetScript("OnDragStop", function(self)
-	local point, relativeTo, relativePoint, xOffset, yOffset = self:GetPoint(1);
-	EnRT_HTMUIPosition = {};
-	EnRT_HTMUIPosition.point = point;
-	EnRT_HTMUIPosition.relativeTo = relativeTo;
-	EnRT_HTMUIPosition.relativePoint = relativePoint;
-	EnRT_HTMUIPosition.xOffset = xOffset;
-	EnRT_HTMUIPosition.yOffset = yOffset;
-	self:StopMovingOrSizing();
-end);
 f:Hide();
 
 local targetText = f:CreateFontString(nil, "ARTWORK", "GameFontNormal");
@@ -72,7 +72,7 @@ targetText:SetText("Target: Waiting");
 targetText:SetJustifyH("CENTER");
 
 for i = 1, 5 do
-	local button = CreateFrame("Button", "EnRT_HTMButton"..i, f, "UIMenuButtonStretchTemplate");
+	local button = CreateFrame("Button", "IRT_HTMButton"..i, f, "UIMenuButtonStretchTemplate");
 	button:SetSize(28,28);
 	button:SetPoint("TOPLEFT", f, "TOPLEFT", 10+((i-1)*30), -30);
 	local buttonTexture = button:CreateTexture();
@@ -87,7 +87,7 @@ for i = 1, 5 do
 	});]]
 	button:SetScript("OnClick", function()
 		local target = GetUnitName("target", true);
-		C_ChatInfo.SendAddonMessage("EnRT_HTM", i, "WHISPER", target);
+		C_ChatInfo.SendAddonMessage("IRT_HTM", i, "WHISPER", target);
 	end);
 end
 
@@ -126,20 +126,20 @@ f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 
-C_ChatInfo.RegisterAddonMessagePrefix("EnRT_HTM");
+C_ChatInfo.RegisterAddonMessagePrefix("IRT_HTM");
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
-		if (EnRT_HTMEnabled == nil) then EnRT_HTMEnabled = true; end
-		if (EnRT_HTMUIPosition) then setMainFramePosition(EnRT_HTMUIPosition.point, EnRT_HTMUIPosition.relativeTo, EnRT_HTMUIPosition.relativePoint, EnRT_HTMUIPosition.xOffset, EnRT_HTMUIPosition.yOffset); end
-	elseif (event == "UNIT_AURA" and EnRT_HTMEnabled and inEncounter) then
+		if (IRT_HTMEnabled == nil) then IRT_HTMEnabled = true; end
+		if (IRT_HTMUIPosition) then setMainFramePosition(IRT_HTMUIPosition.point, IRT_HTMUIPosition.relativeTo, IRT_HTMUIPosition.relativePoint, IRT_HTMUIPosition.xOffset, IRT_HTMUIPosition.yOffset); end
+	elseif (event == "UNIT_AURA" and IRT_HTMEnabled and inEncounter) then
 		local unit = ...;
 		local plName = GetUnitName(unit, true);
 		
 		if (GetUnitName("player", true) == master) then
 			--284168
-			if (EnRT_UnitDebuff(unit, GetSpellInfo(284168))) then
-				if (not EnRT_Contains(shrunkPlayers, plName)) then
+			if (IRT_UnitDebuff(unit, GetSpellInfo(284168))) then
+				if (not IRT_Contains(shrunkPlayers, plName)) then
 					shrunkPlayers[#shrunkPlayers+1] = plName;
 					if (not pendingAssignments) then
 						pendingAssignments = true;
@@ -148,9 +148,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 								table.sort(shrunkPlayers, compareAlphabetically);
 								for i = 1, #shrunkPlayers do
 									if (i == #shrunkPlayers) then
-										C_ChatInfo.SendAddonMessage("EnRT_HTM", shrunkPlayers[1], "WHISPER", shrunkPlayers[i]);
+										C_ChatInfo.SendAddonMessage("IRT_HTM", shrunkPlayers[1], "WHISPER", shrunkPlayers[i]);
 									else
-										C_ChatInfo.SendAddonMessage("EnRT_HTM", shrunkPlayers[i+1], "WHISPER", shrunkPlayers[i]);
+										C_ChatInfo.SendAddonMessage("IRT_HTM", shrunkPlayers[i+1], "WHISPER", shrunkPlayers[i]);
 									end
 								end
 							end
@@ -159,16 +159,16 @@ f:SetScript("OnEvent", function(self, event, ...)
 					end
 				end
 			else
-				if (EnRT_Contains(shrunkPlayers, plName) and not EnRT_UnitDebuff(unit, GetSpellInfo(286105))) then
-					shrunkPlayers[EnRT_Contains(shrunkPlayers, plName)] = nil;
+				if (IRT_Contains(shrunkPlayers, plName) and not IRT_UnitDebuff(unit, GetSpellInfo(286105))) then
+					shrunkPlayers[IRT_Contains(shrunkPlayers, plName)] = nil;
 					targetText:SetText("Target: Waiting");
 				end
 			end
 		end
-	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and EnRT_HTMEnabled and inEncounter) then
+	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and IRT_HTMEnabled and inEncounter) then
 		local unit, _, spellID = ...;
 		if (UnitName(unit) == UnitName("player") and (spellID == 286152 or spellID == 286226 or spellID == 286219 or spellID == 286192 or spellID == 286215)) then
-			EnRT_PopupHide();
+			IRT_PopupHide();
 			if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
 				for i = 1, 5 do
 					ActionButton_HideOverlayGlow(_G["BT4Button"..i]);
@@ -187,17 +187,17 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
-	elseif (event == "CHAT_MSG_ADDON" and EnRT_HTMEnabled and inEncounter) then
+	elseif (event == "CHAT_MSG_ADDON" and IRT_HTMEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
-		if (prefix == "EnRT_HTM") then
+		if (prefix == "IRT_HTM") then
 			if (tonumber(msg)) then
-				if (EnRT_PopupIsShown()) then
-					EnRT_PopupHide();
+				if (IRT_PopupIsShown()) then
+					IRT_PopupHide();
 				end
 				glowNumber = msg; -- Before it gets converted to a number to be able to act as a reference in the global namespace
 				msg = tonumber(msg);
 				count = count + 1;
-				EnRT_PopupShow(htmData[msg].color .. count .. ". " .. htmData[msg].text, 30);
+				IRT_PopupShow(htmData[msg].color .. count .. ". " .. htmData[msg].text, 30);
 				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
 					for i = 1, 5 do
 						ActionButton_HideOverlayGlow(_G["BT4Button"..i]);
@@ -229,7 +229,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				showGUI();
 			end
 		end
-	elseif (event == "UNIT_ENTERED_VEHICLE" and EnRT_HTMEnabled and inEncounter) then
+	elseif (event == "UNIT_ENTERED_VEHICLE" and IRT_HTMEnabled and inEncounter) then
 		local unit = ...;
 		if (UnitName("player") == master and #shrunkPlayers > 4) then
 			if (#intermissionPlayers == 0) then
@@ -252,9 +252,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 			else
 				local place = #intermissionPlayers;
 				intermissionPlayers[#intermissionPlayers+1] = UnitName(unit);
-				C_ChatInfo.SendAddonMessage("EnRT_HTM", UnitName(unit), "WHISPER", intermissionPlayers[place]);
+				C_ChatInfo.SendAddonMessage("IRT_HTM", UnitName(unit), "WHISPER", intermissionPlayers[place]);
 				if (sparkBots == 1) then
-					C_ChatInfo.SendAddonMessage("EnRT_HTM", UnitName(unit), "WHISPER", intermissionPlayers[1]);
+					C_ChatInfo.SendAddonMessage("IRT_HTM", UnitName(unit), "WHISPER", intermissionPlayers[1]);
 				end
 				sparkBots = sparkBots - 1;
 			end
@@ -262,14 +262,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (UnitName(unit) == UnitName("player")) then
 			showGUI();
 		end
-	elseif (event == "UNIT_EXITED_VEHICLE" and EnRT_HTMEnabled and inEncounter) then
+	elseif (event == "UNIT_EXITED_VEHICLE" and IRT_HTMEnabled and inEncounter) then
 		local unit = ...;
 		if (UnitName(unit) == UnitName("player")) then
 			C_Timer.After(5, function() 
 				hideGUI(); 
 				targetText:SetText("Target: Waiting...");
 			end);
-			EnRT_PopupHide();
+			IRT_PopupHide();
 			if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..glowNumber]) then
 				for i = 1, 5 do
 					ActionButton_HideOverlayGlow(_G["BT4Button"..i]);
@@ -289,13 +289,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 			count = 0;
 		end
-	elseif (event == "ENCOUNTER_START" and EnRT_HTMEnabled) then
+	elseif (event == "ENCOUNTER_START" and IRT_HTMEnabled) then
 		local eID = ...;
 		if (eID == 2276) then
-			master = EnRT_GetRaidLeader();
+			master = IRT_GetRaidLeader();
 			inEncounter = true;
 		end
-	elseif (event == "ENCOUNTER_END" and EnRT_HTMEnabled) then
+	elseif (event == "ENCOUNTER_END" and IRT_HTMEnabled) then
 		inEncounter = false;
 	end
 end);
@@ -307,7 +307,7 @@ end);
 	param(value) T - value to check exists
 	return boolean or integer / returns false if the table does not contain the value otherwise it returns the index of where the value is locatedd
 ]]
-function EnRT_Contains(arr, value)
+function IRT_Contains(arr, value)
 	if value == nil then
 		return false
 	end
@@ -322,7 +322,7 @@ function EnRT_Contains(arr, value)
 	return false
 end
 
-function EnRT_GetRaidLeader()
+function IRT_GetRaidLeader()
 	for i = 1, GetNumGroupMembers() do
 		local raider = "raid"..i
 		if select(2, GetRaidRosterInfo(i)) == 2 then
