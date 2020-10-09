@@ -14,8 +14,10 @@ local function handler(msg, editbox)
 	if (arg ~= nil and arg == "vc") then
 		C_ChatInfo.SendAddonMessage("IRT_VC", "vc", "RAID");
 	else
+		InterfaceOptionsFrame_OpenToCategory(IRT_GeneralModules);
 		InterfaceOptionsFrame_OpenToCategory(IRT_GeneralOptions);
 		if (not IRT_GeneralOptions:IsVisible()) then
+			InterfaceOptionsFrame_OpenToCategory(IRT_GeneralModules);
 			InterfaceOptionsFrame_OpenToCategory(IRT_GeneralOptions);
 		end
 	end

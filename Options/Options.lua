@@ -17,6 +17,7 @@ version:SetPoint("TOPLEFT", author, "BOTTOMLEFT", 0, -10)
 version:SetText(L.OPTIONS_VERSION)
 
 IRT_Options:SetScript("OnShow", function(IRT_OptionsFrame)
+	InterfaceOptionsFrame_OpenToCategory(IRT_GeneralModules);
 	InterfaceOptionsFrame_OpenToCategory(IRT_GeneralOptions);
 end);
 
