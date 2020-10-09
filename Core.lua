@@ -2,10 +2,10 @@ local L = IRTLocals;
 local f = CreateFrame("Frame");
 local addon = ...; -- The name of the addon folder
 local version = GetAddOnMetadata(addon, "Version");
-SLASH_ENDLESSRAIDTOOLS1 = "/endlessraidtools";
-SLASH_ENDLESSRAIDTOOLS2 = "/enrt";
-SLASH_ENDLESSRAIDTOOLS3 = "/irt";
-SLASH_ENDLESSRAIDTOOLS4 = "/infiniteraidtools";
+SLASH_INFINITERAIDTOOLS1 = "/endlessraidtools";
+SLASH_INFINITERAIDTOOLS2 = "/enrt";
+SLASH_INFINITERAIDTOOLS3 = "/irt";
+SLASH_INFINITERAIDTOOLS4 = "/infiniteraidtools";
 local playersChecked = {};
 local initCheck = false;
 local recievedOutOfDateMessage = false;
@@ -22,7 +22,7 @@ local function handler(msg, editbox)
 		end
 	end
 end
-SlashCmdList["ENDLESSRAIDTOOLS"] = handler;
+SlashCmdList["SLASH_INFINITERAIDTOOLS"] = handler;
 f:RegisterEvent("CHAT_MSG_ADDON");
 f:RegisterEvent("ADDON_LOADED");
 f:RegisterEvent("PLAYER_LOGIN");
