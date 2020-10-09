@@ -21,7 +21,7 @@ local function handler(msg, editbox)
 		end
 	end
 end
-SlashCmdList["SLASH_INFINITERAIDTOOLS"] = handler;
+SlashCmdList["INFINITERAIDTOOLS"] = handler;
 f:RegisterEvent("CHAT_MSG_ADDON");
 f:RegisterEvent("ADDON_LOADED");
 f:RegisterEvent("PLAYER_LOGIN");
@@ -101,7 +101,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
-	--[[
 	elseif (event == "GROUP_ROSTER_UPDATE") then
 		if (IsInRaid(LE_PARTY_CATEGORY_INSTANCE) or IsInGroup(LE_PARTY_CATEGORY_INSTANCE)) then
 			C_ChatInfo.SendAddonMessage("IRT_UPDATE", version, "INSTANCE_CHAT");
@@ -138,7 +137,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 				C_ChatInfo.SendAddonMessage("IRT_UPDATE", version, "GUILD");
 			end
 		end
-		]]
 	elseif (event == "PLAYER_LOGIN") then
 		if (IRT_MinimapMode == "Always") then
 			IRT_MinimapButton:Show();
