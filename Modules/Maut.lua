@@ -122,7 +122,7 @@ end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
-		if (IRT_MautEnabled == nil) then IRT_MautEnabled = true; end
+		if (IRT_MautEnabled == nil) then IRT_MautEnabled = false; end
 	elseif (event == "CHAT_MSG_ADDON" and IRT_MautEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "IRT_Maut") then

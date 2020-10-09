@@ -17,6 +17,7 @@ f:SetBackdropBorderColor(169,169,169,0)
 
 local rcStatus = false;
 local rcSender = ""
+local raiders = {};
 
 local blizzFixFrame = CreateFrame("Frame", "$parentDetails"); -- UIGoldBorderButtonTemplate is using $parentDetails pointing to a frame called the parents name of the button followed by Details which is undefined in blizzcode.
 blizzFixFrame:SetPoint("CENTER", f, "CENTER");
@@ -176,7 +177,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 		if (rcSender == UnitName("player") and select(2, GetInstanceInfo()) == "raid") then
 			for raider, response in pairs(raiders) do
-				if (response == 0) then
+				if (UnitInRaid(raider) and response == 0) then
 					if not rcText:IsShown() then 
 						rcText:Show()
 					end
@@ -185,17 +186,16 @@ f:SetScript("OnEvent", function(self, event, ...)
 						rcCloseButton:Show()
 					end
 
-						if not f:IsShown() then
-							f:Show()
-							f:SetBackdropColor(0,0,0,1)
-							f:SetBackdropBorderColor(169,169,169,1)
-						end
-						local playerText = string.format("|c%s%s", RAID_CLASS_COLORS[select(2, UnitClass(raider))].colorStr, Ambiguate(raider, "short"));
-						if (rcText:GetText() == nil) then
-							rcText:SetText("Players not ready or afk: \n" .. playerText .. '\n');
-						elseif (not rcText:GetText():match(playerText)) then
-							rcText:SetText(rcText:GetText() .. playerText .. '\n');
-						end
+					if not f:IsShown() then
+						f:Show()
+						f:SetBackdropColor(0,0,0,1)
+						f:SetBackdropBorderColor(169,169,169,1)
+					end
+					local playerText = string.format("|c%s%s", RAID_CLASS_COLORS[select(2, UnitClass(raider))].colorStr, Ambiguate(raider, "short"));
+					if (rcText:GetText() == nil) then
+						rcText:SetText("Players not ready or afk: \n" .. playerText .. '\n');
+					elseif (not rcText:GetText():match(playerText)) then
+						rcText:SetText(rcText:GetText() .. playerText .. '\n');
 					end
 				end
 			end
