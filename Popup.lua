@@ -21,8 +21,8 @@ f:Hide()
 local text = f:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 text:SetPoint("TOP")
 text:SetJustifyH("CENTER");
-text:SetJustifyV("TOP");
-text:SetSize(1080,300);
+text:SetJustifyV("CENTER");
+--text:SetSize(1080,300);
 
 function IRT_PopupUpdateFontSize()
 	text:SetFont("Fonts\\FRIZQT__.TTF", IRT_PopupTextFontSize)
