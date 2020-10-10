@@ -40,7 +40,7 @@ enabledButton:SetSize(26, 26);
 enabledButton:SetPoint("TOPLEFT", 30, -215);
 enabledButton:HookScript("OnClick", function(self)
 	if (self:GetChecked()) then
-		IRT_InnervateEnabled = true;
+		IRT_ReadyCheckEnabled = true;
 		PlaySound(856);
 	else
 		IRT_ReadyCheckEnabled = false;
