@@ -20,7 +20,7 @@ local inEncounter = false;
 local nextInterrupter = nil;
 local f = CreateFrame("Frame");
 f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
-C_ChatInfo.RegisterAddonMessagePrefix("EndlessInterrupt");
+C_ChatInfo.RegisterAddonMessagePrefix("IRT_INTERRUPT");
 f:RegisterEvent("CHAT_MSG_ADDON");
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("ENCOUNTER_START");
@@ -46,7 +46,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "CHAT_MSG_ADDON" and IRT_InterruptEnabled) then
 		local prefix, msg, channel, sender = ...;
 		sender = Ambiguate(sender, "short");
-		if (prefix == "EndlessInterrupt" and ((UnitInParty(sender) or UnitInRaid(sender)))) then
+		if (prefix == "IRT_INTERRUPT" and ((UnitInParty(sender) or UnitInRaid(sender)))) then
 			IRT_PopupShow("NEXT INTERRUPT IS YOURS!", 7);
 			interruptNext = true;
 		end
@@ -59,7 +59,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 					interruptNext = false;
 				end
 				if (nextInterrupter and UnitIsConnected(nextInterrupter) and IsInGroup() and ((UnitInParty(nextInterrupter) or UnitInRaid(nextInterrupter)))) then
-					C_ChatInfo.SendAddonMessage("EndlessInterrupt", UnitName("player"), "WHISPER", nextInterrupter);
+					C_ChatInfo.SendAddonMessage("IRT_INTERRUPT", UnitName("player"), "WHISPER", nextInterrupter);
 				end
 			end
 		end

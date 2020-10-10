@@ -25,7 +25,7 @@ text:SetJustifyV("CENTER");
 --text:SetSize(1080,300);
 
 function IRT_PopupUpdateFontSize()
-	text:SetFont("Fonts\\FRIZQT__.TTF", IRT_PopupTextFontSize)
+	text:SetFont("Fonts\\FRIZQT__.TTF", IRT_PopupTextFontSize);
 end
 --TO:DO Create instances of text so multiple texts can be shown at the same time (1 way would be to create an array and keep all visible texts there)
 function IRT_PopupShow(message, sec)
