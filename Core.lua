@@ -22,7 +22,7 @@ local function handler(msg, editbox)
 		end
 	end
 end
-SlashCmdList["SLASH_INFINITERAIDTOOLS"] = handler;
+SlashCmdList["INFINITERAIDTOOLS"] = handler;
 f:RegisterEvent("CHAT_MSG_ADDON");
 f:RegisterEvent("ADDON_LOADED");
 f:RegisterEvent("PLAYER_LOGIN");
