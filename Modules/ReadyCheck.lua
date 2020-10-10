@@ -176,15 +176,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 		if (rcSender == UnitName("player") and select(2, GetInstanceInfo()) == "raid") then
 			for raider, response in pairs(raiders) do
-				if (UnitInRaid(raider)) then
-					if (response == 0) then
-						if not rcText:IsShown() then 
-							rcText:Show()
-						end
+				if (response == 0) then
+					if not rcText:IsShown() then 
+						rcText:Show()
+					end
 
-						if not rcCloseButton:IsShown() then
-							rcCloseButton:Show()
-						end
+					if not rcCloseButton:IsShown() then
+						rcCloseButton:Show()
+					end
 
 						if not f:IsShown() then
 							f:Show()

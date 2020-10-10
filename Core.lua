@@ -8,7 +8,6 @@ SLASH_INFINITERAIDTOOLS3 = "/irt";
 SLASH_INFINITERAIDTOOLS4 = "/infiniteraidtools";
 local playersChecked = {};
 local initCheck = false;
-local recievedOutOfDateMessage = false;
 local function handler(msg, editbox)
 	local arg = string.lower(msg);
 	if (arg ~= nil and arg == "vc") then
@@ -173,7 +172,6 @@ function IRT_Contains(arr, value)
 	end
 	return false;
 end
-
 --[[
 	Checking if a table contains a given value and if it does, what index is the value located at
 	param(arr) table
