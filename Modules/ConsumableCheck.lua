@@ -5,6 +5,7 @@ f2:SetFrameLevel(3);
 f2:SetFrameStrata("FULLSCREEN");
 f2:SetHeight(25);
 f2:SetWidth(265);
+f2:Hide();
 --[[
 f2:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", --Set the background and border textures
 	edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
@@ -71,7 +72,6 @@ local text3 = ReadyCheckListenerFrame:CreateFontString(nil, "ARTWORK", "GameFont
 text3:SetPoint("BOTTOM", text2, "BOTTOM", 0, -18);
 text3:SetFont("Fonts\\FRIZQT__.TTF", 12);
 text3:SetJustifyH("CENTER");
-ReadyCheckFrame:HookScript("OnHide", function() f2:Hide() end);
 
 
 
@@ -81,8 +81,9 @@ local oilsIDs = {6188, 6190, 6200};
 local oilIconIDs = {
 	[6188] = 463543, 
 	[6190] = 463544, 
-	[6200] = 3528422
-}; --3528423
+	[6200] = 3528422,
+	[6201] = 3528423,
+};
 local RED = "\124cFFFF0000";
 local YELLOW = "\124cFFFFFF00";
 local GREEN = "\124cFF00FF00";
@@ -92,6 +93,26 @@ local rcSender = "";
 local raiders = {};
 
 local armorKitSlots = {"ChestSlot", "LegsSlot", "HandsSlot", "FeetSlot"};
+local armorKitTimers = {
+	["ChestSlot"] = 0,
+	["LegsSlot"] = 0,
+	["HandsSlot"] = 0,
+	["FeetSlot"] = 0,
+};
+local armorKitSlotSimple = {
+	["ChestSlot"] = "Chest",
+	["LegsSlot"] = "Legs",
+	["HandsSlot"] = "Hands",
+	["FeetSlot"] = "Feet",
+};
+
+local armorKitSlotBindings = {
+	["ChestSlot"] = " Shift+Left Click to reapply",
+	["LegsSlot"] = " Shift+Right Click to reapply",
+	["HandsSlot"] = " Ctrl+Left Click to reapply",
+	["FeetSlot"] = " Ctrl+Right Click to reapply",
+};
+
 local buffSpellIDs = {
 	["MAGE"] = 1459, 
 	["PRIEST"] = 21562, 
@@ -102,6 +123,62 @@ local buffIconIDs = {
 	["PRIEST"] = 135987, 
 	["WARRIOR"] = 132333,
 };
+
+local currentKitIndex = 1;
+local autoKit = CreateFrame("Button", "IRT_AutoKitButton", nil, "SecureActionButtonTemplate");
+autoKit:ClearAllPoints();
+autoKit:RegisterForClicks("RightButtonUp", "LeftButtonUp");
+autoKit:SetNormalTexture("Interface\\Icons\\inv_leatherworking_armorpatch_heavy");
+
+autoKit:SetAttribute("type", "macro"); 
+autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 5\n/click StaticPopup1Button1");
+autoKit:SetAttribute("shift-macrotext1", "/Use Heavy Desolate Armor Kit\n/use 5\n/click StaticPopup1Button1"); 
+autoKit:SetAttribute("ctrl-macrotext1", "/Use Heavy Desolate Armor Kit\n/use 10\n/click StaticPopup1Button1"); 
+autoKit:SetAttribute("shift-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 7\n/click StaticPopup1Button1"); 
+autoKit:SetAttribute("ctrl-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 8\n/click StaticPopup1Button1"); 
+
+autoKit:SetSize(25,25);
+autoKit:SetPoint("RIGHT", ReadyCheckFrame, "RIGHT", 60, 0);
+autoKit:SetFrameStrata("FULLSCREEN");
+local autoKitCooldown = CreateFrame("Cooldown", "IRT_AutoKitCooldown", autoKit, "CooldownFrameTemplate")
+autoKitCooldown:SetAllPoints();
+autoKit:Hide();
+
+autoKit:HookScript("OnEnter", function(self)
+	local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFLeft Click loops all slots.|r";
+	for slot, duration in pairs (armorKitTimers) do
+		tooltipText = tooltipText .. "\n" .. armorKitSlotSimple[slot] .. ": " .. duration .. "|cFFFFFFFF" .. armorKitSlotBindings[slot] .. "|r";
+	end
+	GameTooltip:SetOwner(self);
+	GameTooltip:SetText(tooltipText);
+	GameTooltip:Show();
+end);
+autoKit:SetScript("OnLeave", function(self)
+	GameTooltip:Hide();
+end);
+
+autoKit:HookScript("OnClick", function()
+	autoKit:SetAttribute("shift-macrotext1", "/Use Heavy Desolate Armor Kit\n/use 5\n/click StaticPopup1Button1"); 
+	autoKit:SetAttribute("ctrl-macrotext1", "/Use Heavy Desolate Armor Kit\n/use 10\n/click StaticPopup1Button1"); 
+	autoKit:SetAttribute("shift-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 7\n/click StaticPopup1Button1"); 
+	autoKit:SetAttribute("ctrl-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 8\n/click StaticPopup1Button1"); 
+	if (not UnitCastingInfo("player") and select(1, GetItemCooldown(172347) == 0)) then
+		autoKitCooldown:SetCooldown(GetTime()+1.5, 1);
+		currentKitIndex = currentKitIndex + 1;
+		if (currentKitIndex == 1 or currentKitIndex == 5) then
+			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 5\n/click StaticPopup1Button1"); 
+			currentKitIndex = 1;
+		elseif (currentKitIndex == 2) then
+			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 10\n/click StaticPopup1Button1"); 
+		elseif (currentKitIndex == 3) then
+			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 7\n/click StaticPopup1Button1"); 
+		elseif (currentKitIndex == 4) then 
+			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 8\n/click StaticPopup1Button1"); 
+		end
+	end
+end);
+
+local autoOil = CreateFrame("Button", "IRT_AutoKitButton", nil, "SecureActionButtonTemplate");
 
 local scanTooltip = CreateFrame("GameToolTip", "EnRT_TempToolTip", nil, "GameTooltipTemplate");
 scanTooltip:SetOwner(WorldFrame, "ANCHOR_NONE");
@@ -117,6 +194,7 @@ function armorKit()
 		local slotID = select(1, GetInventorySlotInfo(armorKitSlots[i]));
 		scanTooltip:ClearLines();
 		local hasItem = scanTooltip:SetInventoryItem("player", slotID);
+		armorKitTimers[armorKitSlots[i]] = RED .. "0min|r";
 		if (hasItem) then
 			local lines = {scanTooltip:GetRegions()};
 			for index, region in pairs(lines) do
@@ -127,22 +205,26 @@ function armorKit()
 						local timeUnit = text:reverse():match(".*%)"):reverse();
 						local duration = tonumber(text:reverse():match("%d+"):reverse());
 						if (timeUnit:match("hours")) then
+							armorKitTimers[armorKitSlots[i]] = GREEN .. "2hrs|r";
 							if (shortest == nil) then
 								shortest = 61;
 							end
 						elseif(timeUnit:match("hour")) then
+							armorKitTimers[armorKitSlots[i]] = GREEN .. "60min|r";
 							if (shortest == nil) then
 								shortest = 60;
 							elseif (shortest > 60) then
 								shortest = 60;
 							end
 						elseif(timeUnit:match("min")) then
+							armorKitTimers[armorKitSlots[i]] = GREEN .. duration .."min|r";
 							if (shortest == nil) then
 								shortest = duration;
 							elseif (shortest > duration) then
 								shortest = duration;
 							end
 						else
+							armorKitTimers[armorKitSlots[i]] = GREEN .. "2hrs|r";
 							if (shortest == nil) then
 								shortest = 61;
 							end
@@ -186,6 +268,16 @@ function armorKit()
 		elseif (shortest <= 8) then
 			shortest = RED .. shortest .. "min|r";
 		end
+	end
+	if(autoKit:IsMouseOver()) then
+		GameTooltip:Hide();
+		local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFLeft Click loops all slots.|r";
+		for slot, duration in pairs (armorKitTimers) do
+			tooltipText = tooltipText .. "\n" .. armorKitSlotSimple[slot] .. ": " .. duration .. "|cFFFFFFFF" .. armorKitSlotBindings[slot] .. "|r";
+		end
+		GameTooltip:SetOwner(autoKit);
+		GameTooltip:SetText(tooltipText);
+		GameTooltip:Show();
 	end
 	return count, shortest;
 	--3528447
@@ -336,6 +428,13 @@ local function updateConsumables()
 	end
 end
 
+ReadyCheckFrame:HookScript("OnHide", function() f2:Hide(); autoKit:Hide(); autoOil:Hide(); end);
+ReadyCheckFrame:HookScript("OnShow", function() 
+	if (not UnitIsUnit(ReadyCheckFrame.initiator, "player")) then
+		autoKit:Show(); 
+		autoOil:Show();
+	end
+end);
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		if (EnRT_ConsumableCheckEnabled == nil) then EnRT_ConsumableCheckEnabled = true; end

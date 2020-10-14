@@ -12,6 +12,15 @@ local pair = nil;
 local plMark = nil;
 local plPos = nil;
 local hasAssigned = false;
+local raidCDs = {};
+local cdSpellIDs = {
+	["Ice Block"] = 45438,
+	["Cold Snap"] = 235219,
+	["Divine Shield"] = 642,
+	["Blessing of Protection"] = 1022,
+	["Aspect of the Turtle"] = 186265,
+
+};
 local raid = {
 	["TANK"] = {},
 	["HEALER"] = {},
@@ -49,6 +58,7 @@ f:RegisterEvent("ENCOUNTER_START");
 f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 f:RegisterEvent("CHAT_MSG_ADDON");
+f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 
 C_ChatInfo.RegisterAddonMessagePrefix("EnRT_SLUDGEFIST");
 
@@ -144,7 +154,7 @@ local function assignMarks()
 						chainedTo = hookedPlayers[idx];
 					end
 					if (chainedTo and not EnRT_Contains(raid["MELEE"], chainedTo)) then
-						if ((not EnRT_UnitDebuff(player, GetSpellInfo(342410)) and not EnRT_UnitDebuff(chainedTo, GetSpellInfo(342410))) or i == 1) then
+						if (not EnRT_UnitDebuff(player, GetSpellInfo(342410)) and not EnRT_UnitDebuff(chainedTo, GetSpellInfo(342410))) then
 							assignments[player] = {};
 							assignments[player].mark = count;
 							assignments[player].pos = "LARGE AND SMALL";
@@ -356,6 +366,11 @@ f:SetScript("OnEvent", function(self, event, ...)
 			else
 				plMark, plPos = strsplit(" ", msg, 2);
 			end
+		end
+	elseif (event == "UNIT_SPELLCAST_SUCCEEDED") then
+		local target, caster, spellID = ...;
+		if (UnitInRaid(caster) and EnRT_Contains(cdSpellIDs, spellID)) then
+			
 		end
 	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED" and EnRT_SludgefistEnabled and inEncounter) then
 		local _, logEvent, _, _, _, _, _, _, target, _, _, spellID = CombatLogGetCurrentEventInfo();

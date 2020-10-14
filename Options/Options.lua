@@ -18,6 +18,7 @@ version:SetText(L.OPTIONS_VERSION)
 
 EnRT_Options:SetScript("OnShow", function(EnRT_OptionsFrame)
 	InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralModules);
+	InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralOptions)
 end);
 
 InterfaceOptions_AddCategory(EnRT_Options)
