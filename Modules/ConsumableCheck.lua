@@ -107,10 +107,21 @@ local armorKitSlotSimple = {
 };
 
 local armorKitSlotBindings = {
-	["ChestSlot"] = " Shift+Left Click to reapply",
-	["LegsSlot"] = " Shift+Right Click to reapply",
-	["HandsSlot"] = " Ctrl+Left Click to reapply",
-	["FeetSlot"] = " Ctrl+Right Click to reapply",
+	["ChestSlot"] = " SHIFT+Left Click to reapply",
+	["LegsSlot"] = " SHIFT+Right Click to reapply",
+	["HandsSlot"] = " CTRL+Left Click to reapply",
+	["FeetSlot"] = " CTRL+Right Click to reapply",
+};
+local oilTimers = {
+	["Main Hand"] = 0,
+	["Off Hand"] = 0,
+};
+
+local oilBindings = {
+	["Shadowcore Oil"] = "Shadowcore Oil: No modifier(MH Only)", 
+	["Embalmer's Oil"] = "Embalmer's Oil: SHIFT(MH Only)", 
+	["Shaded Sharpening Stone"] = "Shaded Sharpening Stone: CTRL",
+	["Shaded Weightstone"] = "Shaded weightstone: ALT",
 };
 
 local buffSpellIDs = {
@@ -138,7 +149,7 @@ autoKit:SetAttribute("shift-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 7\
 autoKit:SetAttribute("ctrl-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 8\n/click StaticPopup1Button1"); 
 
 autoKit:SetSize(25,25);
-autoKit:SetPoint("RIGHT", ReadyCheckFrame, "RIGHT", 60, 0);
+autoKit:SetPoint("RIGHT", ReadyCheckFrame, "RIGHT", 60, 15);
 autoKit:SetFrameStrata("FULLSCREEN");
 local autoKitCooldown = CreateFrame("Cooldown", "IRT_AutoKitCooldown", autoKit, "CooldownFrameTemplate")
 autoKitCooldown:SetAllPoints();
@@ -178,7 +189,54 @@ autoKit:HookScript("OnClick", function()
 	end
 end);
 
-local autoOil = CreateFrame("Button", "IRT_AutoKitButton", nil, "SecureActionButtonTemplate");
+local offhand = GetInventoryItemID("player", GetInventorySlotInfo("SecondaryHandSlot"));
+local isOffhandWeapon = false;
+if (offhand and select(6, GetItemInfo(offhand)) == "Weapon") then
+	isOffhandWeapon = true;
+else
+	isOffhandWeapon = false;
+end
+
+local autoOil = CreateFrame("Button", "IRT_AutoOilButton", nil, "SecureActionButtonTemplate");
+autoOil:ClearAllPoints();
+autoOil:RegisterForClicks("RightButtonUp", "LeftButtonUp");
+autoOil:SetNormalTexture("Interface\\Icons\\inv_misc_potionseta");
+
+autoOil:SetAttribute("type", "macro"); 
+autoOil:SetAttribute("macrotext1", "/Use Shadowcore Oil\n/use 16\n/click StaticPopup1Button1");
+autoOil:SetAttribute("shift-macrotext1", "/Use Embalmer's Oil\n/use 16\n/click StaticPopup1Button1"); 
+autoOil:SetAttribute("ctrl-macrotext1", "/Use Shaded Sharpening Stone\n/use 16\n/click StaticPopup1Button1"); 
+autoOil:SetAttribute("alt-macrotext1", "/Use Shaded Weightstone\n/use 16\n/click StaticPopup1Button1"); 
+autoOil:SetAttribute("macrotext2", "/Use Shadowcore Oil\n/use 17\n/click StaticPopup1Button1");
+autoOil:SetAttribute("shift-macrotext2", "/Use Embalmer's Oil\n/use 17\n/click StaticPopup1Button1"); 
+autoOil:SetAttribute("ctrl-macrotext2", "/Use Shaded Sharpening Stone\n/use 17\n/click StaticPopup1Button1"); 
+autoOil:SetAttribute("alt-macrotext2", "/Use Shaded Weightstone\n/use 17\n/click StaticPopup1Button1"); 
+
+autoOil:SetSize(25,25);
+autoOil:SetPoint("TOPLEFT", autoKit, "TOPLEFT", 0, -30);
+autoOil:SetFrameStrata("FULLSCREEN");
+local autoKitCooldown = CreateFrame("Cooldown", "IRT_AutoOilCooldown", autoOil, "CooldownFrameTemplate")
+autoKitCooldown:SetAllPoints();
+autoOil:Hide();
+
+autoOil:HookScript("OnEnter", function(self)
+	local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFLeft+Modifier for main hand\nRight+Modifier for off hand|r\nModifiers:";
+	for id, modifierInfo in pairs (oilBindings) do
+		tooltipText = tooltipText .. "\n|cFFFFFFFF" .. modifierInfo .. "|r";
+	end
+	if (isOffhandWeapon) then
+		tooltipText = tooltipText .. "\n" .. "Main Hand" .. ": " .. oilTimers["Main Hand"];
+		tooltipText = tooltipText .. "\n" .. "Off Hand" .. ": " .. oilTimers["Off Hand"];
+	else
+		tooltipText = tooltipText .. "\n" .. "Main Hand" .. ": " .. oilTimers["Main Hand"];
+	end
+	GameTooltip:SetOwner(autoOil);
+	GameTooltip:SetText(tooltipText);
+	GameTooltip:Show();
+end);
+autoOil:SetScript("OnLeave", function(self)
+	GameTooltip:Hide();
+end);
 
 local scanTooltip = CreateFrame("GameToolTip", "EnRT_TempToolTip", nil, "GameTooltipTemplate");
 scanTooltip:SetOwner(WorldFrame, "ANCHOR_NONE");
@@ -269,6 +327,22 @@ function armorKit()
 			shortest = RED .. shortest .. "min|r";
 		end
 	end
+	if(autoOil:IsMouseOver()) then
+		GameTooltip:Hide();
+		local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFLeft+Modifier for main hand\nRight+Modifier for off hand|r\nModifiers:";
+		for id, modifierInfo in pairs (oilBindings) do
+			tooltipText = tooltipText .. "\n|cFFFFFFFF" .. modifierInfo .. "|r";
+		end
+		if (isOffhandWeapon) then
+			tooltipText = tooltipText .. "\n" .. "Main Hand" .. ": " .. oilTimers["Main Hand"];
+			tooltipText = tooltipText .. "\n" .. "Off Hand" .. ": " .. oilTimers["Off Hand"];
+		else
+			tooltipText = tooltipText .. "\n" .. "Main Hand" .. ": " .. oilTimers["Main Hand"];
+		end
+		GameTooltip:SetOwner(autoOil);
+		GameTooltip:SetText(tooltipText);
+		GameTooltip:Show();
+	end
 	if(autoKit:IsMouseOver()) then
 		GameTooltip:Hide();
 		local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFLeft Click loops all slots.|r";
@@ -298,7 +372,12 @@ local function updateConsumables()
 		end
 	end
 	local oil, oilTime, _, oilID, offhandOil, offhandOilTime, _, offhandOilID = GetWeaponEnchantInfo();
-	local offhand = GetInventoryItemID("player", GetInventorySlotInfo("SecondaryHandSlot"));
+	offhand = GetInventoryItemID("player", GetInventorySlotInfo("SecondaryHandSlot"));
+	if (offhand and select(6, GetItemInfo(offhand)) == "Weapon") then
+		isOffhandWeapon = true;
+	else
+		isOffhandWeapon = false;
+	end
 	local oilCount = 0;
 	local oilIcon = nil;
 	if (oil) then
@@ -308,26 +387,32 @@ local function updateConsumables()
 	end
 	if (oilTime and offhandOilTime) then
 		oilTime = math.floor(tonumber(oilTime)/1000/60);
-		print(oilTime)
 		offhandOilTime = math.floor(tonumber(offhandOilTime)/1000/60);
-		print(offhandOilTime)
+		oilTimers["Main Hand"] = GREEN .. oilTime .. "m|r";
+		oilTimers["Off Hand"] = GREEN .. offhandOilTime .. "m|r";
 		oilCount = 2;
 		if (oilTime > offhandOilTime) then
 			oilTime = offhandOilTime;
 		end
 	elseif (oilTime) then
 		oilTime = math.floor(tonumber(oilTime)/1000/60);
+		oilTimers["Main Hand"] = GREEN .. oilTime .. "m|r";
+		oilTimers["Off Hand"] = RED .. "0m|r";
 		oilCount = 1;
 	elseif (offhandOilTime) then
 		oilTime = math.floor(tonumber(offhandOilTime)/1000/60);
+		oilTimers["Main Hand"] = RED .. "0m|r"
+		oilTimers["Off Hand"] = GREEN .. oilTime .. "m|r";
 		oilCount = 1;
 	else
+		oilTimers["Main Hand"] = RED .. "0m|r";
+		oilTimers["Off Hand"] = RED .. "0m|r";
 		oilTime = nil;
 	end
 	if (oilTime) then
 		if (oilCount == 2) then
 			oilCount = GREEN .. "2/2 ";
-		elseif (offhand and select(6, GetItemInfo(offhand)) == "Weapon") then
+		elseif (isOffhandWeapon) then
 			oilCount = RED .. "1/2 ";
 		else
 			oilCount = "";
