@@ -149,7 +149,7 @@ autoKit:SetAttribute("shift-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 7\
 autoKit:SetAttribute("ctrl-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 8\n/click StaticPopup1Button1"); 
 
 autoKit:SetSize(25,25);
-autoKit:SetPoint("RIGHT", ReadyCheckFrame, "RIGHT", 60, 15);
+autoKit:SetPoint("RIGHT", ReadyCheckFrame, "RIGHT", 40, 15);
 autoKit:SetFrameStrata("FULLSCREEN");
 local autoKitCooldown = CreateFrame("Cooldown", "IRT_AutoKitCooldown", autoKit, "CooldownFrameTemplate")
 autoKitCooldown:SetAllPoints();
