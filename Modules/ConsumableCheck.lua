@@ -121,7 +121,7 @@ local oilBindings = {
 	["Shadowcore Oil"] = "Shadowcore Oil: No modifier(MH Only)", 
 	["Embalmer's Oil"] = "Embalmer's Oil: SHIFT(MH Only)", 
 	["Shaded Sharpening Stone"] = "Shaded Sharpening Stone: CTRL",
-	["Shaded Weightstone"] = "Shaded weightstone: ALT",
+	["Shaded Weightstone"] = "Shaded Weightstone: ALT",
 };
 
 local buffSpellIDs = {

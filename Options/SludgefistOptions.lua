@@ -79,23 +79,37 @@ enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
 
 local infoTexture = IRT_SludgefistOptions:CreateTexture(nil, "BACKGROUND");
-infoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\Sludgefist.tga");
-infoTexture:SetPoint("TOPLEFT", enabledButton, "TOP", 5, -50);
-infoTexture:SetSize(465, 170);
-infoTexture:SetTexCoord(0,0.9,0,0.65);
+infoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\SludgefistInfoBox.tga");
+infoTexture:SetPoint("TOPLEFT", enabledButton, "TOP", -25, -95);
+infoTexture:SetSize(210, 85);
+infoTexture:SetTexCoord(0,0.82,0,0.66);
+
+local soakStarTexture = IRT_SludgefistOptions:CreateTexture(nil, "BACKGROUND");
+soakStarTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\SoakStar.tga");
+soakStarTexture:SetPoint("TOPLEFT", enabledButton, "TOP", 245, -55);
+soakStarTexture:SetSize(218, 28);
+soakStarTexture:SetTexCoord(0,0.85,0,0.88);
+
+local yellStarTexture = IRT_SludgefistOptions:CreateTexture(nil, "BACKGROUND");
+yellStarTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\YellStar.tga");
+yellStarTexture:SetPoint("TOPLEFT", soakStarTexture, "TOP", -20, -40);
+yellStarTexture:SetSize(51, 128);
+yellStarTexture:SetTexCoord(0,0.8,0,1);
+
+
 
 local starTexture1 = IRT_SludgefistOptions:CreateTexture(nil, "BACKGROUND");
 starTexture1:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_1");
-starTexture1:SetPoint("TOPLEFT", infoTexture, "TOPLEFT", -45, 5);
+starTexture1:SetPoint("TOPLEFT", soakStarTexture, "TOPLEFT", -45, 5);
 starTexture1:SetSize(40, 40);
 
 local starTexture2 = IRT_SludgefistOptions:CreateTexture(nil, "BACKGROUND");
 starTexture2:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_1");
-starTexture2:SetPoint("TOPLEFT", infoTexture, "TOPRIGHT", 3, 5);
+starTexture2:SetPoint("TOPLEFT", soakStarTexture, "TOPRIGHT", 3, 5);
 starTexture2:SetSize(40, 40);
 
 local previewText = IRT_SludgefistOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
-previewText:SetPoint("TOP", infoTexture, "TOP", 0, 25);
+previewText:SetPoint("TOP", soakStarTexture, "TOP", -120, 30);
 previewText:SetText(L.OPTIONS_SLUDGEFIST_PREVIEW);
 previewText:SetJustifyH("CENTER");
 previewText:SetSize(570,25);

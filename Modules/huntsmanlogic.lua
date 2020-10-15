@@ -93,6 +93,7 @@ local function printAssignments()
 		printText = printText .. "\n\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_".. i .. ":12\124t"
 		for idx = #assignments[i], 1, -1 do
 			local pl = Ambiguate(assignments[i][idx].name, "short");
+			pl = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pl))].colorStr, pl);
 			if (idx > 1 and idx < IRT_HuntsmanAltimorPlayersPerLine) then
 				printText = printText .. "|cFF00FF00" .. pl .. "|r|cFFFFFFFF, |r";
 			elseif (idx == 1) then
