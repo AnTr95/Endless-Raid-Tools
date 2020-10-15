@@ -19,7 +19,7 @@ f:RegisterEvent("CHAT_MSG_ADDON");
 --f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 f:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE");
 
-C_ChatInfo.RegisterAddonMessagePrefix("EnRT_TCOB");
+C_ChatInfo.RegisterAddonMessagePrefix("IRT_TCOB");
 
 local function glowButton(button)
 	if (isGlowing) then
@@ -81,7 +81,7 @@ local function removeGlow()
 end
 
 local function onUpdate(self, elapsed)
-	if (debuffed and EnRT_TCOBDFEnabled and inEncounter) then
+	if (debuffed and IRT_TCOBDFEnabled and inEncounter) then
 		ticks = ticks + elapsed;
 		if (ticks > 0.05) then
 			safe = true;
@@ -89,17 +89,17 @@ local function onUpdate(self, elapsed)
 				local raider = "raid"..i;
 				local name = GetUnitName(raider, true);
 				if (UnitIsVisible(raider) and not UnitIsUnit(playerName, name) and not UnitIsDead(raider)) then
-					if (IsItemInRange(63427, raider) and not EnRT_Contains(nearby, name)) then --Duel range 10y
+					if (IsItemInRange(63427, raider) and not IRT_Contains(nearby, name)) then --Duel range 10y
 						safe = false;
 						nearby[#nearby+1] = name;
 					elseif (IsItemInRange(63427, raider)) then
 						safe = false;
-					elseif (not IsItemInRange(63427, raider) and EnRT_Contains(nearby, name)) then
-						nearby[EnRT_Contains(nearby, name)] = nil;
+					elseif (not IsItemInRange(63427, raider) and IRT_Contains(nearby, name)) then
+						nearby[IRT_Contains(nearby, name)] = nil;
 					end
 				end
 			end
-			if (safe and EnRT_UnitDebuff(playerName, dfID)) then
+			if (safe and IRT_UnitDebuff(playerName, dfID)) then
 				if (text == nil) then
 					text = "SAFE - " .. math.ceil(debuffed-GetTime()) .. "s";
 					SendChatMessage(text, "YELL");
@@ -107,8 +107,8 @@ local function onUpdate(self, elapsed)
 					text = "SAFE - " .. math.ceil(debuffed-GetTime()) .. "s";
 					SendChatMessage(text, "YELL");
 				end
-				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "SHOW", "RAID");
-			elseif (not safe and EnRT_UnitDebuff(playerName, dfID)) then
+				C_ChatInfo.SendAddonMessage("IRT_TCOB", "SHOW", "RAID");
+			elseif (not safe and IRT_UnitDebuff(playerName, dfID)) then
 				if (text == nil) then
 					text = "NOT SAFE - " .. math.ceil(debuffed-GetTime()) .. "s";
 					SendChatMessage(text, "YELL");
@@ -116,7 +116,7 @@ local function onUpdate(self, elapsed)
 					text = "NOT SAFE - " .. math.ceil(debuffed-GetTime()) .. "s";
 					SendChatMessage(text, "YELL");
 				end
-				C_ChatInfo.SendAddonMessage("EnRT_TCOB", "HIDE", "RAID");
+				C_ChatInfo.SendAddonMessage("IRT_TCOB", "HIDE", "RAID");
 			end
 			--[[
 			if (timer == nil) then
@@ -136,25 +136,25 @@ end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then 
-		if (EnRT_TCOBDMEnabled == nil) then EnRT_TCOBDMEnabled = true; end
-		if (EnRT_TCOBDFEnabled == nil) then EnRT_TCOBDFEnabled = true; end
+		if (IRT_TCOBDMEnabled == nil) then IRT_TCOBDMEnabled = true; end
+		if (IRT_TCOBDFEnabled == nil) then IRT_TCOBDFEnabled = true; end
 	elseif (event == "UNIT_AURA" and inEncounter) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
 		if (UnitIsUnit(unitName, playerName)) then
-			if (EnRT_TCOBDMEnabled) then
-				if ((not EnRT_UnitDebuff(unit, GetSpellInfo(328495)) or EnRT_UnitDebuff(unit, GetSpellInfo(330848))) and isGlowing) then
+			if (IRT_TCOBDMEnabled) then
+				if ((not IRT_UnitDebuff(unit, GetSpellInfo(328495)) or IRT_UnitDebuff(unit, GetSpellInfo(330848))) and isGlowing) then
 					C_Timer.After(1, function() 
 						removeGlow();
 					end);
 				end
 			end
-			if (EnRT_TCOBDFEnabled) then
-				if (EnRT_UnitDebuff(unit, dfID) and not debuffed) then -- unknown spellid Dancing Fever
+			if (IRT_TCOBDFEnabled) then
+				if (IRT_UnitDebuff(unit, dfID) and not debuffed) then -- unknown spellid Dancing Fever
 					debuffed = math.floor(GetTime())+5;
 					nearby = {};
 					f:SetScript("OnUpdate", onUpdate);
-				elseif (not EnRT_UnitDebuff(unit, dfID) and debuffed) then
+				elseif (not IRT_UnitDebuff(unit, dfID) and debuffed) then
 					debuffed = false;
 					nearby = {};
 					if (timer) then
@@ -163,12 +163,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 					--timer = nil;
 					text = nil;
 					f:SetScript("OnUpdate", nil);
-					C_ChatInfo.SendAddonMessage("EnRT_TCOB", "HIDE", "RAID");
+					C_ChatInfo.SendAddonMessage("IRT_TCOB", "HIDE", "RAID");
 				end
 			end
 		end
 	--[[
-	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and EnRT_TCOBDMEnabled and inEncounter) then
+	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and IRT_TCOBDMEnabled and inEncounter) then
 		local unit, _, spellID = ...;
 		if (not UnitInRaid(unit) and (spellID == 328595 or spellID == 328591 or spellID == 328592 or spellID == 328596)) then
 			if (spellID == 328595 and not isGlowing) then
@@ -181,29 +181,29 @@ f:SetScript("OnEvent", function(self, event, ...)
 				glowButton(4);
 			end
 		end]]
-	elseif (event == "CHAT_MSG_ADDON" and EnRT_TCOBDFEnabled and inEncounter) then
+	elseif (event == "CHAT_MSG_ADDON" and IRT_TCOBDFEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
 		sender = Ambiguate(sender, "short");
-		if (prefix == "EnRT_TCOB") then
+		if (prefix == "IRT_TCOB") then
 			local class = select(2, UnitClass(sender));
 			if (class == "MONK" or class == "PALADIN" or class == "PRIEST") then
 				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, sender);
 				if (msg == "SHOW" and not UnitIsUnit(playerName, sender)) then
-					if (not EnRT_PopupIsShown()) then
-						EnRT_PopupShow("|cFF00FF00DISPEL|r " .. name, 500);
-					elseif (EnRT_PopupIsShown() and EnRT_PopupGetText():match("DISPEL") and not EnRT_PopupGetText():match(sender)) then
-						local getText = EnRT_PopupGetText();
-						EnRT_PopupHide();
-						EnRT_PopupShow(getText .. " AND " .. name, 500);
+					if (not IRT_PopupIsShown()) then
+						IRT_PopupShow("|cFF00FF00DISPEL|r " .. name, 500);
+					elseif (IRT_PopupIsShown() and IRT_PopupGetText():match("DISPEL") and not IRT_PopupGetText():match(sender)) then
+						local getText = IRT_PopupGetText();
+						IRT_PopupHide();
+						IRT_PopupShow(getText .. " AND " .. name, 500);
 					end
-				elseif (msg == "HIDE" and EnRT_PopupIsShown() and EnRT_PopupGetText():match(sender)) then
-					if (EnRT_PopupIsShown() and EnRT_PopupGetText():match("DISPEL")) then
-						EnRT_PopupHide();
+				elseif (msg == "HIDE" and IRT_PopupIsShown() and IRT_PopupGetText():match(sender)) then
+					if (IRT_PopupIsShown() and IRT_PopupGetText():match("DISPEL")) then
+						IRT_PopupHide();
 					end
 				end
 			end
 		end
-	elseif (event == "ENCOUNTER_START" and (EnRT_TCOBDMEnabled or EnRT_TCOBDFEnabled)) then
+	elseif (event == "ENCOUNTER_START" and (IRT_TCOBDMEnabled or IRT_TCOBDFEnabled)) then
 		local eID = ...;
 		if (eID == 2412) then
 			inEncounter = true;
@@ -215,7 +215,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			text = nil;
 			f:SetScript("OnUpdate", nil);
 		end
-	elseif (event == "ENCOUNTER_END" and inEncounter and (EnRT_TCOBDFEnabled or EnRT_TCOBDMEnabled)) then
+	elseif (event == "ENCOUNTER_END" and inEncounter and (IRT_TCOBDFEnabled or IRT_TCOBDMEnabled)) then
 		inEncounter = false;
 		isGlowing = false;
 		--timer = nil;

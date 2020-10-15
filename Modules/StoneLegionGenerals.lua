@@ -32,16 +32,16 @@ local function assignDispels()
 	assignments = {};
 	for i, pl in pairs(debuffed) do -- ensure healers dont dispel themselves
 		for j, healer in pairs(healers) do
-			if (EnRT_Contains(healers, pl) and not UnitIsUnit(pl, healer)) then
+			if (IRT_Contains(healers, pl) and not UnitIsUnit(pl, healer)) then
 				assignments[pl] = healer;
 				break;
 			end
 		end
 	end
 	for i, pl in pairs(debuffed) do
-		if (not EnRT_ContainsKey(assignments, pl)) then
+		if (not IRT_ContainsKey(assignments, pl)) then
 			for j, healer in pairs(healers) do
-				if (not EnRT_Contains(assignments, healer)) then
+				if (not IRT_Contains(assignments, healer)) then
 					assignments[pl] = healer;
 					break;
 				end
@@ -58,7 +58,7 @@ local function updateDispelText()
 		pl = Ambiguate(pl, "short");
 		pl = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pl))].colorStr, pl);
 		if (UnitIsUnit(healer, playerName) and countdown == -1 and count == 1) then
-			EnRT_PopupShow("Dispel " .. pl, 36);
+			IRT_PopupShow("Dispel " .. pl, 36);
 		end
 		healer = Ambiguate(healer, "short");
 		healer = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(healer))].colorStr, healer);
@@ -69,36 +69,36 @@ local function updateDispelText()
 		count = count + 1;
 	end
 	if (text == "|cFFFFFFFFHeart Rend|r") then
-		EnRT_InfoBoxHide();
+		IRT_InfoBoxHide();
 	else
-		EnRT_InfoBoxShow(text, 36);
+		IRT_InfoBoxShow(text, 36);
 	end
 end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
-		if (EnRT_StoneLegionGeneralsEnabled == nil) then EnRT_StoneLegionGeneralsEnabled = true; end
-	elseif (event == "UNIT_AURA" and inEncounter and EnRT_StoneLegionGeneralsEnabled) then
+		if (IRT_StoneLegionGeneralsEnabled == nil) then IRT_StoneLegionGeneralsEnabled = true; end
+	elseif (event == "UNIT_AURA" and inEncounter and IRT_StoneLegionGeneralsEnabled) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
-		if (EnRT_UnitDebuff(unit, GetSpellInfo(334675))) then
-			if (not EnRT_Contains(debuffed, unitName)) then
+		if (IRT_UnitDebuff(unit, GetSpellInfo(334675))) then
+			if (not IRT_Contains(debuffed, unitName)) then
 				debuffed[#debuffed+1] = unitName;
 				countdown = -1;
 				assignDispels();
 			end
 		else
-			if (EnRT_Contains(debuffed, unitName)) then
-				debuffed[EnRT_Contains(debuffed, unitName)] = nil;
+			if (IRT_Contains(debuffed, unitName)) then
+				debuffed[IRT_Contains(debuffed, unitName)] = nil;
 				if (UnitIsUnit(playerName, assignments[unitName])) then
-					EnRT_PopupHide();
+					IRT_PopupHide();
 				end
 				assignments[unitName] = nil;
 				updateDispelText();
 			end
 		end
-		if (EnRT_UnitDebuff(unit, GetSpellInfo(334771))) then
-			if (not EnRT_Contains(currentDispelled, unitName)) then
+		if (IRT_UnitDebuff(unit, GetSpellInfo(334771))) then
+			if (not IRT_Contains(currentDispelled, unitName)) then
 				currentDispelled[#currentDispelled+1] = unitName;
 				countdown = 6;
 				updateDispelText();
@@ -108,12 +108,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end, 7);
 			end
 		else
-			if (EnRT_Contains(currentDispelled, unitName)) then
-				currentDispelled[EnRT_Contains(currentDispelled, unitName)] = nil;
+			if (IRT_Contains(currentDispelled, unitName)) then
+				currentDispelled[IRT_Contains(currentDispelled, unitName)] = nil;
 				updateDispelText();
 			end
 		end
-	elseif (event == "ENCOUNTER_START" and EnRT_StoneLegionGeneralsEnabled) then
+	elseif (event == "ENCOUNTER_START" and IRT_StoneLegionGeneralsEnabled) then
 		local eID = ...;
 		local difficulty = select(3, GetInstanceInfo());
 		if (eID == 2337 and difficulty == 16) then
@@ -125,13 +125,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 			currentDispelled = {};
 			initHealers();
 		end
-	elseif (event == "ENCOUNTER_END" and inEncounter and EnRT_StoneLegionGeneralsEnabled) then
+	elseif (event == "ENCOUNTER_END" and inEncounter and IRT_StoneLegionGeneralsEnabled) then
 		inEncounter = false;
 		healers = {};
 		debuffed = {};
 		assignments = {};
 		countdown = -1;
 		currentDispelled = {};
-		EnRT_InfoBoxHide();
+		IRT_InfoBoxHide();
 	end
 end);

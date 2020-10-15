@@ -87,8 +87,8 @@ local oilIconIDs = {
 local RED = "\124cFFFF0000";
 local YELLOW = "\124cFFFFFF00";
 local GREEN = "\124cFF00FF00";
-local CROSS = "\124TInterface\\addons\\EndlessRaidTools\\Res\\cross:16\124t";
-local CHECK = "\124TInterface\\addons\\EndlessRaidTools\\Res\\check:16\124t";
+local CROSS = "\124TInterface\\addons\\InfiniteRaidTools\\Res\\cross:16\124t";
+local CHECK = "\124TInterface\\addons\\InfiniteRaidTools\\Res\\check:16\124t";
 local rcSender = "";
 local raiders = {};
 
@@ -238,7 +238,7 @@ autoOil:SetScript("OnLeave", function(self)
 	GameTooltip:Hide();
 end);
 
-local scanTooltip = CreateFrame("GameToolTip", "EnRT_TempToolTip", nil, "GameTooltipTemplate");
+local scanTooltip = CreateFrame("GameToolTip", "IRT_TempToolTip", nil, "GameTooltipTemplate");
 scanTooltip:SetOwner(WorldFrame, "ANCHOR_NONE");
 scanTooltip:AddFontStrings(
     scanTooltip:CreateFontString("$parentTextLeft1", nil, "GameTooltipText"),
@@ -364,9 +364,9 @@ f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("UNIT_INVENTORY_CHANGED");
 
 local function updateConsumables()
-	local flask, flaskIcon, _, _, _, flaskTime = EnRT_UnitBuff("player", GetSpellInfo(307185));
+	local flask, flaskIcon, _, _, _, flaskTime = IRT_UnitBuff("player", GetSpellInfo(307185));
 	for i = 1, #flasks do
-		flask, flaskIcon, _, _, _, flaskTime = EnRT_UnitBuff("player", GetSpellInfo(flasks[i]));
+		flask, flaskIcon, _, _, _, flaskTime = IRT_UnitBuff("player", GetSpellInfo(flasks[i]));
 		if (flask) then
 			break;
 		end
@@ -428,8 +428,8 @@ local function updateConsumables()
 		oilCount = "";
 		oilTime = CROSS;
 	end
-	local food, foodIcon, _, _, _, foodTime = EnRT_UnitBuff("player", GetSpellInfo(297039)); -- Random Well Fed Buff
-	local rune, runeIcon, _, _, _, runeTime = EnRT_UnitBuff("player", GetSpellInfo(270058));
+	local food, foodIcon, _, _, _, foodTime = IRT_UnitBuff("player", GetSpellInfo(297039)); -- Random Well Fed Buff
+	local rune, runeIcon, _, _, _, runeTime = IRT_UnitBuff("player", GetSpellInfo(270058));
 	local armorKitCount, armorKitTime = armorKit();
 	local armorKitIcon = 3528447;
 	flaskIcon = flaskIcon and flaskIcon or 2057568;
@@ -468,7 +468,7 @@ local function updateConsumables()
 				unit = "raid"..i;
 				if (UnitIsVisible(unit)) then
 					total = total + 1;
-					if (EnRT_UnitBuff(unit, GetSpellInfo(buffSpellIDs[class]))) then
+					if (IRT_UnitBuff(unit, GetSpellInfo(buffSpellIDs[class]))) then
 						count = count + 1;
 					end
 				end
@@ -478,13 +478,13 @@ local function updateConsumables()
 				unit = "party"..i;
 				if (UnitIsVisible(unit)) then
 					total = total + 1;
-					if (EnRT_UnitBuff(unit, GetSpellInfo(buffSpellIDs[class]))) then
+					if (IRT_UnitBuff(unit, GetSpellInfo(buffSpellIDs[class]))) then
 						count = count + 1;
 					end
 				end
 			end
 			total = total + 1;
-			if (EnRT_UnitBuff("player", GetSpellInfo(buffSpellIDs[class]))) then
+			if (IRT_UnitBuff("player", GetSpellInfo(buffSpellIDs[class]))) then
 				count = count + 1;
 			end
 		end
@@ -522,19 +522,19 @@ ReadyCheckFrame:HookScript("OnShow", function()
 end);
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
-		if (EnRT_ConsumableCheckEnabled == nil) then EnRT_ConsumableCheckEnabled = true; end
-	elseif (event == "READY_CHECK" and EnRT_ConsumableCheckEnabled) then
+		if (IRT_ConsumableCheckEnabled == nil) then IRT_ConsumableCheckEnabled = true; end
+	elseif (event == "READY_CHECK" and IRT_ConsumableCheckEnabled) then
 		local sender = ...
 		rcSender = sender;
 		if (not UnitIsUnit(sender, UnitName("player"))) then
 			updateConsumables();
 		end
-	elseif (event == "UNIT_AURA" and EnRT_ConsumableCheckEnabled and ReadyCheckFrame:IsShown()) then
+	elseif (event == "UNIT_AURA" and IRT_ConsumableCheckEnabled and ReadyCheckFrame:IsShown()) then
 		local unit = ...;
 		if ((UnitInRaid(unit) or UnitInParty(unit)) and not UnitIsUnit(rcSender, UnitName("player"))) then
 			updateConsumables();
 		end
-	elseif (event == "UNIT_INVENTORY_CHANGED" and EnRT_ConsumableCheckEnabled and ReadyCheckFrame:IsShown()) then
+	elseif (event == "UNIT_INVENTORY_CHANGED" and IRT_ConsumableCheckEnabled and ReadyCheckFrame:IsShown()) then
 		local unit = ...;
 		if ((UnitInRaid(unit) or UnitInParty(unit)) and not UnitIsUnit(rcSender, UnitName("player"))) then
 			updateConsumables();

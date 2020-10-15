@@ -1,0 +1,54 @@
+## Interface: 90002
+## Title: Infinite Raid Tools
+## Version: 9.02
+## Notes: Raid Tools
+## Author: Ant-Kazzak
+## SavedVariables: IRT_InterruptEnabled
+## SavedVariables: IRT_NextInterrupt
+## SavedVariables: IRT_InnervateEnabled
+## SavedVariables: IRT_PopupTextFontSize
+## SavedVariables: IRT_HungeringDestroyerEnabled
+## SavedVariables: IRT_LadyInervaDarkveinEnabled
+## SavedVariables: IRT_HuntsmanAltimorEnabled
+## SavedVariables: IRT_TCOBDMEnabled
+## SavedVariables: IRT_TCOBDFEnabled
+## SavedVariablesPerCharacter: IRT_StoneLegionGeneralsEnabled
+## SavedVariablesPerCharacter: IRT_PopupTextPosition
+## SavedVariablesPerCharacter: IRT_BonusRollCurrentRaid
+## SavedVariablesPerCharacter: IRT_ConsumableCheckEnabled
+## SavedVariablesPerCharacter: IRT_CalendarNotificationEnabled
+## SavedVariablesPerCharacter: IRT_ReadyCheckEnabled
+## SavedVariablesPerCharacter: IRT_ReadyCheckFlashing
+## SavedVariablesPerCharacter: IRT_MinimapMode
+## SavedVariablesPerCharacter: IRT_MinimapDegree
+## SavedVariablesPerCharacter: IRT_InfoBoxPosition
+## SavedVariablesPerCharacter: IRT_HuntsmanAltimorPlayersPerLine
+Localization\Localization.enUS.lua
+Core.lua
+Options\Options.lua
+Options\GeneralOptions.lua
+Options\Minimap.lua
+Popup.lua
+InfoBox.lua
+Modules\Interrupts.lua
+Modules\Innervate.lua
+Modules\CalendarNotification.lua
+Options\CalendarNotificationOptions.lua
+Options\InnervateOptions.lua
+Options\InterruptOptions.lua
+Modules\ReadyCheck.lua
+Options\ReadyCheckOptions.lua
+Modules\ConsumableCheck.lua
+Options\ConsumableCheckOptions.lua
+Modules\huntsmanlogic.lua
+Options\HuntsmanAltimorOptions.lua
+Modules\HungeringDestroyer2.lua
+Options\HungeringDestroyerOptions.lua
+Modules\LadyInervaDarkvein.lua
+Options\LadyInervaDarkveinOptions.lua
+Modules\CouncilofBlood2.lua
+Options\CouncilofBloodOptions.lua
+Modules\Sludgefist2.lua
+Options\SludgefistOptions.lua
+Modules\StoneLegionGenerals.lua
+Options\StoneLegionGeneralsOptions.lua

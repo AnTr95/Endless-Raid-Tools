@@ -52,7 +52,7 @@ f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("CHAT_MSG_ADDON");
 
-C_ChatInfo.RegisterAddonMessagePrefix("EnRT_HA");
+C_ChatInfo.RegisterAddonMessagePrefix("IRT_HA");
 
 local function compare(a, b)
 	return tonumber(positionsLex[tostring(a[3])]) < tonumber(positionsLex[tostring(b[3])]);
@@ -76,7 +76,7 @@ local function initRaid()
 	resetAssignmentsData();
 end
 
-function EnRT_HA_Debug()
+function IRT_HA_Debug()
 	if (printDebug) then
 		printDebug = false;
 	else
@@ -105,14 +105,14 @@ local function resetAssignmentsData()
 		[3] = 0,
 		[4] = 0,
 	};
-	C_ChatInfo.SendAddonMessage("EnRT_HA", "reset", "RAID");
+	C_ChatInfo.SendAddonMessage("IRT_HA", "reset", "RAID");
 end
 
 local function printAssignments()
-	--local starText = "EnRT Assignments:\n\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:12\124t \124TInterface\\Icons\\ability_hunter_assassinate2:12\124t" .. Ambiguate(debuffed[1], "short") .. "\124TInterface\\Icons\\ability_hunter_assassinate2:12\124t,";
+	--local starText = "IRT Assignments:\n\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:12\124t \124TInterface\\Icons\\ability_hunter_assassinate2:12\124t" .. Ambiguate(debuffed[1], "short") .. "\124TInterface\\Icons\\ability_hunter_assassinate2:12\124t,";
 --	local circleText = "\n\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_2:12\124t \124TInterface\\Icons\\ability_hunter_assassinate2:12\124t" .. Ambiguate(debuffed[2], "short") .. "\124TInterface\\Icons\\ability_hunter_assassinate2:12\124t,";
 	--local diamondText = "\n\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_3:12\124t \124TInterface\\Icons\\ability_hunter_assassinate2:12\124t" .. Ambiguate(debuffed[3], "short") .. "\124TInterface\\Icons\\ability_hunter_assassinate2:12\124t,";
-	local printText = "EnRT Assignments:";
+	local printText = "IRT Assignments:";
 	local sortedTable = {
 		[1] = {}, 
 		[2] = {}, 
@@ -172,14 +172,14 @@ local function assignMarks()
 				break;
 			end
 			if (#debuffed < 3) then
-				if (not EnRT_Contains(debuffed, player) and assignments[player].mark == mark) then
+				if (not IRT_Contains(debuffed, player) and assignments[player].mark == mark) then
 					if (printDebug) then
 						print(player .. " passed " .. groupIcons[tostring(mark)] .. " " .. positions[index-requireBackup]);
 					end
 					assignments[player].mark = mark;
 					assignments[player].pos = positions[index-requireBackup];
 					if (UnitIsConnected(player)) then
-						C_ChatInfo.SendAddonMessage("EnRT_HA", mark .. " " .. positions[index-requireBackup], "WHISPER", player);
+						C_ChatInfo.SendAddonMessage("IRT_HA", mark .. " " .. positions[index-requireBackup], "WHISPER", player);
 					end
 				else
 					if (printDebug) then
@@ -206,7 +206,7 @@ local function assignMarks()
 							print("backup player " .. backupPlayer);
 						end
 					end
-					if (EnRT_Contains(debuffed, backupPlayer)) then
+					if (IRT_Contains(debuffed, backupPlayer)) then
 						if (printDebug) then
 							print("backupPlayer " .. " is debuffed");
 						end
@@ -229,7 +229,7 @@ local function assignMarks()
 						end
 					end
 					local backupPos = 4-debuffsInGroup+1;
-					if (mark == 2 and debuffsInGroup > 0 and debuffsPerGroup[2] > 0 and not EnRT_Contains(debuffed, raid[mark+1][4]) and not EnRT_Contains(debuffed, raid[mark][4])) then --if debuffed player is only backup dont move position forward
+					if (mark == 2 and debuffsInGroup > 0 and debuffsPerGroup[2] > 0 and not IRT_Contains(debuffed, raid[mark+1][4]) and not IRT_Contains(debuffed, raid[mark][4])) then --if debuffed player is only backup dont move position forward
 						if (printDebug) then
 							print("debuffs in grp 3 and in grp 2 has a backup player");
 						end
@@ -239,7 +239,7 @@ local function assignMarks()
 						if (printDebug) then
 							print("backup player changed to " .. backupPlayer);
 						end
-					elseif (mark == 2 and EnRT_Contains(debuffed, raid[mark+1][4]) and EnRT_Contains(debuffed, raid[mark][4])) then
+					elseif (mark == 2 and IRT_Contains(debuffed, raid[mark+1][4]) and IRT_Contains(debuffed, raid[mark][4])) then
 						backupPlayer = raid[nextGroup][3];
 						if (printDebug) then
 							print("backup player changed to " .. backupPlayer);
@@ -260,12 +260,12 @@ local function assignMarks()
 						print("backup player assigned " .. groupIcons[tostring(mark)] .. " " .. positions[backupPos]);
 					end
 					if (UnitIsConnected(player)) then
-						C_ChatInfo.SendAddonMessage("EnRT_HA", mark .. " " .. positions[backupPos], "WHISPER", backupPlayer);
+						C_ChatInfo.SendAddonMessage("IRT_HA", mark .. " " .. positions[backupPos], "WHISPER", backupPlayer);
 					end
 					debuffsInGroup = debuffsInGroup - 1;
 				end
 			else
-				if (not EnRT_Contains(debuffed, player) and assignments[player].mark == mark and soaksPerGroup[mark+1] < 3) then
+				if (not IRT_Contains(debuffed, player) and assignments[player].mark == mark and soaksPerGroup[mark+1] < 3) then
 					if (printDebug) then
 						print(player .. " passed " .. groupIcons[tostring(mark)] .. " " .. positions[index-requireBackup]);
 					end
@@ -273,9 +273,9 @@ local function assignMarks()
 					assignments[player].pos = positions[soaksPerGroup[assignments[player].mark+1]+1];
 					soaksPerGroup[mark+1] = soaksPerGroup[mark+1] + 1;
 					if (UnitIsConnected(player)) then
-						C_ChatInfo.SendAddonMessage("EnRT_HA", mark .. " " .. positions[index-requireBackup], "WHISPER", player);
+						C_ChatInfo.SendAddonMessage("IRT_HA", mark .. " " .. positions[index-requireBackup], "WHISPER", player);
 					end
-				elseif (EnRT_Contains(debuffed, player)) then
+				elseif (IRT_Contains(debuffed, player)) then
 					if (printDebug) then
 						print(player .. " did not pass " .. groupIcons[tostring(mark)] .. " " .. assignments[player].pos);
 					end
@@ -295,7 +295,7 @@ local function assignMarks()
 							print(groupIcons[tostring(assignments[nextPlayer].mark)] .. " now has " .. soaksPerGroup[assignments[nextPlayer].mark+1] .. " soakers");
 						end
 						if (UnitIsConnected(nextPlayer)) then
-							C_ChatInfo.SendAddonMessage("EnRT_HA", assignments[nextPlayer].mark .. " " .. assignments[nextPlayer].pos, "WHISPER", nextPlayer);
+							C_ChatInfo.SendAddonMessage("IRT_HA", assignments[nextPlayer].mark .. " " .. assignments[nextPlayer].pos, "WHISPER", nextPlayer);
 						end
 						if (soaksPerGroup[assignments[player].mark+1] < 3) then
 							if (printDebug) then
@@ -310,7 +310,7 @@ local function assignMarks()
 								print(groupIcons[tostring(assignments[player].mark)] .. " now has " .. soaksPerGroup[assignments[player].mark+1] .. " soakers");
 							end
 							if (UnitIsConnected(player)) then
-								C_ChatInfo.SendAddonMessage("EnRT_HA", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
+								C_ChatInfo.SendAddonMessage("IRT_HA", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
 							end
 						end
 					else
@@ -326,7 +326,7 @@ local function assignMarks()
 							print(groupIcons[tostring(assignments[player].mark)] .. " now has " .. soaksPerGroup[assignments[player].mark+1] .. " soakers");
 						end
 						if (UnitIsConnected(player)) then
-							C_ChatInfo.SendAddonMessage("EnRT_HA", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
+							C_ChatInfo.SendAddonMessage("IRT_HA", assignments[player].mark .. " " .. assignments[player].pos, "WHISPER", player);
 						end
 					end
 				end
@@ -351,7 +351,7 @@ local function assignMarks()
 									print(groupIcons[tostring(grp-1)] .. " now has " .. soaksPerGroup[grp] .. " soakers");
 								end
 								if (UnitIsConnected(player)) then
-									C_ChatInfo.SendAddonMessage("EnRT_HA", grp-1 .. " " .. assignments[player].pos, "WHISPER", player);
+									C_ChatInfo.SendAddonMessage("IRT_HA", grp-1 .. " " .. assignments[player].pos, "WHISPER", player);
 								end
 								if (soaksPerGroup[grp] >= 3) then
 									break;
@@ -375,7 +375,7 @@ local function assignMarks()
 					end
 					assignments[player].pos = positions[5];
 					if (UnitIsConnected(player)) then
-						C_ChatInfo.SendAddonMessage("EnRT_HA", grp-1 .. " " .. assignments[player].pos, "WHISPER", player);
+						C_ChatInfo.SendAddonMessage("IRT_HA", grp-1 .. " " .. assignments[player].pos, "WHISPER", player);
 					end
 				end
 			end
@@ -388,14 +388,14 @@ local function playerNotification(mark, pos, duration)
 	local chatText = "";
 	if (tonumber(pos)) then --debuffed
 		chatText = "{rt" .. mark .. "} " .. math.ceil(pos-GetTime()) .. " {rt" .. mark .. "}";
-		EnRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
+		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
 	elseif (pos == positions[5]) then
 		chatText = "DO NOT SOAK";
-		EnRT_PopupShow("|cFFFF0000DO NOT SOAK!|r", duration);
+		IRT_PopupShow("|cFFFF0000DO NOT SOAK!|r", duration);
 	else
 		--chatText = "{rt" .. mark .. "} " .. pos .. " {rt" .. mark .. "}";
 		chatText = "{rt" .. mark .. "} " .. pos .. " {rt" .. mark .. "}";
-		EnRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. ", POSITION: " .. pos .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
+		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. ", POSITION: " .. pos .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
 	end
 	SendChatMessage(chatText, "YELL");
 	timer = C_Timer.NewTicker(1, function()
@@ -409,43 +409,43 @@ local function playerNotification(mark, pos, duration)
 			SendChatMessage(chatText, "YELL");
 		end
 	end, math.floor(duration-1));
-	PlaySoundFile("Interface\\AddOns\\EndlessRaidTools\\Sound\\"..groupIcons[mark]..".ogg", "Master");
+	PlaySoundFile("Interface\\AddOns\\InfiniteRaidTools\\Sound\\"..groupIcons[mark]..".ogg", "Master");
 end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then 
-		if (EnRT_HuntsmanAltimornabled == nil) then EnRT_HuntsmanAltimorEnabled = true; end
-		if (EnRT_HuntsmanAltimorPlayersPerLine == nil) then EnRT_HuntsmanAltimorPlayersPerLine = 4; end
-	elseif (event == "UNIT_AURA" and EnRT_HuntsmanAltimorEnabled and inEncounter) then
+		if (IRT_HuntsmanAltimornabled == nil) then IRT_HuntsmanAltimorEnabled = true; end
+		if (IRT_HuntsmanAltimorPlayersPerLine == nil) then IRT_HuntsmanAltimorPlayersPerLine = 4; end
+	elseif (event == "UNIT_AURA" and IRT_HuntsmanAltimorEnabled and inEncounter) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
 		if (UnitIsUnit(leader, playerName)) then
-			if (EnRT_UnitDebuff(unit, GetSpellInfo(335111)) or EnRT_UnitDebuff(unit, GetSpellInfo(335112)) or EnRT_UnitDebuff(unit, GetSpellInfo(335113))) then
-				if (not EnRT_Contains(debuffed, unitName)) then
+			if (IRT_UnitDebuff(unit, GetSpellInfo(335111)) or IRT_UnitDebuff(unit, GetSpellInfo(335112)) or IRT_UnitDebuff(unit, GetSpellInfo(335113))) then
+				if (not IRT_Contains(debuffed, unitName)) then
 					debuffed[#debuffed+1] = unitName;
 					SetRaidTarget(unitName, #debuffed);
-					local expTime = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(335111)));
+					local expTime = select(7, IRT_UnitDebuff(unit, GetSpellInfo(335111)));
 					if (not expTime) then
-						expTime = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(335112)));
+						expTime = select(7, IRT_UnitDebuff(unit, GetSpellInfo(335112)));
 					end
 					if (not expTime) then
-						expTime = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(335113)));
+						expTime = select(7, IRT_UnitDebuff(unit, GetSpellInfo(335113)));
 					end
 					if (UnitIsConnected(unitName)) then
-						C_ChatInfo.SendAddonMessage("EnRT_HA", #debuffed .. " " .. expTime, "WHISPER", unitName);
+						C_ChatInfo.SendAddonMessage("IRT_HA", #debuffed .. " " .. expTime, "WHISPER", unitName);
 					end
 					local raidIndex = UnitInRaid(unitName);
 					local name, rank, group, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(raidIndex);
 					debuffsPerGroup[group] = debuffsPerGroup[group] + 1;
-					if (EnRT_ContainsKey(assignments, unitName)) then
+					if (IRT_ContainsKey(assignments, unitName)) then
 						assignments[unitName].mark = #debuffed;
 						assignments[unitName].pos = 5;
 					end
 					assignMarks();
 				end
 			else
-				if (EnRT_Contains(debuffed, unitName)) then
-					debuffed[EnRT_Contains(debuffed, unitName)] = nil;
+				if (IRT_Contains(debuffed, unitName)) then
+					debuffed[IRT_Contains(debuffed, unitName)] = nil;
 					SetRaidTarget(unitName, 0);
 					resetAssignmentsData();
 					if (timer) then
@@ -455,9 +455,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
-	elseif (event == "CHAT_MSG_ADDON" and EnRT_HuntsmanAltimorEnabled and inEncounter) then
+	elseif (event == "CHAT_MSG_ADDON" and IRT_HuntsmanAltimorEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
-		if (prefix == "EnRT_HA") then
+		if (prefix == "IRT_HA") then
 			if(msg == "reset") then
 				assignment = "";
 			else
@@ -476,12 +476,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
-	elseif (event == "ENCOUNTER_START" and EnRT_HuntsmanAltimorEnabled) then
+	elseif (event == "ENCOUNTER_START" and IRT_HuntsmanAltimorEnabled) then
 		local eID = ...;
 		local difficulty = select(3, GetInstanceInfo());
 		if (eID == 2418 and difficulty == 16) then
 			inEncounter = true;
-			leader = EnRT_GetRaidLeader();
+			leader = IRT_GetRaidLeader();
 			debuffed = {};
 			assignment = "";
 			initRaid();
@@ -490,7 +490,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				timer = nil;
 			end
 		end
-	elseif (event == "ENCOUNTER_END" and EnRT_HuntsmanAltimorEnabled and inEncounter) then
+	elseif (event == "ENCOUNTER_END" and IRT_HuntsmanAltimorEnabled and inEncounter) then
 		inEncounter = false;
 		debuffed = {};
 		assignment = "";
@@ -898,16 +898,16 @@ function HA_Test(p1, p2, p3)
 				SetRaidTarget(unitName, #debuffed);
 				local expTime = GetTime()+5;
 				if (not expTime) then
-					expTime = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(335112)));
+					expTime = select(7, IRT_UnitDebuff(unit, GetSpellInfo(335112)));
 				end
 				if (not expTime) then
-					expTime = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(335113)));
+					expTime = select(7, IRT_UnitDebuff(unit, GetSpellInfo(335113)));
 				end
 				if (UnitIsConnected(unitName)) then
-					C_ChatInfo.SendAddonMessage("EnRT_HA", #debuffed .. " " .. expTime, "WHISPER", unitName);
+					C_ChatInfo.SendAddonMessage("IRT_HA", #debuffed .. " " .. expTime, "WHISPER", unitName);
 				end
 				debuffsPerGroup[rngGroup] = debuffsPerGroup[rngGroup] + 1;
-				if (EnRT_ContainsKey(assignments, unitName)) then
+				if (IRT_ContainsKey(assignments, unitName)) then
 					assignments[unitName].mark = #debuffed;
 					assignments[unitName].pos = 5;
 				end
@@ -921,7 +921,7 @@ function HA_Test(p1, p2, p3)
 			C_Timer.After(i-1*0.6, function()
 				local rngGroup = math.random(1, 4);
 				local rngPlayer = math.random(1, 5);
-				while (EnRT_Contains(rngs, ((rngGroup-1)*5)+rngPlayer)) do
+				while (IRT_Contains(rngs, ((rngGroup-1)*5)+rngPlayer)) do
 					rngGroup = math.random(1, 4);
 					rngPlayer = math.random(1, 5);
 				end
@@ -932,17 +932,17 @@ function HA_Test(p1, p2, p3)
 				SetRaidTarget(unitName, #debuffed);
 				local expTime = GetTime()+5;
 				if (not expTime) then
-					expTime = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(335112)));
+					expTime = select(7, IRT_UnitDebuff(unit, GetSpellInfo(335112)));
 				end
 				if (not expTime) then
-					expTime = select(7, EnRT_UnitDebuff(unit, GetSpellInfo(335113)));
+					expTime = select(7, IRT_UnitDebuff(unit, GetSpellInfo(335113)));
 				end
 				if (UnitIsConnected(unitName)) then
-					C_ChatInfo.SendAddonMessage("EnRT_HA", #debuffed .. " " .. expTime, "WHISPER", unitName);
+					C_ChatInfo.SendAddonMessage("IRT_HA", #debuffed .. " " .. expTime, "WHISPER", unitName);
 				end
 				local raidIndex = UnitInRaid(unitName);
 				debuffsPerGroup[rngGroup] = debuffsPerGroup[rngGroup] + 1;
-				if (EnRT_ContainsKey(assignments, unitName)) then
+				if (IRT_ContainsKey(assignments, unitName)) then
 					assignments[unitName].mark = #debuffed;
 					assignments[unitName].pos = 5;
 				end

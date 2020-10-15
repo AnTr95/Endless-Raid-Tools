@@ -1,8 +1,8 @@
-EnRTLocals = {};
-local L = EnRTLocals;
+IRTLocals = {};
+local L = IRTLocals;
 local addon = ...;
 
-L.OPTIONS_TITLE = "Endless Raid Tools";
+L.OPTIONS_TITLE = "Infinite Raid Tools";
 L.OPTIONS_AUTHOR = "Author: " .. GetAddOnMetadata(addon, "Author");
 L.OPTIONS_VERSION = "Version: " .. GetAddOnMetadata(addon, "Version");
 L.OPTIONS_DIFFICULTY = "Difficulty:"
@@ -32,7 +32,7 @@ L.OPTIONS_INTERRUPT_PREVIEW = "|cFFFFFFFFPreview of the popup that appears on yo
 L.OPTIONS_INTERRUPT_TORRENT = "Count Arcane Torrent as an interrupt";
 
 L.OPTIONS_INNERVATE_TITLE = "Innervate Module";
-L.OPTIONS_INNERVATE_INFO = "Tells your druid that you need innervate with a popup on your druids screen! By macroing: |cFF00FFFF/endlessinnervate PlayerName|r.\n\n|cFF00FFFFConfig:|r The popup can be individually moved and resized in the general options.";
+L.OPTIONS_INNERVATE_INFO = "Tells your druid that you need innervate with a popup on your druids screen! By macroing: |cFF00FFFF/infiniteinnervate PlayerName|r.\n\n|cFF00FFFFConfig:|r The popup can be individually moved and resized in the general options.";
 L.OPTIONS_INNERVATE_PREVIEW = "|cFFFFFFFFPreview of the popup that appears on the druids screen|r";
 
 L.OPTIONS_CALENDARNOTIFICATION_TITLE = "Calendar Notice Module";
@@ -43,9 +43,9 @@ L.OPTIONS_BONUSROLL_INFO = "|cFF00FFFFNotification:|r Whenever you enter the lat
 L.OPTIONS_BONUSROLL_PREVIEW = "|cFFFFFFFFPreview of the popup that appears and the BLP tracker:|r";
 
 L.OPTIONS_READYCHECK_TITLE = "Ready Check Module";
-L.OPTIONS_READYCHECK_INFO = "|cFF00FFFFRaiders:|r If you are in a raid and you are either AFK or decline a ready check you will get a button show up on your screen that will inform the raid that you are ready once you press it.\n|cFF00FFFFRaid leader(sender):|r If you have this enabled and send a ready check a list will show up of players that are AFK/not ready after the Blizzard ready check finished that updates in real time as the players presses their EnRT ready button.";
+L.OPTIONS_READYCHECK_INFO = "|cFF00FFFFRaiders:|r If you are in a raid and you are either AFK or decline a ready check you will get a button show up on your screen that will inform the raid that you are ready once you press it.\n|cFF00FFFFRaid leader(sender):|r If you have this enabled and send a ready check a list will show up of players that are AFK/not ready after the Blizzard ready check finished that updates in real time as the players presses their IRT ready button.";
 L.OPTIONS_READYCHECK_PREVIEW = "|cFF00FFFFRaiders:|r\n|cFFFFFFFFPreview of the button that appears if you press not ready or AFK for a ready check.|r\n\n|cFF00FFFFRaid leader(sender):|r\n|cFFFFFFFFPreview of the list that appears for the players that pressed not ready or was AFK\nThe list updates in real time.|r";
-L.OPTIONS_READYCHECK_FLASHING = "Flash EnRT Ready Check Button \nWarning for those sensitive to pulsating light.";
+L.OPTIONS_READYCHECK_FLASHING = "Flash IRT Ready Check Button \nWarning for those sensitive to pulsating light.";
 
 L.OPTIONS_CONSUMABLECHECK_PREVIEW = "|cFFFFFFFFPreview of consumable check from |cff3ec6eaMage|r PoV (can buff) and |cfff38bb9Paladin|r PoV (cant buff)|r";
 L.OPTIONS_CONSUMABLECHECK_INFO = "Shows if the player has flask, weapon oil/sharpening stone, food and rune. In addition classes that can buff can see if players are missing their buff.\nThe top picture is taken from a |cff3ec6eamage|r point of view, other classes would see their buff or none if they do not have any.\nThe bottom picture is taken from a |cfff38bb9paladin|r which can not buff and therefore no buffs are shown.";
@@ -79,4 +79,5 @@ L.OPTIONS_STONELEGIONGENERALS_PREVIEW = "|cFFFFFFFFPreview of the infobox that a
 
 L.BONUSROLL_INFO = "Pick bosses to coin";
 
-L.WARNING_OUTOFDATEMESSAGE = "There is a newer version of Endless Raid Tools available on twitch/curse!";
+L.WARNING_OUTOFDATEMESSAGE = "There is a newer version of Infinite Raid Tools available on overwolf/curseforge!";
+L.WARNING_DELETE_OLD_FOLDER = "|cFFFFFFFFHello dear |r|cFF00FFFFEndless Raid Tools|r|cFFFFFFFF user!\n|cFF00FFFFEndless Raid Tools|r |cFFFFFFFFhas changed name to |r|cFF00FFFFInfinite Raid Tools|r, |cFF00FFFF/enrt|r |cFFFFFFFFwill still work for now but will eventually be removed, the new command is: |cFF00FFFF/irt|r.\n|cFFFF0000Please delete the|r |cFF00FFFFEndless Raid Tools|r |cFFFF0000folder to avoid possible bugs and interference.|r \n|cFFFFFFFFThe folder can be found from your WoW installation then _retail_/Interface/AddOns/EndlessRaidTools\n Thank you for using|r |cFF00FFFFInfinite Raid Tools|r|cFFFFFFFF! Coming in Shadowlands: Consumable Check update and 6 new boss modules for Castle Nathria!|r\n |cFFFF0000Auto-disabling old |r|cFF00FFFFEndless Raid Tools|r|cFFFF0000 for now, new|r |cFF00FFFFInfinite Raid Tools|r |cFFFF0000will still be loaded. Please hit reload ui.|r";

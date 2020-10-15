@@ -19,7 +19,7 @@ local spellIDs = {
 };
 
 
-C_ChatInfo.RegisterAddonMessagePrefix("EnRT_HD");
+C_ChatInfo.RegisterAddonMessagePrefix("IRT_HD");
 
 f:RegisterEvent("ENCOUNTER_START");
 f:RegisterEvent("ENCOUNTER_END");
@@ -46,7 +46,7 @@ end
 
 local function compare(a, b)
 	if (a[2] == b[2]) then
-		return EnRT_Contains(raid[a[2]], a[1]) > EnRT_Contains(raid[b[2]], b[1]);
+		return IRT_Contains(raid[a[2]], a[1]) > IRT_Contains(raid[b[2]], b[1]);
 	end
 	return a[2] < b[2];
 end
@@ -78,7 +78,7 @@ local function updateGroups()
 					debuffedGroups[group] = debuffedGroups[group] - 1;
 					debuffedGroups[i] = 1;
 					table.insert(raid[i], player);
-					table.remove(raid[group], EnRT_Contains(raid[group], player));
+					table.remove(raid[group], IRT_Contains(raid[group], player));
 					SetRaidTarget(player, i);
 					break;
 				end
@@ -93,11 +93,11 @@ local function updateGroups()
 			for i = 1, #raid[grp] do --for each player reversed
 				if (#raid[grp] > 5) then -- during each iteration make sure still more than 5
 					local player = raid[grp][#raid[grp]+1-i];
-					if (not EnRT_UnitDebuff(player, spellIDs["Sap"]) and not EnRT_ContainsKey(debuffed, player) and UnitGroupRolesAssigned(player) ~= "TANK") then --Dont swap debuffed players nor players that cant soak because still debuffed nor tanks
+					if (not IRT_UnitDebuff(player, spellIDs["Sap"]) and not IRT_ContainsKey(debuffed, player) and UnitGroupRolesAssigned(player) ~= "TANK") then --Dont swap debuffed players nor players that cant soak because still debuffed nor tanks
 						for newGrp = 1, 4 do
 							if (#raid[newGrp] < 5) then
 								table.insert(raid[newGrp], player);
-								table.remove(raid[grp], EnRT_Contains(raid[grp], player));
+								table.remove(raid[grp], IRT_Contains(raid[grp], player));
 								break;
 							end
 						end
@@ -111,11 +111,11 @@ local function updateGroups()
 		while (#raid[i] > 5) do
 			print("grp " .. i .. " is more than 5")
 			for index, player in pairs(raid[i]) do
-				if (not EnRT_UnitDebuff(player, spellIDs["Sap"]) and not EnRT_ContainsKey(debuffed, player)) then
+				if (not IRT_UnitDebuff(player, spellIDs["Sap"]) and not IRT_ContainsKey(debuffed, player)) then
 					for j = 1, 4 do
 						if (#raid[j] < 5) then
 							table.insert(raid[j], player);
-							table.remove(raid[i], EnRT_Contains(raid[i], player));
+							table.remove(raid[i], IRT_Contains(raid[i], player));
 							goto retry;
 						end
 					end
@@ -124,7 +124,7 @@ local function updateGroups()
 			::retry::
 		end]]
 	end
-	local printText = "EnRT Assignments:\n";
+	local printText = "IRT Assignments:\n";
 	local count = 0;
 	for grp = 1, 4 do
 		count = 0;
@@ -137,56 +137,56 @@ local function updateGroups()
 				printText = printText .. " ";
 			end
 			if (UnitIsConnected(player)) then -- add icons for 1st and 2nd soak and debuff & CHECK DEBUFF DOESNT TIME OUT NEXT 2s
-				if (EnRT_ContainsKey(debuffed, player)) then
+				if (IRT_ContainsKey(debuffed, player)) then
 					--spam icon over head
-					C_ChatInfo.SendAddonMessage("EnRT_HD", grp, "WHISPER", player);
+					C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
 					printText = printText .. "|c296d98FF\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t" .. playerShort .. "\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t|cFFFFFFFF";
-				elseif (not EnRT_UnitDebuff(player, spellIDs["Sap"]) and count < 2)then
-					C_ChatInfo.SendAddonMessage("EnRT_HD", grp, "WHISPER", player);
+				elseif (not IRT_UnitDebuff(player, spellIDs["Sap"]) and count < 2)then
+					C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
 					count = count + 1;
 					printText = printText .. "|cFF00FF00" .. playerShort .. "|cFFFFFFFF";
 				elseif (count == 2) then
-					if (EnRT_UnitDebuff(player, spellIDs["Sap"])) then
+					if (IRT_UnitDebuff(player, spellIDs["Sap"])) then
 						printText = printText .. "|cFFFF0000\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t|cFFFFFFFF";
 					else
 						printText = printText .. "|cFFFF0000" .. playerShort .. "|cFFFFFFFF";
 					end
-					C_ChatInfo.SendAddonMessage("EnRT_HD", "next " .. grp, "WHISPER", player);
+					C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
 				else
 					-- got debuff but count less than 2 atm
 					local lowestDebuff1 = 100000;
 					local lowestDebuff2 = 100000;
-					if (EnRT_UnitDebuff(player, spellIDs["Sap"])) then
-						local stacks = select(4, EnRT_UnitDebuff(player, spellIDs["Sap"]));
+					if (IRT_UnitDebuff(player, spellIDs["Sap"])) then
+						local stacks = select(4, IRT_UnitDebuff(player, spellIDs["Sap"]));
 						lowestDebuff1 = stacks;
 						lowestDebuff2 = stacks;
 						for idx, pl in pairs(raid[grp]) do
 							if (count == 0) then
-								if (select(4, EnRT_UnitDebuff(pl, spellIDs["Sap"]))) then
-									local nextStacks = select(4, EnRT_UnitDebuff(pl, spellIDs["Sap"]));
+								if (select(4, IRT_UnitDebuff(pl, spellIDs["Sap"]))) then
+									local nextStacks = select(4, IRT_UnitDebuff(pl, spellIDs["Sap"]));
 									if (nextStacks < lowestDebuff1) then
 										lowestDebuff1 = -1;
 										--1 better option palyer out of 2
 									elseif (nextStacks < lowestDebuff2) then
 										--2 better option player this player soaks later
 										printText = printText .. "|cFFFF0000(\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t)|cFFFFFFFF";
-										C_ChatInfo.SendAddonMessage("EnRT_HD", "next " .. grp, "WHISPER", player);
+										C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
 										break;
 									end
 								end
 							elseif (count == 1) then
-								if (select(4, EnRT_UnitDebuff(pl, spellIDs["Sap"]))) then
-									local nextStacks = select(4, EnRT_UnitDebuff(pl, spellIDs["Sap"]));
+								if (select(4, IRT_UnitDebuff(pl, spellIDs["Sap"]))) then
+									local nextStacks = select(4, IRT_UnitDebuff(pl, spellIDs["Sap"]));
 									if (nextStacks < lowestDebuff1) then
 										--better option player this player soaks later
 										printText = printText .. "|cFFFF0000\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t|cFFFFFFFF";
-										C_ChatInfo.SendAddonMessage("EnRT_HD", "next " .. grp, "WHISPER", player);
+										C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
 										break;
 									end
 								end
 							end
 							-- best option player soak now
-							C_ChatInfo.SendAddonMessage("EnRT_HD", grp, "WHISPER", player);
+							C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
 							printText = printText .. "|cFF00FF00\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t|cFFFFFFFF";
 							count = count + 1;
 						end
@@ -194,18 +194,18 @@ local function updateGroups()
 				end
 				--[[
 				previous version tested and works
-				if ((EnRT_UnitDebuff(player, spellIDs["Sap"]) and not EnRT_ContainsKey(debuffed, player)) or (count == 2 and not EnRT_ContainsKey(debuffed, player))) then
-					if (EnRT_UnitDebuff(player, spellIDs["Sap"])) then
+				if ((IRT_UnitDebuff(player, spellIDs["Sap"]) and not IRT_ContainsKey(debuffed, player)) or (count == 2 and not IRT_ContainsKey(debuffed, player))) then
+					if (IRT_UnitDebuff(player, spellIDs["Sap"])) then
 						printText = printText .. "|cFFFF0000(\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t)|cFFFFFFFF";
 					else
 						printText = printText .. "|cFFFF0000(" .. playerShort .. ")|cFFFFFFFF";
 					end
-					C_ChatInfo.SendAddonMessage("EnRT_HD", "soon " .. grp, "WHISPER", player);
-				elseif (EnRT_ContainsKey(debuffed, player)) then
-					C_ChatInfo.SendAddonMessage("EnRT_HD", grp, "WHISPER", player);
+					C_ChatInfo.SendAddonMessage("IRT_HD", "soon " .. grp, "WHISPER", player);
+				elseif (IRT_ContainsKey(debuffed, player)) then
+					C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
 					printText = printText .. "|c296d98FF\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t" .. playerShort .. "\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t|cFFFFFFFF";
 				else
-					C_ChatInfo.SendAddonMessage("EnRT_HD", grp, "WHISPER", player);
+					C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
 					count = count + 1;
 					printText = printText .. "|cFF00FF00" .. playerShort .. "|cFFFFFFFF";
 				end]]
@@ -232,29 +232,29 @@ local function playerNotification(mark, duration)
 			SendChatMessage(chatText, "YELL");
 		end
 	end, math.floor(duration/1.5)-1);
-	EnRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. " NOW " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
-	PlaySoundFile("Interface\\AddOns\\EndlessRaidTools\\Sound\\"..groupIcons[mark]..".ogg", "Master");
+	IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. " NOW " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
+	PlaySoundFile("Interface\\AddOns\\InfiniteRaidTools\\Sound\\"..groupIcons[mark]..".ogg", "Master");
 end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
-		if (EnRT_HungeringDestroyerEnabled == nil) then EnRT_HungeringDestroyerEnabled = true; end
-	elseif (event == "UNIT_AURA" and inEncounter and EnRT_HungeringDestroyerEnabled) then
+		if (IRT_HungeringDestroyerEnabled == nil) then IRT_HungeringDestroyerEnabled = true; end
+	elseif (event == "UNIT_AURA" and inEncounter and IRT_HungeringDestroyerEnabled) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
 		if (UnitIsUnit(unitName, playerName)) then
-			if (EnRT_UnitDebuff(unitName, spellIDs["Miasma"])) then
+			if (IRT_UnitDebuff(unitName, spellIDs["Miasma"])) then
 				hasDebuff = true;
 			elseif (hasDebuff) then
 				hasDebuff = false;
 			end
 		end
 		if (UnitIsUnit(leader, playerName)) then
-			if (EnRT_UnitDebuff(unit, spellIDs["Miasma"])) then
-				if (not EnRT_ContainsKey(debuffed, unitName)) then
+			if (IRT_UnitDebuff(unit, spellIDs["Miasma"])) then
+				if (not IRT_ContainsKey(debuffed, unitName)) then
 					for i = 1, 4 do
-						if (EnRT_Contains(raid[i], unitName)) then
-							debuffed[unitName] = EnRT_Contains(raid, unitName);
+						if (IRT_Contains(raid[i], unitName)) then
+							debuffed[unitName] = IRT_Contains(raid, unitName);
 							break;
 						end
 					end
@@ -264,34 +264,34 @@ f:SetScript("OnEvent", function(self, event, ...)
 					end
 				end
 			else
-				if (EnRT_ContainsKey(debuffed, unitName)) then
+				if (IRT_ContainsKey(debuffed, unitName)) then
 					debuffed[unitName] = nil;
 					SetRaidTarget(unitName, 0);
 					hasAssigned = false;
 				end
 			end
 		end
-	elseif (event == "CHAT_MSG_ADDON" and inEncounter and EnRT_HungeringDestroyerEnabled) then
+	elseif (event == "CHAT_MSG_ADDON" and inEncounter and IRT_HungeringDestroyerEnabled) then
 		local prefix, msg, channel, sender = ...;
-		if (prefix == "EnRT_HD") then
+		if (prefix == "IRT_HD") then
 			if (msg:match("next")) then
 				local text, mark = strsplit(" ", msg);
-				EnRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. ", |cFFFF0000DO NOT SOAK|cFFFFFFFF" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 8);
+				IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. ", |cFFFF0000DO NOT SOAK|cFFFFFFFF" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 8);
 			else
 				playerNotification(msg, 24);
 			end
 		end
-	elseif (event == "ENCOUNTER_START" and EnRT_HungeringDestroyerEnabled) then
+	elseif (event == "ENCOUNTER_START" and IRT_HungeringDestroyerEnabled) then
 		local eID = ...;
 		local difficulty = select(3, GetInstanceInfo());
 		if (eID == 2383 and difficulty == 16) then
 			inEncounter = true;
 			raid = {};
-			leader = EnRT_GetRaidLeader();
+			leader = IRT_GetRaidLeader();
 			hasDebuff = false;
 			initRaid();
 		end
-	elseif (event == "ENCOUNTER_END" and EnRT_HungeringDestroyerEnabled and inEncounter) then
+	elseif (event == "ENCOUNTER_END" and IRT_HungeringDestroyerEnabled and inEncounter) then
 		raid = {};
 		inEncounter = false;
 		debuffed = {};
@@ -345,7 +345,7 @@ function HD_Test(p1, p2, p3, p4)
 		for i = 1, 4 do
 			local rngGroup = math.random(1, 4);
 			local rngPlayer = math.random(1, 5);
-			while (EnRT_Contains(rngs, ((rngGroup-1)*5)+rngPlayer)) do
+			while (IRT_Contains(rngs, ((rngGroup-1)*5)+rngPlayer)) do
 				rngGroup = math.random(1, 4);
 				rngPlayer = math.random(1, 5);
 			end
@@ -399,7 +399,7 @@ function HD_Test2(p1, p2, p3, p4)
 		for i = 1, 4 do
 			local rngGroup = math.random(1, 4);
 			local rngPlayer = math.random(1, 5);
-			while (EnRT_Contains(rngs, ((rngGroup-1)*5)+rngPlayer)) do
+			while (IRT_Contains(rngs, ((rngGroup-1)*5)+rngPlayer)) do
 				rngGroup = math.random(1, 4);
 				rngPlayer = math.random(1, 5);
 			end

@@ -1,41 +1,41 @@
-local L = EnRTLocals;
+local L = IRTLocals;
 
-EnRT_Options = CreateFrame("Frame", "EnRT_OptionsFrame", InterefaceOptionsFramePanelContainer)
-EnRT_Options.name = "Endless Raid Tools"
-EnRT_Options:Hide()
+IRT_Options = CreateFrame("Frame", "IRT_OptionsFrame", InterefaceOptionsFramePanelContainer)
+IRT_Options.name = "Infinite Raid Tools"
+IRT_Options:Hide()
 
-local title = EnRT_Options:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+local title = IRT_Options:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 title:SetPoint("TOP", 0, -16)
 title:SetText(L.OPTIONS_TITLE)
 
-local author = EnRT_Options:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+local author = IRT_Options:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 author:SetPoint("TOPLEFT", 450, -20)
 author:SetText(L.OPTIONS_AUTHOR)
 
-local version = EnRT_Options:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+local version = IRT_Options:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 version:SetPoint("TOPLEFT", author, "BOTTOMLEFT", 0, -10)
 version:SetText(L.OPTIONS_VERSION)
 
-EnRT_Options:SetScript("OnShow", function(EnRT_OptionsFrame)
-	InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralModules);
-	InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralOptions)
+IRT_Options:SetScript("OnShow", function(IRT_OptionsFrame)
+	InterfaceOptionsFrame_OpenToCategory(IRT_GeneralModules);
+	InterfaceOptionsFrame_OpenToCategory(IRT_GeneralOptions)
 end);
 
-InterfaceOptions_AddCategory(EnRT_Options)
+InterfaceOptions_AddCategory(IRT_Options)
 
-EnRT_GeneralModules = CreateFrame("Frame", "EnRT_GeneralModulesFrame")
-EnRT_GeneralModules.name = "|cFFFFFF00General Modules|r"
-EnRT_GeneralModules.parent = "Endless Raid Tools"
-EnRT_GeneralModules:SetScript("OnShow", function(EnRT_GeneralModules)
-	InterfaceOptionsFrame_OpenToCategory(EnRT_GeneralOptions)
+IRT_GeneralModules = CreateFrame("Frame", "IRT_GeneralModulesFrame")
+IRT_GeneralModules.name = "|cFFFFFF00General Modules|r"
+IRT_GeneralModules.parent = "Infinite Raid Tools"
+IRT_GeneralModules:SetScript("OnShow", function(IRT_GeneralModules)
+	InterfaceOptionsFrame_OpenToCategory(IRT_GeneralOptions)
 end);
-InterfaceOptions_AddCategory(EnRT_GeneralModules)
+InterfaceOptions_AddCategory(IRT_GeneralModules)
 
 
-EnRT_CastleModules = CreateFrame("Frame", "EnRT_CastleModulesFrame")
-EnRT_CastleModules.name = "|cFFFFFF00Castle Nathria Modules|r"
-EnRT_CastleModules.parent = "Endless Raid Tools"
-EnRT_CastleModules:SetScript("OnShow", function(EnRT_CastleModules)
-	InterfaceOptionsFrame_OpenToCategory(EnRT_HuntsmanAltimorOptions);
+IRT_CastleModules = CreateFrame("Frame", "IRT_CastleModulesFrame")
+IRT_CastleModules.name = "|cFFFFFF00Castle Nathria Modules|r"
+IRT_CastleModules.parent = "Infinite Raid Tools"
+IRT_CastleModules:SetScript("OnShow", function(IRT_CastleModules)
+	InterfaceOptionsFrame_OpenToCategory(IRT_HuntsmanAltimorOptions);
 end);
-InterfaceOptions_AddCategory(EnRT_CastleModules)
+InterfaceOptions_AddCategory(IRT_CastleModules)
