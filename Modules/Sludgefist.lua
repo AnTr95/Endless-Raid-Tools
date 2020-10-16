@@ -84,7 +84,10 @@ local function printAssignments()
 	table.sort(sortedTable, compare);
 	for i, data in pairs(sortedTable) do
 		local mark = data[2];
-		local pl = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(data[1]))].colorStr, Ambiguate(data[1], "short"));
+		local pl = Ambiguate(data[1], "short");
+		if (UnitIsConnected(pl)) then
+			pl = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pl))].colorStr, pl);
+		end
 		if (i%2 == 1) then
 			printText = printText .. "\n\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_".. mark .. ":12\124t";
 		end

@@ -130,7 +130,10 @@ local function updateGroups()
 		count = 0;
 		printText = printText .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. grp .. ":12\124t";
 		for index, player in pairs(raid[grp]) do
-			local playerShort = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(player))].colorStr, Ambiguate(player, "short"));
+			local playerShort = Ambiguate(player, "short");
+			if (UnitIsConnected(player)) then
+				playerShort = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(playerShort))].colorStr, playerShort);
+			end
 			if (index > 1) then
 				printText = printText .. ", ";
 			else
