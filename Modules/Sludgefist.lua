@@ -93,7 +93,7 @@ local function printAssignments()
 	print(printText);
 end
 
-function playerNotification(mark, duration)
+local function playerNotification(mark, duration)
 	local chatText = "{rt" .. mark .. "}";
 	IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
 	SendChatMessage(chatText, "YELL");

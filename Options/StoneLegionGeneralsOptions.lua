@@ -97,9 +97,10 @@ infoTexture3:SetSize(256, 37);
 infoTexture3:SetTexCoord(0,1,0,0.7);
 
 local previewText = IRT_StoneLegionGeneralsOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
-previewText:SetPoint("TOP", infoTexture, "TOP", 140, 50);
+previewText:SetPoint("TOP", enabledButton, "TOP", 225, -24);
 previewText:SetText(L.OPTIONS_STONELEGIONGENERALS_PREVIEW);
 previewText:SetJustifyH("CENTER");
+previewText:SetJustifyV("TOP");
 previewText:SetSize(570,45);
 previewText:SetWordWrap(true);
 

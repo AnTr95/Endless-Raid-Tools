@@ -42,7 +42,7 @@ Modules\ConsumableCheck.lua
 Options\ConsumableCheckOptions.lua
 Modules\huntsmanlogic.lua
 Options\HuntsmanAltimorOptions.lua
-Modules\HungeringDestroyer2.lua
+Modules\HungeringDestroyer3.lua
 Options\HungeringDestroyerOptions.lua
 Modules\LadyInervaDarkvein.lua
 Options\LadyInervaDarkveinOptions.lua

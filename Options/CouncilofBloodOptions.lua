@@ -104,20 +104,29 @@ dfEnabledText:SetText(L.OPTIONS_COUNCILOFBLOOD_DF);
 
 local dmInfoTexture = IRT_CouncilofBloodOptions:CreateTexture(nil, "BACKGROUND");
 dmInfoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\tcobdm.tga");
-dmInfoTexture:SetPoint("TOPLEFT", dfEnabledButton, "TOPLEFT", -30, -50);
+dmInfoTexture:SetPoint("TOPLEFT", dfEnabledButton, "TOPLEFT", -30, -55);
 dmInfoTexture:SetSize(256, 128);
 dmInfoTexture:SetTexCoord(0,0.95,0.1,1);
-
-local previewText = IRT_CouncilofBloodOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
-previewText:SetPoint("TOP", dmInfoTexture, "TOP", 150, 20);
-previewText:SetText(L.OPTIONS_COUNCILOFBLOOD_PREVIEW);
-previewText:SetJustifyH("CENTER");
 
 local dfInfoTexture = IRT_CouncilofBloodOptions:CreateTexture(nil, "BACKGROUND");
 dfInfoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\tcobdf.tga");
 dfInfoTexture:SetPoint("TOPLEFT", dmInfoTexture, "TOPLEFT", 290, -5);
 dfInfoTexture:SetSize(256, 37);
 dfInfoTexture:SetTexCoord(0,1,0,0.7);
+
+local dfYellTexture = IRT_CouncilofBloodOptions:CreateTexture(nil, "BACKGROUND");
+dfYellTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\tcobdfyell.tga");
+dfYellTexture:SetPoint("TOPLEFT", dfInfoTexture, "TOP", 0, -40);
+dfYellTexture:SetSize(52, 94);
+dfYellTexture:SetTexCoord(0,0.81,0,0.73);
+
+local previewText = IRT_CouncilofBloodOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+previewText:SetPoint("TOP", dfEnabledButton, "TOP", 225, -24);
+previewText:SetText(L.OPTIONS_COUNCILOFBLOOD_PREVIEW);
+previewText:SetJustifyH("CENTER");
+previewText:SetJustifyV("TOP");
+previewText:SetSize(570,25);
+previewText:SetWordWrap(true);
 
 IRT_CouncilofBloodOptions:SetScript("OnShow", function(self)
 	dmEnabledButton:SetChecked(IRT_TCOBDMEnabled);

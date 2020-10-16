@@ -218,11 +218,14 @@ local function updateGroups()
 	print(printText);
 end
 
-local function playerNotification(mark, duration)
+function playerNotification(mark, duration)
 	local chatText = "{rt" .. mark .. "}";
-	if (hasDebuff) then
+	if (not hasDebuff) then
 		chatText = chatText .. " DEBUFFED " .. "{rt" .. mark .. "}";
 		duration = 24;
+		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
+	else
+		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. " NOW " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
 	end
 	SendChatMessage(chatText, "YELL");
 	local ticker = C_Timer.NewTicker(1.5, function()
@@ -232,7 +235,6 @@ local function playerNotification(mark, duration)
 			SendChatMessage(chatText, "YELL");
 		end
 	end, math.floor(duration/1.5)-1);
-	IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. " NOW " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
 	PlaySoundFile("Interface\\AddOns\\InfiniteRaidTools\\Sound\\"..groupIcons[mark]..".ogg", "Master");
 end
 
