@@ -10,8 +10,7 @@
 ## SavedVariables: IRT_HungeringDestroyerEnabled
 ## SavedVariables: IRT_LadyInervaDarkveinEnabled
 ## SavedVariables: IRT_HuntsmanAltimorEnabled
-## SavedVariables: IRT_TCOBDMEnabled
-## SavedVariables: IRT_TCOBDFEnabled
+## SavedVariables: IRT_TheCouncilOfBloodEnabled
 ## SavedVariablesPerCharacter: IRT_StoneLegionGeneralsEnabled
 ## SavedVariablesPerCharacter: IRT_PopupTextPosition
 ## SavedVariablesPerCharacter: IRT_BonusRollCurrentRaid

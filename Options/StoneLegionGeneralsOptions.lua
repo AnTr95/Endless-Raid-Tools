@@ -91,7 +91,7 @@ infoTexture2:SetSize(188, 96);
 infoTexture2:SetTexCoord(0,0.73,0,0.74);
 
 local infoTexture3 = IRT_StoneLegionGeneralsOptions:CreateTexture(nil, "BACKGROUND");
-infoTexture3:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\tcobdf.tga");
+infoTexture3:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\Dispel.tga");
 infoTexture3:SetPoint("BOTTOMLEFT", infoTexture2, "BOTTOMLEFT", 0, -50);
 infoTexture3:SetSize(256, 37);
 infoTexture3:SetTexCoord(0,1,0,0.7);
