@@ -125,7 +125,7 @@ vcText:SetPoint("TOPLEFT", generalText, "TOPLEFT", 0, -70);
 
 local vcButton = CreateFrame("Button", "IRT_VCButton", IRT_GeneralOptions, "UIPanelButtonTemplate");
 vcButton:SetSize(150, 35);
-vcButton:SetPoint("TOPLEFT", vcText, "TOPLEFT", 190, 15);
+vcButton:SetPoint("TOPLEFT", vcText, "TOPLEFT", 160, 15);
 vcButton:SetText(L.OPTIONS_VERSIONCHECK_BUTTON_TEXT);
 vcButton:HookScript("OnClick", function(self)
 	C_ChatInfo.SendAddonMessage("IRT_VC", "vc", "RAID");

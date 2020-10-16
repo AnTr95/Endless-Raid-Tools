@@ -30,6 +30,7 @@ local bossLex = {
 		[8] = "Sludgefist",
 		[9] = "Stone Legion Generals",
 		[10] = "Sire Denathrius",
+		[11] = "No boss",
 	},
 };
 
