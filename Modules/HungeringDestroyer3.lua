@@ -218,11 +218,10 @@ local function updateGroups()
 	print(printText);
 end
 
-function playerNotification(mark, duration)
+local function playerNotification(mark, duration)
 	local chatText = "{rt" .. mark .. "}";
-	if (not hasDebuff) then
+	if (hasDebuff) then
 		chatText = chatText .. " DEBUFFED " .. "{rt" .. mark .. "}";
-		duration = 24;
 		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
 	else
 		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. " NOW " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
