@@ -39,13 +39,13 @@ Modules\ReadyCheck.lua
 Options\ReadyCheckOptions.lua
 Modules\ConsumableCheck.lua
 Options\ConsumableCheckOptions.lua
-Modules\huntsmanlogic.lua
+Modules\HuntsmanAltimor.lua
 Options\HuntsmanAltimorOptions.lua
-Modules\HungeringDestroyer3.lua
+Modules\HungeringDestroyer.lua
 Options\HungeringDestroyerOptions.lua
 Modules\LadyInervaDarkvein.lua
 Options\LadyInervaDarkveinOptions.lua
-Modules\CouncilofBlood2.lua
+Modules\CouncilofBlood.lua
 Options\CouncilofBloodOptions.lua
 Modules\Sludgefist.lua
 Options\SludgefistOptions.lua

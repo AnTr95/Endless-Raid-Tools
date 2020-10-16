@@ -1,9 +1,15 @@
 local f = CreateFrame("Frame");
 local inEncounter = false;
-local leader = "";
 local playerName = GetUnitName("player");
-local traceKey = false;
-local hooked = false;
+local isGlowing = false;
+--local timer = nil;
+local text = nil;
+local ticks = 0;
+local debuffed = false;
+local safe = true;
+local nearby = {};
+
+local dfID = GetSpellInfo(342859);
 
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("ENCOUNTER_START");
@@ -13,152 +19,139 @@ f:RegisterEvent("CHAT_MSG_ADDON");
 
 C_ChatInfo.RegisterAddonMessagePrefix("IRT_TCOB");
 
+local function onUpdate(self, elapsed)
+	if (debuffed and IRT_TheCouncilOfBloodEnabled and inEncounter) then
+		ticks = ticks + elapsed;
+		if (ticks > 0.05) then
+			safe = true;
+			for i = 1, GetNumGroupMembers() do
+				local raider = "raid"..i;
+				local name = GetUnitName(raider, true);
+				if (UnitIsVisible(raider) and not UnitIsUnit(playerName, name) and not UnitIsDead(raider)) then
+					if (IsItemInRange(63427, raider) and not IRT_Contains(nearby, name)) then --Duel range 10y
+						safe = false;
+						nearby[#nearby+1] = name;
+					elseif (IsItemInRange(63427, raider)) then
+						safe = false;
+					elseif (not IsItemInRange(63427, raider) and IRT_Contains(nearby, name)) then
+						nearby[IRT_Contains(nearby, name)] = nil;
+					end
+				end
+			end
+			if (safe and IRT_UnitDebuff(playerName, dfID)) then
+				if (text == nil) then
+					text = "SAFE - " .. math.ceil(debuffed-GetTime()) .. "s";
+					SendChatMessage(text, "YELL");
+				elseif (text:match("NOT")) then
+					text = "SAFE - " .. math.ceil(debuffed-GetTime()) .. "s";
+					SendChatMessage(text, "YELL");
+				end
+				C_ChatInfo.SendAddonMessage("IRT_TCOB", "SHOW", "RAID");
+			elseif (not safe and IRT_UnitDebuff(playerName, dfID)) then
+				if (text == nil) then
+					text = "NOT SAFE - " .. math.ceil(debuffed-GetTime()) .. "s";
+					SendChatMessage(text, "YELL");
+				elseif (not text:match("NOT")) then
+					text = "NOT SAFE - " .. math.ceil(debuffed-GetTime()) .. "s";
+					SendChatMessage(text, "YELL");
+				end
+				C_ChatInfo.SendAddonMessage("IRT_TCOB", "HIDE", "RAID");
+			end
+			--[[
+			if (timer == nil) then
+				timer = C_Timer.NewTicker(2, function()
+					if(safe) then
+						text = "SAFE - " .. math.ceil(debuffed-GetTime());
+					else
+						text = "NOT SAFE - " .. math.ceil(debuffed-GetTime());
+					end
+					SendChatMessage(text, "YELL");
+				end, 2);
+			end]]
+			ticks = 0;
+		end
+	end
+end
+
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then 
-		if (IRT_CouncilofBloodEnabled == nil) then IRT_CouncilofBloodEnabled = true; end
-	elseif (event == "UNIT_AURA" and IRT_CouncilofBloodEnabled and inEncounter) then
+		if (IRT_TheCouncilOfBloodEnabled == nil) then IRT_TheCouncilOfBloodEnabled = true; end
+	elseif (event == "UNIT_AURA" and inEncounter and IRT_TheCouncilOfBloodEnabled) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
 		if (UnitIsUnit(unitName, playerName)) then
-			if (IRT_UnitDebuff(unit, GetSpellInfo(328495)) and not traceKey and not IRT_UnitDebuff(unit, GetSpellInfo(330848))) then
-				traceKey = true;
-			elseif ((not IRT_UnitDebuff(unit, GetSpellInfo(328495)) and traceKey) or (IRT_UnitDebuff(unit, GetSpellInfo(330848)) and traceKey)) then
-				if (traceKey) then
-					traceKey = false;
-					if (IsAddOnLoaded("Bartender4") and _G["BT4Button1"]) then
-						for i = 1, 4 do
-							ActionButton_HideOverlayGlow(_G["BT4Button"..i]);
-						end
-					elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton1"]) then
-						for i = 1, 4 do
-							ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..i]);
-						end
-					elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button1"]) then
-						for i = 1, 4 do
-							ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..i]);
-						end
-					else
-						for i = 1, 4 do
-							ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..i]);
-						end
-					end
+			if (IRT_UnitDebuff(unit, dfID) and not debuffed) then -- unknown spellid Dancing Fever
+				debuffed = math.floor(GetTime())+5;
+				nearby = {};
+				f:SetScript("OnUpdate", onUpdate);
+			elseif (not IRT_UnitDebuff(unit, dfID) and debuffed) then
+				debuffed = false;
+				nearby = {};
+				if (timer) then
+					timer:Cancel();
 				end
+				--timer = nil;
+				text = nil;
+				f:SetScript("OnUpdate", nil);
+				C_ChatInfo.SendAddonMessage("IRT_TCOB", "HIDE", "RAID");
 			end
 		end
-	elseif (event == "CHAT_MSG_ADDON" and IRT_CouncilofBloodEnabled and inEncounter) then
+	--[[
+	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and IRT_TCOBDMEnabled and inEncounter) then
+		local unit, _, spellID = ...;
+		if (not UnitInRaid(unit) and (spellID == 328595 or spellID == 328591 or spellID == 328592 or spellID == 328596)) then
+			if (spellID == 328595 and not isGlowing) then
+				glowButton(1);
+			elseif (spellID == 328591 and not isGlowing) then
+				glowButton(2);
+			elseif (spellID == 328592 and not isGlowing) then
+				glowButton(3);
+			elseif (spellID == 328596 and not isGlowing) then
+				glowButton(4);
+			end
+		end]]
+	elseif (event == "CHAT_MSG_ADDON" and IRT_TheCouncilOfBloodEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
-		if (prefix == "IRT_TCOB" and traceKey) then
-			msg = msg:sub(strlen(msg));
-			if (tonumber(msg)) then
-				msg = tonumber(msg);
-				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..msg]) then
-					for i = 1, 4 do
-						ActionButton_HideOverlayGlow(_G["BT4Button"..i]);
+		sender = Ambiguate(sender, "short");
+		if (prefix == "IRT_TCOB") then
+			local class = select(2, UnitClass(sender));
+			if (class == "MONK" or class == "PALADIN" or class == "PRIEST") then
+				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, sender);
+				if (msg == "SHOW" and not UnitIsUnit(playerName, sender)) then
+					if (not IRT_PopupIsShown()) then
+						IRT_PopupShow("|cFF00FF00DISPEL|r " .. name, 500);
+					elseif (IRT_PopupIsShown() and IRT_PopupGetText():match("DISPEL") and not IRT_PopupGetText():match(sender)) then
+						local getText = IRT_PopupGetText();
+						IRT_PopupHide();
+						IRT_PopupShow(getText .. " AND " .. name, 500);
 					end
-				elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..msg]) then
-					for i = 1, 4 do
-						ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..i]);
+				elseif (msg == "HIDE" and IRT_PopupIsShown() and IRT_PopupGetText():match(sender)) then
+					if (IRT_PopupIsShown() and IRT_PopupGetText():match("DISPEL")) then
+						IRT_PopupHide();
 					end
-				elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..msg]) then
-					for i = 1, 4 do
-						ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..i]);
-					end
-				else
-					for i = 1, 4 do
-						ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..i]);
-					end
-				end
-				if (IsAddOnLoaded("Bartender4") and _G["BT4Button"..msg]) then
-					ActionButton_ShowOverlayGlow(_G["BT4Button"..msg]);
-				elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton"..msg]) then
-					ActionButton_ShowOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..msg]);
-				elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button"..msg]) then
-					ActionButton_ShowOverlayGlow(_G["ElvUI_Bar1Button"..msg]);
-				else
-					ActionButton_ShowOverlayGlow(_G["OverrideActionBarButton"..msg]);
 				end
 			end
 		end
-	elseif (event == "ENCOUNTER_START" and IRT_CouncilofBloodEnabled) then
+	elseif (event == "ENCOUNTER_START" and IRT_TheCouncilOfBloodEnabled) then
 		local eID = ...;
 		if (eID == 2412) then
 			inEncounter = true;
-			traceKey = false;
-			leader = IRT_GetRaidLeader();
-			if (UnitIsUnit(leader, playerName) and hooked == false) then
-				hooked = true;
-				if (IsAddOnLoaded("Bartender4") and _G["BT4Button1"]) then
-					for i = 1, 4 do
-						_G["BT4Button"..i]:HookScript("OnClick", function(self)
-							if (traceKey) then
-								C_ChatInfo.SendAddonMessage("IRT_TCOB", self:GetName(), "RAID");
-							end
-						end);
-					end
-				elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton1"]) then
-					for i = 1, 4 do
-						_G["ElvUISLEEnhancedVehicleBarButton"..i]:HookScript("OnClick", function(self)
-							if (traceKey) then
-								C_ChatInfo.SendAddonMessage("IRT_TCOB", self:GetName(), "RAID");
-							end
-						end);
-					end
-				elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button1"]) then
-					for i = 1, 4 do
-						_G["ElvUI_Bar1Button"..i]:HookScript("OnClick", function(self)
-							if (traceKey) then
-								C_ChatInfo.SendAddonMessage("IRT_TCOB", self:GetName(), "RAID");
-							end
-						end);
-					end
-				else
-					for i = 1, 4 do
-						_G["OverrideActionBarButton"..i]:HookScript("OnClick", function(self)
-							if (traceKey) then
-								C_ChatInfo.SendAddonMessage("IRT_TCOB", self:GetName(), "RAID");
-							end
-						end);
-					end
-				end
-			elseif (hooked == false) then
-				hooked = true;
-				if (IsAddOnLoaded("Bartender4") and _G["BT4Button1"]) then
-					for i = 1, 4 do
-						_G["BT4Button"..i]:HookScript("OnClick", function(self)
-							if (traceKey) then
-								ActionButton_HideOverlayGlow(_G["BT4Button"..i]);
-							end
-						end);
-					end
-				elseif (IsAddOnLoaded("ElvUI_SLE") and _G["ElvUISLEEnhancedVehicleBarButton1"]) then
-					for i = 1, 4 do
-						_G["ElvUISLEEnhancedVehicleBarButton"..i]:HookScript("OnClick", function(self)
-							if (traceKey) then
-								ActionButton_HideOverlayGlow(_G["ElvUISLEEnhancedVehicleBarButton"..i]);
-							end
-						end);
-					end
-				elseif (IsAddOnLoaded("ElvUI") and _G["ElvUI_Bar1Button1"]) then
-					for i = 1, 4 do
-						_G["ElvUI_Bar1Button"..i]:HookScript("OnClick", function(self)
-							if (traceKey) then
-								ActionButton_HideOverlayGlow(_G["ElvUI_Bar1Button"..i]);
-							end
-						end);
-					end
-				else
-					for i = 1, 4 do
-						_G["OverrideActionBarButton"..i]:HookScript("OnClick", function(self)
-							if (traceKey) then
-								ActionButton_HideOverlayGlow(_G["OverrideActionBarButton"..i]);
-							end
-						end);
-					end
-				end
-			end
+			isGlowing = false;
+			--timer = nil;
+			debuffed = false;
+			nearby = {};
+			ticks = 0;
+			text = nil;
+			f:SetScript("OnUpdate", nil);
 		end
-	elseif (event == "ENCOUNTER_END" and IRT_CouncilofBloodEnabled and inEncounter) then
+	elseif (event == "ENCOUNTER_END" and inEncounter and IRT_TheCouncilOfBloodEnabled) then
 		inEncounter = false;
-		traceKey = false;
+		isGlowing = false;
+		--timer = nil;
+		debuffed = false;
+		nearby = {};
+		ticks = 0;
+		text = nil;
+		f:SetScript("OnUpdate", nil);
 	end
 end);
