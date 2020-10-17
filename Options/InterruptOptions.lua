@@ -114,7 +114,7 @@ local function createRow()
 	local row = #GUI+1;
 	GUI[row] = {};
 	local orderEdit = CreateFrame("EditBox", nil, IRT_InterruptOptions, "InputBoxTemplate");
-	orderEdit:SetPoint("TOPLEFT", orderText, "TOPLEFT", 0, -2-((row-1)*40));
+	orderEdit:SetPoint("TOPLEFT", orderText, "TOPLEFT", 0, -2-((row-1)*30));
 	orderEdit:SetAutoFocus(false);
 	orderEdit:SetSize(250, 45);
 	orderEdit:SetText("");
@@ -137,7 +137,7 @@ local function createRow()
 	GUI[row].orderEdit = orderEdit;
 
 	local dropDown = CreateFrame("FRAME", "IRT_Interrupt_Dropdown" .. row, IRT_InterruptOptions, "UIDropDownMenuTemplate");
-	dropDown:SetPoint("TOPLEFT", orderText, "TOPLEFT", 270, -12-((row-1)*40));
+	dropDown:SetPoint("TOPLEFT", orderText, "TOPLEFT", 270, -12-((row-1)*30));
 
 	local function dropDown_OnClick (self, bossName, bossID, checked)
 		IRT_NextInterrupt[row].bossID = bossID;
@@ -191,7 +191,7 @@ end
 local showButtonRemove = CreateFrame("Button", "IRT_RemoveButton", IRT_InterruptOptions, "UIPanelButtonTemplate");
 showButtonRemove:SetText("-");
 showButtonRemove:SetSize(30, 25);
-showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -2);
+showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -10);
 showButtonRemove:HookScript("OnClick", function(self)
 	if (#IRT_NextInterrupt > 1) then
 		GUI[#IRT_NextInterrupt].dropDown:Hide();
@@ -199,20 +199,20 @@ showButtonRemove:HookScript("OnClick", function(self)
 		GUI[#IRT_NextInterrupt] = nil;  
 		IRT_NextInterrupt[#IRT_NextInterrupt] = nil;
 	end
-	showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -2-(#IRT_NextInterrupt*40));
-	IRT_AddButton:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -2-(#IRT_NextInterrupt*40));
+	showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -10-(#IRT_NextInterrupt*30));
+	IRT_AddButton:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -10-(#IRT_NextInterrupt*30));
 end)
 
 local showButtonAdd = CreateFrame("Button", "IRT_AddButton", IRT_InterruptOptions, "UIPanelButtonTemplate")
 showButtonAdd:SetText("+");
 showButtonAdd:SetSize(30, 25);
-showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -2);
+showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -6);
 showButtonAdd:HookScript("OnClick", function(self)
-	if (#IRT_NextInterrupt < 8) then
+	if (#IRT_NextInterrupt < 10) then
 		IRT_NextInterrupt[#IRT_NextInterrupt+1] = {bossID=1};
 		createRow();
-		showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -2-(#IRT_NextInterrupt*40));
-		showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -2-(#IRT_NextInterrupt*40));
+		showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -10-(#IRT_NextInterrupt*30));
+		showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -10-(#IRT_NextInterrupt*30));
 	end
 end);
 
@@ -233,8 +233,8 @@ IRT_InterruptOptions:SetScript("OnShow", function(self)
 			end
 		end
 	end
-	showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -2-(#IRT_NextInterrupt*40));
-	showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -2-(#IRT_NextInterrupt*40));
+	showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -10-(#IRT_NextInterrupt*30));
+	showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -10-(#IRT_NextInterrupt*30));
 	enabledButton:SetChecked(IRT_InterruptEnabled);
 end)
 
