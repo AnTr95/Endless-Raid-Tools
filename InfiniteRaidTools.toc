@@ -11,9 +11,7 @@
 ## SavedVariables: IRT_LadyInervaDarkveinEnabled
 ## SavedVariables: IRT_HuntsmanAltimorEnabled
 ## SavedVariables: IRT_TheCouncilOfBloodEnabled
-## SavedVariablesPerCharacter: IRT_StoneLegionGeneralsEnabled
 ## SavedVariablesPerCharacter: IRT_PopupTextPosition
-## SavedVariablesPerCharacter: IRT_BonusRollCurrentRaid
 ## SavedVariablesPerCharacter: IRT_ConsumableCheckEnabled
 ## SavedVariablesPerCharacter: IRT_CalendarNotificationEnabled
 ## SavedVariablesPerCharacter: IRT_ReadyCheckEnabled
@@ -21,6 +19,9 @@
 ## SavedVariablesPerCharacter: IRT_MinimapMode
 ## SavedVariablesPerCharacter: IRT_MinimapDegree
 ## SavedVariablesPerCharacter: IRT_InfoBoxPosition
+## SavedVariablesPerCharacter: IRT_AutoKitPosition
+## SavedVariablesPerCharacter: IRT_AutoOilPosition
+## SavedVariablesPerCharacter: IRT_StoneLegionGeneralsEnabled
 ## SavedVariablesPerCharacter: IRT_HuntsmanAltimorPlayersPerLine
 Localization\Localization.enUS.lua
 Core.lua
@@ -30,15 +31,15 @@ Options\Minimap.lua
 Popup.lua
 InfoBox.lua
 Modules\Interrupts.lua
-Modules\Innervate.lua
-Modules\CalendarNotification.lua
-Options\CalendarNotificationOptions.lua
-Options\InnervateOptions.lua
 Options\InterruptOptions.lua
-Modules\ReadyCheck.lua
-Options\ReadyCheckOptions.lua
 Modules\ConsumableCheck.lua
 Options\ConsumableCheckOptions.lua
+Modules\ReadyCheck.lua
+Options\ReadyCheckOptions.lua
+Modules\Innervate.lua
+Options\InnervateOptions.lua
+Modules\CalendarNotification.lua
+Options\CalendarNotificationOptions.lua
 Modules\HuntsmanAltimor.lua
 Options\HuntsmanAltimorOptions.lua
 Modules\HungeringDestroyer.lua

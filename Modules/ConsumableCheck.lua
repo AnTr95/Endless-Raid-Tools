@@ -92,14 +92,17 @@ local CROSS = "\124TInterface\\addons\\InfiniteRaidTools\\Res\\cross:16\124t";
 local CHECK = "\124TInterface\\addons\\InfiniteRaidTools\\Res\\check:16\124t";
 local rcSender = "";
 local raiders = {};
-
+local lastZone = "";
 local armorKitSlots = {"ChestSlot", "LegsSlot", "HandsSlot", "FeetSlot"};
+local playerName = UnitName("player");
+
 local armorKitTimers = {
 	["ChestSlot"] = 0,
 	["LegsSlot"] = 0,
 	["HandsSlot"] = 0,
 	["FeetSlot"] = 0,
 };
+
 local armorKitSlotSimple = {
 	["ChestSlot"] = "Chest",
 	["LegsSlot"] = "Legs",
@@ -130,16 +133,35 @@ local buffSpellIDs = {
 	["PRIEST"] = 21562, 
 	["WARRIOR"] = 6673,
 };
+
 local buffIconIDs = {
 	["MAGE"] = 135932, 
 	["PRIEST"] = 135987, 
 	["WARRIOR"] = 132333,
 };
 
+local instances = {
+	["De Other Side"] = "Dungeon",
+	["Halls of Atonement"] = "Dungeon",
+	["Mist of Tirna Scithe"] = "Dungeon",
+	["Plaguefall"] = "Dungeon",
+	["Sanguine Depths"] = "Dungeon",
+	["Spire of Ascension"] = "Dungeon",
+	["The Necrotic Wake"] = "Dungeon",
+	["Theater of Pain"] = "Dungeon",
+	["Castle Nathria"] = "Raid",
+};
+
+f:RegisterEvent("PLAYER_LOGIN");
+f:RegisterEvent("READY_CHECK");
+f:RegisterEvent("UNIT_AURA");
+f:RegisterEvent("UNIT_INVENTORY_CHANGED");
+f:RegisterEvent("ZONE_CHANGED_NEW_AREA");
+
 local currentKitIndex = 1;
 local autoKit = CreateFrame("Button", "IRT_AutoKitButton", nil, "SecureActionButtonTemplate");
 autoKit:ClearAllPoints();
-autoKit:RegisterForClicks("RightButtonUp", "LeftButtonUp");
+autoKit:RegisterForClicks("RightButtonUp", "LeftButtonUp", "MiddleButtonUp");
 autoKit:SetNormalTexture("Interface\\Icons\\inv_leatherworking_armorpatch_heavy");
 
 autoKit:SetAttribute("type", "macro"); 
@@ -152,6 +174,9 @@ autoKit:SetAttribute("ctrl-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 8\n
 autoKit:SetSize(25,25);
 autoKit:SetPoint("RIGHT", ReadyCheckFrame, "RIGHT", 40, 15);
 autoKit:SetFrameStrata("FULLSCREEN");
+autoKit:SetClampedToScreen(true);
+autoKit:SetMovable(true);
+autoKit:RegisterForDrag("LeftButton");
 local autoKitCooldown = CreateFrame("Cooldown", "IRT_AutoKitCooldown", autoKit, "CooldownFrameTemplate")
 autoKitCooldown:SetAllPoints();
 autoKit:Hide();
@@ -160,25 +185,20 @@ autoKit:SetScript("OnLeave", function(self)
 	GameTooltip:Hide();
 end);
 
-autoKit:HookScript("OnClick", function()
-	autoKit:SetAttribute("shift-macrotext1", "/Use Heavy Desolate Armor Kit\n/use 5\n/click StaticPopup1Button1"); 
-	autoKit:SetAttribute("ctrl-macrotext1", "/Use Heavy Desolate Armor Kit\n/use 10\n/click StaticPopup1Button1"); 
-	autoKit:SetAttribute("shift-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 7\n/click StaticPopup1Button1"); 
-	autoKit:SetAttribute("ctrl-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 8\n/click StaticPopup1Button1"); 
-	if (not UnitCastingInfo("player") and select(1, GetItemCooldown(172347) == 0)) then
-		autoKitCooldown:SetCooldown(GetTime()+1.5, 1);
-		currentKitIndex = currentKitIndex + 1;
-		if (currentKitIndex == 1 or currentKitIndex == 5) then
-			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 5\n/click StaticPopup1Button1"); 
-			currentKitIndex = 1;
-		elseif (currentKitIndex == 2) then
-			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 10\n/click StaticPopup1Button1"); 
-		elseif (currentKitIndex == 3) then
-			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 7\n/click StaticPopup1Button1"); 
-		elseif (currentKitIndex == 4) then 
-			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 8\n/click StaticPopup1Button1"); 
-		end
+autoKit:SetScript("OnDragStart", function(self)
+	if (IsAltKeyDown() and IsControlKeyDown()) then
+		self:StartMoving();
 	end
+end);
+autoKit:SetScript("OnDragStop", function(self)
+	local point, relativeTo, relativePoint, xOffset, yOffset = self:GetPoint(1);
+	IRT_AutoKitPosition = {};
+	IRT_AutoKitPosition.point = point;
+	IRT_AutoKitPosition.relativeTo = relativeTo;
+	IRT_AutoKitPosition.relativePoint = relativePoint;
+	IRT_AutoKitPosition.xOffset = xOffset;
+	IRT_AutoKitPosition.yOffset = yOffset;
+	self:StopMovingOrSizing();
 end);
 
 local offhand = GetInventoryItemID("player", GetInventorySlotInfo("SecondaryHandSlot"));
@@ -191,7 +211,7 @@ end
 
 local autoOil = CreateFrame("Button", "IRT_AutoOilButton", nil, "SecureActionButtonTemplate");
 autoOil:ClearAllPoints();
-autoOil:RegisterForClicks("RightButtonUp", "LeftButtonUp");
+autoOil:RegisterForClicks("RightButtonUp", "LeftButtonUp", "MiddleButtonUp");
 autoOil:SetNormalTexture("Interface\\Icons\\inv_misc_potionseta");
 
 autoOil:SetAttribute("type", "macro"); 
@@ -203,10 +223,29 @@ autoOil:SetAttribute("macrotext2", "/Use Shadowcore Oil\n/use 17\n/click StaticP
 autoOil:SetAttribute("shift-macrotext2", "/Use Embalmer's Oil\n/use 17\n/click StaticPopup1Button1"); 
 autoOil:SetAttribute("ctrl-macrotext2", "/Use Shaded Sharpening Stone\n/use 17\n/click StaticPopup1Button1"); 
 autoOil:SetAttribute("alt-macrotext2", "/Use Shaded Weightstone\n/use 17\n/click StaticPopup1Button1"); 
+autoOil:SetAttribute("alt-ctrl-shiftmacrotext", "/run autoOil:Hide(); autoKit:Hide();");
 
 autoOil:SetSize(25,25);
-autoOil:SetPoint("TOPLEFT", autoKit, "TOPLEFT", 0, -30);
+autoOil:SetPoint("RIGHT", ReadyCheckFrame, "RIGHT", 40, -15);
 autoOil:SetFrameStrata("FULLSCREEN");
+autoOil:SetClampedToScreen(true);
+autoOil:SetMovable(true);
+autoOil:RegisterForDrag("LeftButton");
+autoOil:SetScript("OnDragStart", function(self)
+	if (IsAltKeyDown() and IsControlKeyDown()) then
+		self:StartMoving();
+	end
+end);
+autoOil:SetScript("OnDragStop", function(self)
+	local point, relativeTo, relativePoint, xOffset, yOffset = self:GetPoint(1);
+	IRT_AutoOilPosition = {};
+	IRT_AutoOilPosition.point = point;
+	IRT_AutoOilPosition.relativeTo = relativeTo;
+	IRT_AutoOilPosition.relativePoint = relativePoint;
+	IRT_AutoOilPosition.xOffset = xOffset;
+	IRT_AutoOilPosition.yOffset = yOffset;
+	self:StopMovingOrSizing();
+end);
 
 autoOil:Hide();
 autoOil:SetScript("OnLeave", function(self)
@@ -273,6 +312,7 @@ local function armorKit()
 								shortest = 61;
 							end
 						end
+						break;
 						--[[
 						for number in text:gmatch("(%d+)") do
 							if (tonumber(number) ~= 48) then
@@ -325,6 +365,7 @@ local function armorKit()
 		else
 			tooltipText = tooltipText .. "\n" .. "Main Hand" .. ": " .. oilTimers["Main Hand"];
 		end
+		tooltipText = tooltipText .. "\n|cFFFFFFFFCTRL+ALT+Drag to move\nToggle: /irtc or Middle Click to close.|r";
 		GameTooltip:SetOwner(autoOil);
 		GameTooltip:SetText(tooltipText);
 		GameTooltip:Show();
@@ -335,6 +376,7 @@ local function armorKit()
 		for slot, duration in pairs (armorKitTimers) do
 			tooltipText = tooltipText .. "\n" .. armorKitSlotSimple[slot] .. ": " .. duration .. "|cFFFFFFFF" .. armorKitSlotBindings[slot] .. "|r";
 		end
+		tooltipText = tooltipText .. "\n|cFFFFFFFFCTRL+ALT+Drag to move\nToggle: /irtc or Middle Click to close.|r";
 		GameTooltip:SetOwner(autoKit);
 		GameTooltip:SetText(tooltipText);
 		GameTooltip:Show();
@@ -344,10 +386,6 @@ local function armorKit()
 	--Reinforced (+48 Stamina)
 end
 
-f:RegisterEvent("PLAYER_LOGIN");
-f:RegisterEvent("READY_CHECK");
-f:RegisterEvent("UNIT_AURA");
-f:RegisterEvent("UNIT_INVENTORY_CHANGED");
 
 local function updateConsumables()
 	local flask, flaskIcon, _, _, _, flaskTime = IRT_UnitBuff("player", GetSpellInfo(307185));
@@ -424,12 +462,16 @@ local function updateConsumables()
 	runeIcon = runeIcon and runeIcon or 519379;
 	if (ReadyCheckFrame:IsShown()) then
 		local blizzText = ReadyCheckFrameText:GetText();
-		if (blizzText:find("%-")) then
-			local head, tail, name = blizzText:find("([^-]*)");
-			blizzText = name .. " initiated a ready check";
+		if (UnitIsUnit(playerName.."(Consumable Check)", ReadyCheckFrame.initiator)) then
+			blizzText = playerName .. "(Consumable Check) initiated a ready check";
 		else
-			local head, tail, name = blizzText:find("([^%s]*)");
-			blizzText = name .. " initiated a ready check";
+			if (blizzText:find("%-")) then
+				local head, tail, name = blizzText:find("([^-]*)");
+				blizzText = name .. " initiated a ready check";
+			else
+				local head, tail, name = blizzText:find("([^%s]*)");
+				blizzText = name .. " initiated a ready check";
+			end
 		end
 		local currTime = GetTime();
 		flaskTime = flaskTime and math.floor((tonumber(flaskTime)-currTime)/60) or nil;
@@ -500,6 +542,46 @@ local function updateConsumables()
 	end
 end
 
+autoKit:HookScript("OnClick", function(self, button, down)
+	autoKit:SetAttribute("shift-macrotext1", "/Use Heavy Desolate Armor Kit\n/use 5\n/click StaticPopup1Button1"); 
+	autoKit:SetAttribute("ctrl-macrotext1", "/Use Heavy Desolate Armor Kit\n/use 10\n/click StaticPopup1Button1"); 
+	autoKit:SetAttribute("shift-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 7\n/click StaticPopup1Button1"); 
+	autoKit:SetAttribute("ctrl-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 8\n/click StaticPopup1Button1"); 
+	if (button == "MiddleButton") then
+		autoKit:Hide();
+		autoOil:Hide();
+	elseif (not UnitCastingInfo("player") and select(1, GetItemCooldown(172347) == 0)) then
+		autoKitCooldown:SetCooldown(GetTime()+1.5, 1);
+		currentKitIndex = currentKitIndex + 1;
+		if (currentKitIndex == 1 or currentKitIndex == 5) then
+			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 5\n/click StaticPopup1Button1"); 
+			currentKitIndex = 1;
+		elseif (currentKitIndex == 2) then
+			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 10\n/click StaticPopup1Button1"); 
+		elseif (currentKitIndex == 3) then
+			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 7\n/click StaticPopup1Button1"); 
+		elseif (currentKitIndex == 4) then 
+			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 8\n/click StaticPopup1Button1"); 
+		end
+	end
+end);
+
+autoOil:HookScript("OnClick", function(self, button, down)
+	autoOil:SetAttribute("macrotext1", "/Use Shadowcore Oil\n/use 16\n/click StaticPopup1Button1");
+	autoOil:SetAttribute("shift-macrotext1", "/Use Embalmer's Oil\n/use 16\n/click StaticPopup1Button1"); 
+	autoOil:SetAttribute("ctrl-macrotext1", "/Use Shaded Sharpening Stone\n/use 16\n/click StaticPopup1Button1"); 
+	autoOil:SetAttribute("alt-macrotext1", "/Use Shaded Weightstone\n/use 16\n/click StaticPopup1Button1"); 
+	autoOil:SetAttribute("macrotext2", "/Use Shadowcore Oil\n/use 17\n/click StaticPopup1Button1");
+	autoOil:SetAttribute("shift-macrotext2", "/Use Embalmer's Oil\n/use 17\n/click StaticPopup1Button1"); 
+	autoOil:SetAttribute("ctrl-macrotext2", "/Use Shaded Sharpening Stone\n/use 17\n/click StaticPopup1Button1"); 
+	autoOil:SetAttribute("alt-macrotext2", "/Use Shaded Weightstone\n/use 17\n/click StaticPopup1Button1"); 
+	autoOil:SetAttribute("alt-ctrl-shiftmacrotext", "/run autoOil:Hide(); autoKit:Hide();");
+	if (button == "MiddleButton") then
+		autoKit:Hide();
+		autoOil:Hide();
+	end
+end);
+
 autoOil:HookScript("OnEnter", function(self)
 	updateConsumables();
 	local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFLeft+Modifier for main hand\nRight+Modifier for off hand|r\nModifiers:";
@@ -512,6 +594,7 @@ autoOil:HookScript("OnEnter", function(self)
 	else
 		tooltipText = tooltipText .. "\n" .. "Main Hand" .. ": " .. oilTimers["Main Hand"];
 	end
+	tooltipText = tooltipText .. "\n|cFFFFFFFFCTRL+ALT+Drag to move\nToggle: /irtc or Middle Click to close.|r";
 	GameTooltip:SetOwner(autoOil);
 	GameTooltip:SetText(tooltipText);
 	GameTooltip:Show();
@@ -523,25 +606,66 @@ autoKit:HookScript("OnEnter", function(self)
 	for slot, duration in pairs (armorKitTimers) do
 		tooltipText = tooltipText .. "\n" .. armorKitSlotSimple[slot] .. ": " .. duration .. "|cFFFFFFFF" .. armorKitSlotBindings[slot] .. "|r";
 	end
+	tooltipText = tooltipText .. "\n|cFFFFFFFFCTRL+ALT+Drag to move\nToggle: /irtc or Middle Click to close.|r";
 	GameTooltip:SetOwner(self);
 	GameTooltip:SetText(tooltipText);
 	GameTooltip:Show();
 end);
 
-ReadyCheckFrame:HookScript("OnHide", function() f2:Hide(); autoKit:Hide(); autoOil:Hide(); end);
+ReadyCheckFrame:HookScript("OnHide", function()
+	f2:Hide();
+	autoKit:Hide();
+	autoOil:Hide(); 
+end);
 ReadyCheckFrame:HookScript("OnShow", function() 
-	if (not UnitIsUnit(ReadyCheckFrame.initiator, "player")) then
+	if (UnitIsUnit(ReadyCheckFrame.initiator, playerName)) then
+		C_Timer.After(0.5, function()
+			ShowReadyCheck(playerName.."(Consumable Check)", 38); --fool the game its not the player
+			updateConsumables();
+			f2:Show();
+			autoKit:Show(); 
+			autoOil:Show();
+		end);
+	else
+		f2:Show();
 		autoKit:Show(); 
 		autoOil:Show();
 	end
+	--ReadyCheckFrame:Show();
+	--ReadyCheckListenerFrame:Show();
 end);
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		if (IRT_ConsumableCheckEnabled == nil) then IRT_ConsumableCheckEnabled = true; end
+		lastZone = GetInstanceInfo();
+	elseif (event == "ZONE_CHANGED_NEW_AREA" and IRT_ConsumableCheckEnabled) then
+		local zone, instanceType = GetInstanceInfo();
+		if (zone ~= lastZone and instances[zone]) then
+			if (instanceType == "party") then
+				f:RegisterEvent("CHALLENGE_MODE_START");
+			elseif(instanceType == "raid") then
+				f:RegisterEvent("ENCOUNTER_START");
+			end
+			autoKit:Show();
+			autoOil:Show();
+		end
+		lastZone = GetInstanceInfo();
+		--local difficulty = select(3, GetInstanceInfo()); -- This is 0 out of instances
+	elseif (event == "CHALLENGE_MODE_START" and IRT_ConsumableCheckEnabled) then
+		f:UnregisterEvent("CHALLENGE_MODE_START");
+		f:RegisterEvent("PLAYER_REGEN_DISABLED");
+	elseif (event == "ENCOUNTER_START" and IRT_ConsumableCheckEnabled) then
+		f:UnregisterEvent("ENCOUNTER_START");
+		autoKit:Hide();
+		autoOil:Hide();
+	elseif (event == "PLAYER_REGEN_DISABLED" and IRT_ConsumableCheckEnabled) then
+		f:UnregisterEvent("PLAYER_REGEN_DISABLED");
+		autoKit:Hide();
+		autoOil:Hide();
 	elseif (event == "READY_CHECK" and IRT_ConsumableCheckEnabled) then
-		local sender = ...
+		local sender = ...;
 		rcSender = sender;
-		if (not UnitIsUnit(sender, UnitName("player"))) then
+		if (not UnitIsUnit(sender, playerName)) then
 			updateConsumables();
 		end
 	elseif (event == "UNIT_AURA" and IRT_ConsumableCheckEnabled and (ReadyCheckFrame:IsShown() or ((autoOil:IsMouseOver() and autoOil:IsShown()) or (autoKit:IsMouseOver() and autoKit:IsShown())))) then
@@ -552,7 +676,17 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "UNIT_INVENTORY_CHANGED" and IRT_ConsumableCheckEnabled and (ReadyCheckFrame:IsShown() or ((autoOil:IsMouseOver() and autoOil:IsShown()) or (autoKit:IsMouseOver() and autoKit:IsShown())))) then
 		--local unit = ...;
 		--if ((UnitInRaid(unit) or UnitInParty(unit)) and not UnitIsUnit(rcSender, UnitName("player"))) then
-			updateConsumables();
+			C_Timer.After(0.1, updateConsumables);
+			--updateConsumables();
 		--end
 	end
 end);
+
+function IRT_AutoKitSetPosition(point, relativeTo, relativePoint, xOffset, yOffset)
+	autoKit:ClearAllPoints();
+	autoKit:SetPoint(point, ReadyCheckFrame, relativePoint, xOffset, yOffset);
+end
+function IRT_AutoOilSetPosition(point, relativeTo, relativePoint, xOffset, yOffset)
+	autoOil:ClearAllPoints();
+	autoOil:SetPoint(point, ReadyCheckFrame, relativePoint, xOffset, yOffset);
+end

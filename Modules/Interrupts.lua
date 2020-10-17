@@ -44,7 +44,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (IRT_InterruptEnabled == nil) then IRT_InterruptEnabled = true; end
 		if (IRT_NextInterrupt == nil) then IRT_NextInterrupt = {[1] = {bossID = 1}}; end
 		if (type(IRT_NextInterrupt)) == "string" then IRT_NextInterrupt = {[1] = {bossID = 1}}; end-- convert people from older version
-	elseif (event == "NAME_PLATE_UNIT_REMOVED" and IRT_InterruptEnabled and nextInterrupter) then --and inEncounter
+	elseif (event == "NAME_PLATE_UNIT_REMOVED" and IRT_InterruptEnabled and nextInterrupter and inEncounter) then
 		local unit = ...;
 		if (nameplateID and UnitIsUnit(unit, nameplateID)) then
 			if (timer) then
@@ -54,7 +54,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			nameplateText:ClearAllPoints();
 			nameplateTrack = nil;
 		end
-	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED" and IRT_InterruptEnabled and nextInterrupter) then --and inEncounter
+	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED" and IRT_InterruptEnabled and nextInterrupter and inEncounter) then
 		local _, logEvent, _, _, caster, _, _, targetGUID, target, _, _, spellID = CombatLogGetCurrentEventInfo();
 		if (logEvent == "SPELL_CAST_SUCCESS") then
 			if (UnitIsUnit(caster, nextInterrupter) and spellIDs[spellID]) then

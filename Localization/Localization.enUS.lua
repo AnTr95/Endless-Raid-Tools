@@ -24,10 +24,12 @@ L.OPTIONS_MINIMAP_MODE_TEXT = "Show minimap button:";
 L.OPTIONS_GENERAL_INFO = "This is the popup text that |cFF00FFFFInterrupt|r, |cFF00FFFFInnervate|r, |cFF00FFFFHuntsman Altimor|r, |cFF00FFFFLady Inerva Darkvein|r, |cFF00FFFFHungering Destroyer|r, |cFF00FFFFSludgefist|r and |cFF00FFFFStone Legion Modules|r are using. Move the popup to anywhere you want on your screen and change the size after your preference.";
 L.OPTIONS_GENERALSETTINGS_TEXT = "General Settings:";
 L.OPTIONS_GENERAL_TITLE = "General Options";
+L.OPTIONS_RESETPOSITIONS_BUTTON = "Reset";
+L.OPTIONS_RESETPOSITIONS_TEXT = "Reset to default IRT positions";
 
 L.OPTIONS_INTERRUPT_TITLE = "Interrupt Module";
 L.OPTIONS_INTERRUPT_ORDER = "Player to track:";
-L.OPTIONS_INTERRUPT_INFO = "Allows you to create interrupt orders then fill in the boss and the player ahead of you in interrupts. Once that player interrupts you get a popup informing you that you are next, you also get a text anchored to the nameplate of the mob that you are supposed to interrupt next on.\n|cFF00FFFFUsage:|r Put the name of the person who is before you on interrupts.\n\n|cFF00FFFFConfig:|r The popup can be individually moved and resized in the general options.";
+L.OPTIONS_INTERRUPT_INFO = "|cFF00FFFFInterrupt Module:|r Allows you to create interrupt orders then fill in the boss and the player ahead of you in interrupts. Once that player interrupts you get a popup informing you that you are next, you also get a text anchored to the nameplate of the mob that you are supposed to interrupt next on.\n|cFF00FFFFUsage:|r Put the name of the person who is before you on interrupts.\n\n|cFF00FFFFConfig:|r The popup can be individually moved and resized in the general options.";
 L.OPTIONS_INTERRUPT_PREVIEW = "|cFFFFFFFFPreview of the popup that appears on your screen when it is your turn to interrupt and the text anchored to the nameplate of the mob that you are supposed to interrupt.|r";
 
 L.OPTIONS_INNERVATE_TITLE = "Innervate Module";
@@ -46,9 +48,9 @@ L.OPTIONS_READYCHECK_INFO = "|cFF00FFFFRaiders:|r If you are in a raid and you a
 L.OPTIONS_READYCHECK_PREVIEW = "|cFF00FFFFRaiders:|r\n|cFFFFFFFFPreview of the button that appears if you press not ready or AFK for a ready check.|r\n\n|cFF00FFFFRaid leader(sender):|r\n|cFFFFFFFFPreview of the list that appears for the players that pressed not ready or was AFK\nThe list updates in real time.|r";
 L.OPTIONS_READYCHECK_FLASHING = "Flash IRT Ready Check Button \nWarning for those sensitive to pulsating light.";
 
-L.OPTIONS_CONSUMABLECHECK_PREVIEW = "|cFFFFFFFFPreview of consumable check from |cff3ec6eaMage|r PoV (can buff) and |cfff38bb9Paladin|r PoV (cant buff)|r";
-L.OPTIONS_CONSUMABLECHECK_INFO = "Shows if the player has flask, weapon oil/sharpening stone, food and rune. In addition classes that can buff can see if players are missing their buff.\nThe top picture is taken from a |cff3ec6eamage|r point of view, other classes would see their buff or none if they do not have any.\nThe bottom picture is taken from a |cfff38bb9paladin|r which can not buff and therefore no buffs are shown.";
-L.OPTIONS_CONSUMABLECHECK_TITLE = "Consumable Check Module";
+L.OPTIONS_CONSUMABLECHECK_TITLE = "Consumable Module";
+L.OPTIONS_CONSUMABLECHECK_INFO = "|cFF00FFFFConsumable Check:|r Shows if the player has flask, weapon oil/sharpening stone, food and rune during the ready check. In addition classes that can buff can see if players are missing their buff.\nThe top picture is taken from a |cff3ec6eamage|r point of view, other classes would see their buff or none if they do not have any.\nThe bottom picture is taken from a |cfff38bb9paladin|r which can not buff and therefore no buffs are shown.\n\n|cFF00FFFFArmor kit/weapon oil buttons:|r When entering a raid or dungeon or a ready check is initiated two buttons appears allowing you to apply armor kits and weapon oil/stones on your gear in a single click as well as weapon oils.\n|cFF00FFFFAppears when:|r you enter a raid/dungeon, a ready check is initiated or use /irtc.\n|cFF00FFFFDisapears when:|r a raid boss is pulled, first combat after a m+ dungeon starts, ready check finishes, you type /irtc or middle click the button.";
+L.OPTIONS_CONSUMABLECHECK_PREVIEW = "|cFFFFFFFFPreview of consumable check from |cff3ec6eaMage|r PoV (can buff) and |cfff38bb9Paladin|r PoV (cant buff). Also a preview of the armor kit/weapon oil/stone buttons, once mouseovering the actual buttons a tooltip appears with more info.|r";
 
 L.OPTIONS_HUNGERINGDESTROYER_TITLE = "Hungering Dest. Module";
 L.OPTIONS_HUNGERINGDESTROYER_INFO = "|cFF00FFFFMiasma|r Evenly distributes players for gluttonous miasma. INFO WIP Got 3 strategies unsure which one to use until Blizzard decides debuff damage.\n\n|cFF00FFFFConfig:|r The popup can be individually moved and resized in the general options.";
@@ -81,4 +83,5 @@ L.INTERRUPT_ERROR1 = "|cFFFF0000IRT: Error in interrupt module|r ";
 L.INTERRUPT_ERROR2 = " |cFFFF0000is not online or not in the raid.|r";
 
 L.WARNING_OUTOFDATEMESSAGE = "There is a newer version of Infinite Raid Tools available on overwolf/curseforge!";
+L.WARNING_RESETPOSITIONS_DIALOG = "Are you sure you want to reset IRT: minimap, popup, infobox, kit/oil button positions?";
 L.WARNING_DELETE_OLD_FOLDER = "|cFFFFFFFFHello dear |r|cFF00FFFFEndless Raid Tools|r|cFFFFFFFF user!\n|cFF00FFFFEndless Raid Tools|r |cFFFFFFFFhas changed name to |r|cFF00FFFFInfinite Raid Tools|r, |cFF00FFFF/enrt|r |cFFFFFFFFwill still work for now but will eventually be removed, the new command is: |cFF00FFFF/irt|r.\n|cFFFF0000Please delete the|r |cFF00FFFFEndless Raid Tools|r |cFFFF0000folder to avoid possible bugs and interference.|r \n|cFFFFFFFFThe folder can be found from your WoW installation then _retail_/Interface/AddOns/EndlessRaidTools\n Thank you for using|r |cFF00FFFFInfinite Raid Tools|r|cFFFFFFFF! Coming in Shadowlands: Consumable Check update and 6 new boss modules for Castle Nathria!|r\n |cFFFF0000Auto-disabling old |r|cFF00FFFFEndless Raid Tools|r|cFFFF0000 for now, new|r |cFF00FFFFInfinite Raid Tools|r |cFFFF0000will still be loaded. Please hit reload ui.|r";

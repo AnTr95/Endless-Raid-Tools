@@ -57,14 +57,14 @@ version:SetText(L.OPTIONS_VERSION)
 
 local infoBorder = IRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
 infoBorder:SetTexture("Interface\\GMChatFrame\\UI-GMStatusFrame-Pulse.PNG");
-infoBorder:SetWidth(470);
+infoBorder:SetWidth(530);
 infoBorder:SetHeight(120);
 infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
-infoBorder:SetPoint("TOP", 0, -90);
+infoBorder:SetPoint("TOP", 0, -85);
 
 local info = IRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -20)
-info:SetSize(450, 200)
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25)
+info:SetSize(510, 200)
 info:SetText(L.OPTIONS_INTERRUPT_INFO)
 info:SetWordWrap(true)
 info:SetJustifyV("TOP");

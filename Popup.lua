@@ -62,6 +62,7 @@ function IRT_PopupHide()
 	f:Hide();
 end
 function IRT_PopupSetPosition(point, relativeTo, relativePoint, xOffset, yOffset)
+	f:ClearAllPoints();
 	f:SetPoint(point, relativeTo, relativePoint, xOffset, yOffset);
 end
 function IRT_PopupIsShown()
