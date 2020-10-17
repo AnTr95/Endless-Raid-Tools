@@ -60,10 +60,10 @@ infoBorder:SetTexture("Interface\\GMChatFrame\\UI-GMStatusFrame-Pulse.PNG");
 infoBorder:SetWidth(470);
 infoBorder:SetHeight(120);
 infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
-infoBorder:SetPoint("TOP", 0, -85);
+infoBorder:SetPoint("TOP", 0, -90);
 
 local info = IRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25)
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -20)
 info:SetSize(450, 200)
 info:SetText(L.OPTIONS_INTERRUPT_INFO)
 info:SetWordWrap(true)
@@ -85,13 +85,21 @@ end);
 local enabledText = IRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
 enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
+
+local infoTexture = IRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
+infoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\InterruptNamePlate.tga");
+infoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 400, -215);
+infoTexture:SetSize(121, 128);
+infoTexture:SetTexCoord(0,0.95,0,1);
+
 --[[
 local infoTexture = IRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
-infoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\Interrupt.tga");
-infoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 130, -50);
-infoTexture:SetSize(320, 100);
-infoTexture:SetTexCoord(0,1,0,0.2);
-
+infoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\InterruptNamePlate.tga");
+infoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 320, -140);
+infoTexture:SetSize(216, 228);
+infoTexture:SetTexCoord(0,0.85,0,0.89);
+]]
+--[[
 local previewText = IRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
 previewText:SetPoint("TOP", infoTexture, "TOP", 0, 20);
 previewText:SetText(L.OPTIONS_INTERRUPT_PREVIEW);

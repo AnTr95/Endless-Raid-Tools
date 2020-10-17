@@ -26,13 +26,12 @@ L.OPTIONS_GENERALSETTINGS_TEXT = "General Settings:";
 L.OPTIONS_GENERAL_TITLE = "General Options";
 
 L.OPTIONS_INTERRUPT_TITLE = "Interrupt Module";
-L.OPTIONS_INTERRUPT_ORDER = "Interrupt Order:(Seperated by comma)";
-L.OPTIONS_INTERRUPT_INFO = "Makes you create interrupt orders and tells the next person in the order to interrupt with a pop up on that players screen.\n|cFF00FFFFUsage:|r Put the name of the person who is after you on interrupts.\n\n|cFF00FFFFConfig:|r The popup can be individually moved and resized in the general options.";
-L.OPTIONS_INTERRUPT_PREVIEW = "|cFFFFFFFFPreview of the popup that appears on your screen when it is your turn to interrupt|r";
-L.OPTIONS_INTERRUPT_TORRENT = "Count Arcane Torrent as an interrupt";
+L.OPTIONS_INTERRUPT_ORDER = "Player to track:";
+L.OPTIONS_INTERRUPT_INFO = "Allows you to create interrupt orders then fill in the boss and the player ahead of you in interrupts. Once that player interrupts you get a popup informing you that you are next, you also get a text anchored to the nameplate of the mob that you are supposed to interrupt next on.\n|cFF00FFFFUsage:|r Put the name of the person who is before you on interrupts.\n\n|cFF00FFFFConfig:|r The popup can be individually moved and resized in the general options.";
+L.OPTIONS_INTERRUPT_PREVIEW = "|cFFFFFFFFPreview of the popup that appears on your screen when it is your turn to interrupt and the text anchored to the nameplate of the mob that you are supposed to interrupt.|r";
 
 L.OPTIONS_INNERVATE_TITLE = "Innervate Module";
-L.OPTIONS_INNERVATE_INFO = "Tells your druid that you need innervate with a popup on your druids screen! By macroing: |cFF00FFFF/infiniteinnervate PlayerName|r.\n\n|cFF00FFFFConfig:|r The popup can be individually moved and resized in the general options.";
+L.OPTIONS_INNERVATE_INFO = "Tells your druid that you need innervate with a popup on your druids screen!\n|cFF00FFFFUsage:|r Macro: /irtinnervate PlayerName.\n\n|cFF00FFFFConfig:|r The popup can be individually moved and resized in the general options.";
 L.OPTIONS_INNERVATE_PREVIEW = "|cFFFFFFFFPreview of the popup that appears on the druids screen|r";
 
 L.OPTIONS_CALENDARNOTIFICATION_TITLE = "Calendar Notice Module";
@@ -76,6 +75,10 @@ L.OPTIONS_STONELEGIONGENERALS_INFO = "|cFF00FFFFHeart Rend:|r Assigns and orders
 L.OPTIONS_STONELEGIONGENERALS_PREVIEW = "|cFFFFFFFFPreview of the infobox that appears during Heart Rend with healers assigned to a debuffed player each and the countdown that begins after someone been dispelled as well as the popup that shows for the healer when its their time to dispel.";
 
 L.BONUSROLL_INFO = "Pick bosses to coin";
+
+L.INTERRUPT_NEXT = "|cFF00FF00Interrupt Next!";
+L.INTERRUPT_ERROR1 = "|cFFFF0000IRT: Error in interrupt module|r ";
+L.INTERRUPT_ERROR2 = " |cFFFF0000is not online or not in the raid.|r";
 
 L.WARNING_OUTOFDATEMESSAGE = "There is a newer version of Infinite Raid Tools available on overwolf/curseforge!";
 L.WARNING_DELETE_OLD_FOLDER = "|cFFFFFFFFHello dear |r|cFF00FFFFEndless Raid Tools|r|cFFFFFFFF user!\n|cFF00FFFFEndless Raid Tools|r |cFFFFFFFFhas changed name to |r|cFF00FFFFInfinite Raid Tools|r, |cFF00FFFF/enrt|r |cFFFFFFFFwill still work for now but will eventually be removed, the new command is: |cFF00FFFF/irt|r.\n|cFFFF0000Please delete the|r |cFF00FFFFEndless Raid Tools|r |cFFFF0000folder to avoid possible bugs and interference.|r \n|cFFFFFFFFThe folder can be found from your WoW installation then _retail_/Interface/AddOns/EndlessRaidTools\n Thank you for using|r |cFF00FFFFInfinite Raid Tools|r|cFFFFFFFF! Coming in Shadowlands: Consumable Check update and 6 new boss modules for Castle Nathria!|r\n |cFFFF0000Auto-disabling old |r|cFF00FFFFEndless Raid Tools|r|cFFFF0000 for now, new|r |cFF00FFFFInfinite Raid Tools|r |cFFFF0000will still be loaded. Please hit reload ui.|r";

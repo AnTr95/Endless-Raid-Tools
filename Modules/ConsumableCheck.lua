@@ -544,12 +544,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (not UnitIsUnit(sender, UnitName("player"))) then
 			updateConsumables();
 		end
-	elseif (event == "UNIT_AURA" and IRT_ConsumableCheckEnabled and (ReadyCheckFrame:IsShown() or autoOil:IsMouseOver() or autoKit:IsMouseOver())) then
+	elseif (event == "UNIT_AURA" and IRT_ConsumableCheckEnabled and (ReadyCheckFrame:IsShown() or ((autoOil:IsMouseOver() and autoOil:IsShown()) or (autoKit:IsMouseOver() and autoKit:IsShown())))) then
 		--local unit = ...;
 		--if ((UnitInRaid(unit) or UnitInParty(unit)) and not UnitIsUnit(rcSender, UnitName("player"))) then
 			updateConsumables();
 		--end
-	elseif (event == "UNIT_INVENTORY_CHANGED" and IRT_ConsumableCheckEnabled and (ReadyCheckFrame:IsShown() or autoOil:IsMouseOver() or autoKit:IsShown())) then
+	elseif (event == "UNIT_INVENTORY_CHANGED" and IRT_ConsumableCheckEnabled and (ReadyCheckFrame:IsShown() or ((autoOil:IsMouseOver() and autoOil:IsShown()) or (autoKit:IsMouseOver() and autoKit:IsShown())))) then
 		--local unit = ...;
 		--if ((UnitInRaid(unit) or UnitInParty(unit)) and not UnitIsUnit(rcSender, UnitName("player"))) then
 			updateConsumables();
