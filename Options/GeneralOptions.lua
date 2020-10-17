@@ -133,7 +133,7 @@ end);
 
 local resetPositionsText = IRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontWhite");
 resetPositionsText:SetText(L.OPTIONS_RESETPOSITIONS_TEXT);
-resetPositionsText:SetPoint("TOPLEFT", vcText, "TOPLEFT", 0, -70);
+resetPositionsText:SetPoint("TOPLEFT", vcText, "TOPLEFT", 0, -50);
 
 local resetPositionsButton = CreateFrame("Button", "IRT_VCButton", IRT_GeneralOptions, "UIPanelButtonTemplate");
 resetPositionsButton:SetSize(150, 35);

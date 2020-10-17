@@ -52,9 +52,26 @@ local enabledText = IRT_ConsumableCheckOptions:CreateFontString(nil, "ARTWORK", 
 enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
 
+local senderReadyCheckButton = CreateFrame("CheckButton", "IRT_SenderReadyCheckButton", IRT_ConsumableCheckOptions, "UICheckButtonTemplate");
+senderReadyCheckButton:SetSize(26, 26);
+senderReadyCheckButton:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 0, -20);
+senderReadyCheckButton:HookScript("OnClick", function(self)
+	if (self:GetChecked()) then
+		IRT_SenderReadyCheck = true;
+		PlaySound(856);
+	else
+		IRT_SenderReadyCheck = false;
+		PlaySound(857);
+	end
+end);
+
+local senderReadyCheckText = IRT_ConsumableCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
+senderReadyCheckText:SetPoint("TOPLEFT", senderReadyCheckButton, "TOPLEFT", 30, -7);
+senderReadyCheckText:SetText(L.OPTIONS_CONSUMABLECHECK_SENDERREADYCHECK_TEXT);
+
 local infoTexture = IRT_ConsumableCheckOptions:CreateTexture(nil, "BACKGROUND");
 infoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\ConsumableCheck1.tga");
-infoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 130, -60);
+infoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 130, -80);
 infoTexture:SetSize(300, 109);
 infoTexture:SetTexCoord(0,0.69,0,1);
 
@@ -70,7 +87,7 @@ autoOilTexture:SetSize(25, 25);
 
 local infoTexture2 = IRT_ConsumableCheckOptions:CreateTexture(nil, "BACKGROUND");
 infoTexture2:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\ConsumableCheck2.tga");
-infoTexture2:SetPoint("TOPLEFT", infoTexture, "TOPLEFT", 0, -120);
+infoTexture2:SetPoint("TOPLEFT", infoTexture, "TOPLEFT", 0, -110);
 infoTexture2:SetSize(300, 109);
 infoTexture2:SetTexCoord(0,0.69,0,1);
 
@@ -85,7 +102,7 @@ autoOilTexture2:SetPoint("RIGHT", infoTexture2, "RIGHT", 30, -2);
 autoOilTexture2:SetSize(25, 25);
 
 local previewText = IRT_ConsumableCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
-previewText:SetPoint("TOP", enabledButton, "TOP", 255, -24);
+previewText:SetPoint("TOP", senderReadyCheckButton, "TOP", 255, -24);
 previewText:SetText(L.OPTIONS_CONSUMABLECHECK_PREVIEW);
 previewText:SetJustifyH("CENTER");
 previewText:SetJustifyV("TOP");
@@ -94,6 +111,7 @@ previewText:SetWordWrap(true);
 
 IRT_ConsumableCheckOptions:SetScript("OnShow", function(self)
 	enabledButton:SetChecked(IRT_ConsumableCheckEnabled);
+	senderReadyCheckButton:SetChecked(IRT_SenderReadyCheck);
 end);
 
 InterfaceOptions_AddCategory(IRT_ConsumableCheckOptions);

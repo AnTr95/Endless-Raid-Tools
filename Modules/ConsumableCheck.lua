@@ -460,7 +460,7 @@ local function updateConsumables()
 	oilIcon = oilIcon and oilIcon or 463543;
 	foodIcon = foodIcon and foodIcon or 136000;
 	runeIcon = runeIcon and runeIcon or 519379;
-	if (ReadyCheckFrame:IsShown()) then
+	if (ReadyCheckFrame:IsShown() and (not UnitIsUnit(rcSender, playerName) or IRT_SenderReadyCheck)) then
 		local blizzText = ReadyCheckFrameText:GetText();
 		if (UnitIsUnit(playerName.."(Consumable Check)", ReadyCheckFrame.initiator)) then
 			blizzText = playerName .. "(Consumable Check) initiated a ready check";
@@ -613,30 +613,40 @@ autoKit:HookScript("OnEnter", function(self)
 end);
 
 ReadyCheckFrame:HookScript("OnHide", function()
-	f2:Hide();
-	autoKit:Hide();
-	autoOil:Hide(); 
+	if (IRT_ConsumableCheckEnabled) then
+		f2:Hide();
+		autoKit:Hide();
+		autoOil:Hide();
+	end
 end);
 ReadyCheckFrame:HookScript("OnShow", function() 
-	if (UnitIsUnit(ReadyCheckFrame.initiator, playerName)) then
-		C_Timer.After(0.5, function()
-			ShowReadyCheck(playerName.."(Consumable Check)", 38); --fool the game its not the player
-			updateConsumables();
+	if (IRT_ConsumableCheckEnabled) then
+		if (UnitIsUnit(ReadyCheckFrame.initiator, playerName) and IRT_SenderReadyCheck) then
+			C_Timer.After(0.5, function()
+				ShowReadyCheck(playerName.."(Consumable Check)", 38); --fool the game its not the player
+				SetPortraitTexture(ReadyCheckPortrait, playerName);
+				updateConsumables();
+				autoKit:Show(); 
+				autoOil:Show();
+				f2:Show();
+			end);
+		elseif (not UnitIsUnit(ReadyCheckFrame.initiator, playerName)) then
 			f2:Show();
 			autoKit:Show(); 
 			autoOil:Show();
-		end);
-	else
-		f2:Show();
-		autoKit:Show(); 
-		autoOil:Show();
+		elseif (not IRT_SenderReadyCheck) then
+			--updateConsumables();
+			autoKit:Show(); 
+			autoOil:Show();
+		end
+		--ReadyCheckFrame:Show();
+		--ReadyCheckListenerFrame:Show();
 	end
-	--ReadyCheckFrame:Show();
-	--ReadyCheckListenerFrame:Show();
 end);
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		if (IRT_ConsumableCheckEnabled == nil) then IRT_ConsumableCheckEnabled = true; end
+		if (IRT_SenderReadyCheck == nil) then IRT_SenderReadyCheck = true; end
 		lastZone = GetInstanceInfo();
 	elseif (event == "ZONE_CHANGED_NEW_AREA" and IRT_ConsumableCheckEnabled) then
 		local zone, instanceType = GetInstanceInfo();

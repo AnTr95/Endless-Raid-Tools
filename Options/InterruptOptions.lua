@@ -58,7 +58,7 @@ version:SetText(L.OPTIONS_VERSION)
 local infoBorder = IRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
 infoBorder:SetTexture("Interface\\GMChatFrame\\UI-GMStatusFrame-Pulse.PNG");
 infoBorder:SetWidth(530);
-infoBorder:SetHeight(120);
+infoBorder:SetHeight(125);
 infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
 infoBorder:SetPoint("TOP", 0, -85);
 
