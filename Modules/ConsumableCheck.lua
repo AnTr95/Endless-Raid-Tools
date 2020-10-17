@@ -73,9 +73,10 @@ text3:SetPoint("BOTTOM", text2, "BOTTOM", 0, -18);
 text3:SetFont("Fonts\\FRIZQT__.TTF", 12);
 text3:SetJustifyH("CENTER");
 
-
-
 local f = CreateFrame("Frame");
+
+SLASH_INFINITECONSUMABLE1 = "/irtc";
+
 local flasks = {307185,307187, 307166};
 local oilsIDs = {6188, 6190, 6200};
 local oilIconIDs = {
@@ -155,15 +156,6 @@ local autoKitCooldown = CreateFrame("Cooldown", "IRT_AutoKitCooldown", autoKit, 
 autoKitCooldown:SetAllPoints();
 autoKit:Hide();
 
-autoKit:HookScript("OnEnter", function(self)
-	local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFLeft Click loops all slots.|r";
-	for slot, duration in pairs (armorKitTimers) do
-		tooltipText = tooltipText .. "\n" .. armorKitSlotSimple[slot] .. ": " .. duration .. "|cFFFFFFFF" .. armorKitSlotBindings[slot] .. "|r";
-	end
-	GameTooltip:SetOwner(self);
-	GameTooltip:SetText(tooltipText);
-	GameTooltip:Show();
-end);
 autoKit:SetScript("OnLeave", function(self)
 	GameTooltip:Hide();
 end);
@@ -215,28 +207,22 @@ autoOil:SetAttribute("alt-macrotext2", "/Use Shaded Weightstone\n/use 17\n/click
 autoOil:SetSize(25,25);
 autoOil:SetPoint("TOPLEFT", autoKit, "TOPLEFT", 0, -30);
 autoOil:SetFrameStrata("FULLSCREEN");
-local autoKitCooldown = CreateFrame("Cooldown", "IRT_AutoOilCooldown", autoOil, "CooldownFrameTemplate")
-autoKitCooldown:SetAllPoints();
-autoOil:Hide();
 
-autoOil:HookScript("OnEnter", function(self)
-	local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFLeft+Modifier for main hand\nRight+Modifier for off hand|r\nModifiers:";
-	for id, modifierInfo in pairs (oilBindings) do
-		tooltipText = tooltipText .. "\n|cFFFFFFFF" .. modifierInfo .. "|r";
-	end
-	if (isOffhandWeapon) then
-		tooltipText = tooltipText .. "\n" .. "Main Hand" .. ": " .. oilTimers["Main Hand"];
-		tooltipText = tooltipText .. "\n" .. "Off Hand" .. ": " .. oilTimers["Off Hand"];
-	else
-		tooltipText = tooltipText .. "\n" .. "Main Hand" .. ": " .. oilTimers["Main Hand"];
-	end
-	GameTooltip:SetOwner(autoOil);
-	GameTooltip:SetText(tooltipText);
-	GameTooltip:Show();
-end);
+autoOil:Hide();
 autoOil:SetScript("OnLeave", function(self)
 	GameTooltip:Hide();
 end);
+
+local function handler(msg, editbox)
+	if (autoKit:IsShown()) then
+		autoKit:Hide();
+		autoOil:Hide();
+	else
+		autoKit:Show();
+		autoOil:Show();
+	end
+end
+SlashCmdList["INFINITECONSUMABLE"] = handler;
 
 local scanTooltip = CreateFrame("GameToolTip", "IRT_TempToolTip", nil, "GameTooltipTemplate");
 scanTooltip:SetOwner(WorldFrame, "ANCHOR_NONE");
@@ -245,7 +231,7 @@ scanTooltip:AddFontStrings(
     scanTooltip:CreateFontString("$parentTextRight1", nil, "GameTooltipText")
 );
 
-function armorKit()
+local function armorKit()
 	local count = 0;
 	local shortest = nil;
 	for i = 1, #armorKitSlots do
@@ -436,82 +422,111 @@ local function updateConsumables()
 	oilIcon = oilIcon and oilIcon or 463543;
 	foodIcon = foodIcon and foodIcon or 136000;
 	runeIcon = runeIcon and runeIcon or 519379;
-
-	local blizzText = ReadyCheckFrameText:GetText();
-	if (blizzText:find("%-")) then
-		local head, tail, name = blizzText:find("([^-]*)");
-		blizzText = name .. " initiated a ready check";
-	else
-		local head, tail, name = blizzText:find("([^%s]*)");
-		blizzText = name .. " initiated a ready check";
-	end
-	local currTime = GetTime();
-	flaskTime = flaskTime and math.floor((tonumber(flaskTime)-currTime)/60) or nil;
-	if (flaskTime) then
-		if (flaskTime > 15) then
-			flaskTime = GREEN .. flaskTime .. "min|r";
-		elseif (flaskTime <= 15 and flaskTime > 8) then
-			flaskTime = YELLOW .. flaskTime .. "min|r";
-		elseif (flaskTime <= 8) then
-			flaskTime = RED .. flaskTime .. "min|r";
+	if (ReadyCheckFrame:IsShown()) then
+		local blizzText = ReadyCheckFrameText:GetText();
+		if (blizzText:find("%-")) then
+			local head, tail, name = blizzText:find("([^-]*)");
+			blizzText = name .. " initiated a ready check";
+		else
+			local head, tail, name = blizzText:find("([^%s]*)");
+			blizzText = name .. " initiated a ready check";
 		end
-	else
-		flaskTime = CROSS;
-	end
-	local class = select(2, UnitClass("player"));
-	if (class == "MAGE" or class == "PRIEST" or class == "WARRIOR") then
-		local count = 0;
-		local total = 0;
-		local unit = nil;
-		if (IsInRaid()) then
-			for i = 1, GetNumGroupMembers() do
-				unit = "raid"..i;
-				if (UnitIsVisible(unit)) then
-					total = total + 1;
-					if (IRT_UnitBuff(unit, GetSpellInfo(buffSpellIDs[class]))) then
-						count = count + 1;
+		local currTime = GetTime();
+		flaskTime = flaskTime and math.floor((tonumber(flaskTime)-currTime)/60) or nil;
+		if (flaskTime) then
+			if (flaskTime > 15) then
+				flaskTime = GREEN .. flaskTime .. "min|r";
+			elseif (flaskTime <= 15 and flaskTime > 8) then
+				flaskTime = YELLOW .. flaskTime .. "min|r";
+			elseif (flaskTime <= 8) then
+				flaskTime = RED .. flaskTime .. "min|r";
+			end
+		else
+			flaskTime = CROSS;
+		end
+		local class = select(2, UnitClass("player"));
+		if (class == "MAGE" or class == "PRIEST" or class == "WARRIOR") then
+			local count = 0;
+			local total = 0;
+			local unit = nil;
+			if (IsInRaid()) then
+				for i = 1, GetNumGroupMembers() do
+					unit = "raid"..i;
+					if (UnitIsVisible(unit)) then
+						total = total + 1;
+						if (IRT_UnitBuff(unit, GetSpellInfo(buffSpellIDs[class]))) then
+							count = count + 1;
+						end
 					end
 				end
-			end
-		elseif (IsInGroup()) then
-			for i = 1, GetNumGroupMembers()-1 do
-				unit = "party"..i;
-				if (UnitIsVisible(unit)) then
-					total = total + 1;
-					if (IRT_UnitBuff(unit, GetSpellInfo(buffSpellIDs[class]))) then
-						count = count + 1;
+			elseif (IsInGroup()) then
+				for i = 1, GetNumGroupMembers()-1 do
+					unit = "party"..i;
+					if (UnitIsVisible(unit)) then
+						total = total + 1;
+						if (IRT_UnitBuff(unit, GetSpellInfo(buffSpellIDs[class]))) then
+							count = count + 1;
+						end
 					end
 				end
+				total = total + 1;
+				if (IRT_UnitBuff("player", GetSpellInfo(buffSpellIDs[class]))) then
+					count = count + 1;
+				end
 			end
-			total = total + 1;
-			if (IRT_UnitBuff("player", GetSpellInfo(buffSpellIDs[class]))) then
-				count = count + 1;
+			if (ReadyCheckFrame.backdrop and ReadyCheckFrame.backdrop.backdropInfo and ReadyCheckFrame.backdrop.backdropInfo.bgFile and ReadyCheckFrame.backdrop.backdropInfo.bgFile:match("ElvUI")) then
+				ReadyCheckFrameText:SetSize(320, 40);
+				ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
+			else
+				f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -17);
+				f2:Show();
+				rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
 			end
-		end
-		if (ReadyCheckFrame.backdrop and ReadyCheckFrame.backdrop.backdropInfo and ReadyCheckFrame.backdrop.backdropInfo.bgFile and ReadyCheckFrame.backdrop.backdropInfo.bgFile:match("ElvUI")) then
-			ReadyCheckFrameText:SetSize(320, 40);
-			ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
+			--ReadyCheckFrameText:SetText(blizzText);
+			--text2:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. "  \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime);
+			--text3:SetText("\124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
+			--rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
 		else
-			f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -17);
-			f2:Show();
-			rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
+			if (ReadyCheckFrame.backdrop and ReadyCheckFrame.backdrop.backdropInfo and ReadyCheckFrame.backdrop.backdropInfo.bgFile and ReadyCheckFrame.backdrop.backdropInfo.bgFile:match("ElvUI")) then
+				ReadyCheckFrameText:SetSize(320, 40);
+				ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS));
+			else
+				f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -17);
+				f2:Show();
+				rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS));
+			end
+			--ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS)); 
 		end
-		--ReadyCheckFrameText:SetText(blizzText);
-		--text2:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. "  \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime);
-		--text3:SetText("\124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
-		--rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
-	else
-		if (ReadyCheckFrame.backdrop and ReadyCheckFrame.backdrop.backdropInfo and ReadyCheckFrame.backdrop.backdropInfo.bgFile and ReadyCheckFrame.backdrop.backdropInfo.bgFile:match("ElvUI")) then
-			ReadyCheckFrameText:SetSize(320, 40);
-			ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS));
-		else
-			f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -17);
-			f2:Show();
-			rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS));
-		end
-		--ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS)); 
 	end
 end
+
+autoOil:HookScript("OnEnter", function(self)
+	updateConsumables();
+	local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFLeft+Modifier for main hand\nRight+Modifier for off hand|r\nModifiers:";
+	for id, modifierInfo in pairs (oilBindings) do
+		tooltipText = tooltipText .. "\n|cFFFFFFFF" .. modifierInfo .. "|r";
+	end
+	if (isOffhandWeapon) then
+		tooltipText = tooltipText .. "\n" .. "Main Hand" .. ": " .. oilTimers["Main Hand"];
+		tooltipText = tooltipText .. "\n" .. "Off Hand" .. ": " .. oilTimers["Off Hand"];
+	else
+		tooltipText = tooltipText .. "\n" .. "Main Hand" .. ": " .. oilTimers["Main Hand"];
+	end
+	GameTooltip:SetOwner(autoOil);
+	GameTooltip:SetText(tooltipText);
+	GameTooltip:Show();
+end);
+
+autoKit:HookScript("OnEnter", function(self)
+	updateConsumables();
+	local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFLeft Click loops all slots.|r";
+	for slot, duration in pairs (armorKitTimers) do
+		tooltipText = tooltipText .. "\n" .. armorKitSlotSimple[slot] .. ": " .. duration .. "|cFFFFFFFF" .. armorKitSlotBindings[slot] .. "|r";
+	end
+	GameTooltip:SetOwner(self);
+	GameTooltip:SetText(tooltipText);
+	GameTooltip:Show();
+end);
 
 ReadyCheckFrame:HookScript("OnHide", function() f2:Hide(); autoKit:Hide(); autoOil:Hide(); end);
 ReadyCheckFrame:HookScript("OnShow", function() 
@@ -529,15 +544,15 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (not UnitIsUnit(sender, UnitName("player"))) then
 			updateConsumables();
 		end
-	elseif (event == "UNIT_AURA" and IRT_ConsumableCheckEnabled and ReadyCheckFrame:IsShown()) then
-		local unit = ...;
-		if ((UnitInRaid(unit) or UnitInParty(unit)) and not UnitIsUnit(rcSender, UnitName("player"))) then
+	elseif (event == "UNIT_AURA" and IRT_ConsumableCheckEnabled and (ReadyCheckFrame:IsShown() or autoOil:IsMouseOver() or autoKit:IsMouseOver())) then
+		--local unit = ...;
+		--if ((UnitInRaid(unit) or UnitInParty(unit)) and not UnitIsUnit(rcSender, UnitName("player"))) then
 			updateConsumables();
-		end
-	elseif (event == "UNIT_INVENTORY_CHANGED" and IRT_ConsumableCheckEnabled and ReadyCheckFrame:IsShown()) then
-		local unit = ...;
-		if ((UnitInRaid(unit) or UnitInParty(unit)) and not UnitIsUnit(rcSender, UnitName("player"))) then
+		--end
+	elseif (event == "UNIT_INVENTORY_CHANGED" and IRT_ConsumableCheckEnabled and (ReadyCheckFrame:IsShown() or autoOil:IsMouseOver() or autoKit:IsShown())) then
+		--local unit = ...;
+		--if ((UnitInRaid(unit) or UnitInParty(unit)) and not UnitIsUnit(rcSender, UnitName("player"))) then
 			updateConsumables();
-		end
+		--end
 	end
 end);
