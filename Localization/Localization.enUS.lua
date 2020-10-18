@@ -28,8 +28,8 @@ L.OPTIONS_RESETPOSITIONS_BUTTON = "Reset";
 L.OPTIONS_RESETPOSITIONS_TEXT = "Reset to default IRT positions";
 
 L.OPTIONS_INTERRUPT_TITLE = "Interrupt Module";
-L.OPTIONS_INTERRUPT_ORDER = "Player to track:";
 L.OPTIONS_INTERRUPT_INFO = "|cFF00FFFFInterrupt Module:|r Allows you to create interrupt orders then fill in the boss and the player ahead of you in interrupts. Once that player interrupts you get a popup informing you that you are next, you also get a text anchored to the nameplate of the mob that you are supposed to interrupt next on.\n|cFF00FFFFUsage:|r Put the name of the person who is before you on interrupts.\n\n|cFF00FFFFConfig:|r The popup can be individually moved, resized and reset to default positions in the general options.";
+L.OPTIONS_INTERRUPT_ORDER = "Player to track:";
 L.OPTIONS_INTERRUPT_PREVIEW = "|cFFFFFFFFPreview of the popup that appears on your screen when it is your turn to interrupt and the text anchored to the nameplate of the mob that you are supposed to interrupt.|r";
 
 L.OPTIONS_INNERVATE_TITLE = "Innervate Module";
@@ -80,6 +80,7 @@ L.OPTIONS_STONELEGIONGENERALS_PREVIEW = "|cFFFFFFFFPreview of the infobox that a
 L.BONUSROLL_INFO = "Pick bosses to coin";
 
 L.INTERRUPT_NEXT = "|cFF00FF00Interrupt Next!";
+L.INTERRUPT_NEXT2 = "|cFFFFFFFF Next!";
 L.INTERRUPT_ERROR1 = "|cFFFF0000IRT: Error in interrupt module|r ";
 L.INTERRUPT_ERROR2 = " |cFFFF0000is not online or not in the raid.|r";
 
