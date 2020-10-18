@@ -1,3 +1,4 @@
+local L = IRTLocals;
 local f = CreateFrame("Frame");
 local inEncounter = false;
 local leader = "";
@@ -131,13 +132,13 @@ local function playerNotification(mark, pos, duration)
 	local chatText = "";
 	if (tonumber(pos)) then --debuffed
 		chatText = "{rt" .. mark .. "} " .. math.ceil(pos-GetTime()) .. " {rt" .. mark .. "}";
-		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
+		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration, L.BOSS_FILE);
 	elseif (pos == positions[5]) then
 		chatText = "DO NOT SOAK";
-		IRT_PopupShow("|cFFFF0000DO NOT SOAK!|r", duration);
+		IRT_PopupShow("|cFFFF0000DO NOT SOAK!|r", duration, L.BOSS_FILE);
 	else
 		chatText = "{rt" .. mark .. "} " .. pos .. " {rt" .. mark .. "}";
-		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. ", POSITION: " .. pos .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
+		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. ", POSITION: " .. pos .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration, L.BOSS_FILE);
 	end
 	SendChatMessage(chatText, "YELL");
 	timer = C_Timer.NewTicker(1, function()
@@ -326,6 +327,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			timer:Cancel();
 			timer = nil;
 		end
+		IRT_PopupHide(L.BOSS_FILE);
 	end
 end);
 

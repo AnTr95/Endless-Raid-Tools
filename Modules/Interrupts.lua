@@ -17,18 +17,12 @@ local spellIDs = {
 	[171138] = "", 
 	[119910] = "",
 };
-local guids = {};
 local fontStrings = {};
 local namePlateIDs = {};
-local inEncounter = false;
-local trackedInterrupter = nil;
+local inEncounter = true;
+local trackedInterrupter = "Antt";
 local timers = {};
-local interruptNext = false;
 local playerName = UnitName("player");
-local nameplateTrack = nil;
-local nameplateID = nil;
-local timer = nil;
-local unusedFontStrings = 0;
 
 local UnitIsUnit = UnitIsUnit;
 local UnitGUID = UnitGUID;
@@ -126,7 +120,6 @@ local function createFontString(guid, namePlate, interrupter)
 end
 
 local function removeFontString(guid, fs)
-	unusedFontStrings = unusedFontStrings + 1;
 	namePlateIDs[guid] = nil;
 	if (fs) then
 		fs:SetText("");
@@ -182,7 +175,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 					end
 				end);
 			else	
-				local a = GetTime();
 				if (namePlateIDs[guid]) then
 					createFontString(guid, namePlateIDs[guid], player);
 				else
@@ -208,11 +200,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 					getNamePlateForGUID(targetGUID);
 					C_ChatInfo.SendAddonMessage("IRT_INTERRUPT", targetGUID .. " " .. playerName .. " false", "RAID");
 				end
+				IRT_PopupShow(L.INTERRUPT_NEXT_POPUP, 10, L.INTERRUPT_FILE);
 			elseif (UnitIsUnit(caster, playerName)) then
 				if (spellIDs[spellID]) then
-					if (IRT_PopupGetText() == "NEXT INTERRUPT IS YOURS!") then
-						IRT_PopupHide();
-					end
+					IRT_PopupHide(L.INTERRUPT_FILE);
 					C_ChatInfo.SendAddonMessage("IRT_INTERRUPT", targetGUID .. " " .. caster .. " true", "RAID");
 				end
 			end
@@ -223,9 +214,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			else
 				removeFontString(targetGUID);
 			end
-			if (IRT_PopupGetText() == "NEXT INTERRUPT IS YOURS!") then
-				IRT_PopupHide();
-			end
+			IRT_PopupHide(L.INTERRUPT_FILE);
 		end
 	elseif (event == "ENCOUNTER_START" and IRT_InterruptEnabled) then
 		inEncounter = true;
@@ -242,6 +231,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_END" and inEncounter and IRT_InterruptEnabled) then
 		inEncounter = false;
 		trackedInterrupter = nil;
+		namePlateIDs = {};
 		for fs, guid in pairs(fontStrings) do
 			fs:SetText("");
 			fontStrings[fs] = "";
@@ -251,6 +241,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 				timers[fs]:Cancel();
 			end
 		end
-		IRT_PopupHide();
+		IRT_PopupHide(L.INTERRUPT_FILE);
 	end
 end)

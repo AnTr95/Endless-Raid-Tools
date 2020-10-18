@@ -1,3 +1,4 @@
+local L = IRTLocals;
 local f = CreateFrame("Frame");
 local inEncounter = false;
 local assignments = {};
@@ -98,7 +99,7 @@ end
 
 local function playerNotification(mark, duration)
 	local chatText = "{rt" .. mark .. "}";
-	IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
+	IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration, L.BOSS_FILE);
 	SendChatMessage(chatText, "YELL");
 	duration = math.ceil(duration/1.5)-1;
 	timer = C_Timer.NewTicker(1.5, function()
@@ -320,6 +321,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		count = 1;
 		plMark = nil;
 		hasAssigned = false;
+		IRT_PopupHide(L.BOSS_FILE);
 	end
 end);
 

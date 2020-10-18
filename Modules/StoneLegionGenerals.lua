@@ -58,7 +58,7 @@ local function updateDispelText()
 		pl = Ambiguate(pl, "short");
 		pl = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pl))].colorStr, pl);
 		if (UnitIsUnit(healer, playerName) and countdown == -1 and count == 1) then
-			IRT_PopupShow("Dispel " .. pl, 36);
+			IRT_PopupShow("Dispel " .. pl, 36, L.BOSS_FILE);
 		end
 		healer = Ambiguate(healer, "short");
 		healer = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(healer))].colorStr, healer);
@@ -91,7 +91,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (IRT_Contains(debuffed, unitName)) then
 				debuffed[IRT_Contains(debuffed, unitName)] = nil;
 				if (UnitIsUnit(playerName, assignments[unitName])) then
-					IRT_PopupHide();
+					IRT_PopupHide(L.BOSS_FILE);
 				end
 				assignments[unitName] = nil;
 				updateDispelText();
@@ -133,5 +133,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 		countdown = -1;
 		currentDispelled = {};
 		IRT_InfoBoxHide();
+		IRT_PopupHide(L.BOSS_FILE);
 	end
 end);

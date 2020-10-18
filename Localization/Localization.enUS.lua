@@ -81,8 +81,17 @@ L.BONUSROLL_INFO = "Pick bosses to coin";
 
 L.INTERRUPT_NEXT = "|cFF00FF00Interrupt Next!";
 L.INTERRUPT_NEXT2 = "|cFFFFFFFF Next!";
+L.INTERRUPT_NEXT_POPUP = "NEXT INTERRUPT IS YOURS!";
 L.INTERRUPT_ERROR1 = "|cFFFF0000IRT: Error in interrupt module|r ";
 L.INTERRUPT_ERROR2 = " |cFFFF0000is not online or not in the raid.|r";
+L.INTERRUPT_FILE = "Interrupt";
+
+L.POPUP_FILE = "Popup";
+
+L.INNERVATE_FILE = "Innervate";
+
+L.BOSS_FILE = "BossMod";
+
 
 L.WARNING_OUTOFDATEMESSAGE = "There is a newer version of Infinite Raid Tools available on overwolf/curseforge!";
 L.WARNING_RESETPOSITIONS_DIALOG = "Are you sure you want to reset IRT: minimap, popup, infobox, kit/oil button positions?";

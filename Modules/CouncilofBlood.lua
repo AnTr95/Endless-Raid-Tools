@@ -118,16 +118,16 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (class == "MONK" or class == "PALADIN" or class == "PRIEST") then
 				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, sender);
 				if (msg == "SHOW" and not UnitIsUnit(playerName, sender)) then
-					if (not IRT_PopupIsShown()) then
-						IRT_PopupShow("|cFF00FF00DISPEL|r " .. name, 500);
-					elseif (IRT_PopupIsShown() and IRT_PopupGetText():match("DISPEL") and not IRT_PopupGetText():match(sender)) then
-						local getText = IRT_PopupGetText();
-						IRT_PopupHide();
-						IRT_PopupShow(getText .. " AND " .. name, 500);
+					if (not IRT_PopupIsShown(L.BOSS_FILE)) then
+						IRT_PopupShow("|cFF00FF00DISPEL|r " .. name, 500, L.BOSS_FILE);
+					elseif (IRT_PopupIsShown(L.BOSS_FILE) and IRT_PopupGetText(L.BOSS_FILE):match("DISPEL") and not IRT_PopupGetText(L.BOSS_FILE):match(sender)) then
+						local getText = IRT_PopupGetText(L.BOSS_FILE);
+						IRT_PopupHide(L.BOSS_FILE);
+						IRT_PopupShow(getText .. " AND " .. name, 500, L.BOSS_FILE);
 					end
-				elseif (msg == "HIDE" and IRT_PopupIsShown() and IRT_PopupGetText():match(sender)) then
-					if (IRT_PopupIsShown() and IRT_PopupGetText():match("DISPEL")) then
-						IRT_PopupHide();
+				elseif (msg == "HIDE" and IRT_PopupIsShown(L.BOSS_FILE) and IRT_PopupGetText(L.BOSS_FILE):match(sender)) then
+					if (IRT_PopupIsShown(L.BOSS_FILE) and IRT_PopupGetText(L.BOSS_FILE):match("DISPEL")) then
+						IRT_PopupHide(L.BOSS_FILE);
 					end
 				end
 			end
@@ -153,5 +153,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 		ticks = 0;
 		text = nil;
 		f:SetScript("OnUpdate", nil);
+		IRT_PopupHide(L.BOSS_FILE);
 	end
 end);

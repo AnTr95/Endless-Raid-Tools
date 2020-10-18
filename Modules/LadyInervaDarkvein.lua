@@ -1,3 +1,4 @@
+local L = IRTLocals;
 local f = CreateFrame("Frame");
 local inEncounter = false;
 local leader = "";
@@ -50,15 +51,15 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (IRT_Contains(debuffed, unitName)) then
 					debuffed[IRT_Contains(debuffed, unitName)] = nil;
 					SetRaidTarget(unitName, 0);
-					IRT_PopupHide();
+					IRT_PopupHide(L.BOSS_FILE);
 				end
 			end
 		end
 	elseif (event == "CHAT_MSG_ADDON" and IRT_LadyInervaDarkveinEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "IRT_LID") then
-			IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. " NOW " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 60);
-			PlaySoundFile("Interface\\AddOns\\InfiniteRaidTools\\Sound\\"..groupIcons[mark]..".ogg", "Master");
+			IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..msg..":30\124t".." MOVE TO " .. groupIcons[msg] .. " NOW " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..msg..":30\124t", 60, L.BOSS_FILE);
+			PlaySoundFile("Interface\\AddOns\\InfiniteRaidTools\\Sound\\"..groupIcons[msg]..".ogg", "Master");
 		end
 	elseif (event == "ENCOUNTER_START" and IRT_LadyInervaDarkveinEnabled) then
 		local eID = ...;
@@ -70,5 +71,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_END" and IRT_LadyInervaDarkveinEnabled) then
 		inEncounter = false;
 		debuffed = {};
+		IRT_PopupHide(L.BOSS_FILE);
 	end
 end);

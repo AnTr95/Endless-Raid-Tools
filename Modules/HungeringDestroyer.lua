@@ -300,6 +300,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		inEncounter = false;
 		debuffed = {};
 		hasDebuff = false;
+		IRT_PopupHide(L.BOSS_FILE);
 	end
 end);
 
