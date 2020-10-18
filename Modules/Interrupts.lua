@@ -19,14 +19,14 @@ local spellIDs = {
 };
 local fontStrings = {};
 local namePlateIDs = {};
-local inEncounter = true;
-local trackedInterrupter = "Antt";
+local inEncounter = false;
+local trackedInterrupter = nil;
 local timers = {};
 local playerName = UnitName("player");
 
 local UnitIsUnit = UnitIsUnit;
 local UnitGUID = UnitGUID;
-local _G = _G
+local _G = _G;
 
 local f = CreateFrame("Frame");
 f:RegisterEvent("PLAYER_LOGIN");
@@ -163,7 +163,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (IRT_InterruptEnabled == nil) then IRT_InterruptEnabled = true; end
 		if (IRT_NextInterrupt == nil) then IRT_NextInterrupt = {[1] = {bossID = 1}}; end
 		if (type(IRT_NextInterrupt)) == "string" then IRT_NextInterrupt = {[1] = {bossID = 1}}; end-- convert people from older version
-	elseif (event == "CHAT_MSG_ADDON" and IRT_InterruptEnabled) then --inEncounter
+	elseif (event == "CHAT_MSG_ADDON" and IRT_InterruptEnabled and inEncounter) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "IRT_INTERRUPT") then
 			local guid, player, interrupted = strsplit(" ", msg);
