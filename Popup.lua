@@ -34,10 +34,6 @@ local function createFontString(caller)
 	end
 end
 
-local function compare(a, b) 
-	return a < b;
-end
-
 local function getAvailableYOffset()
 	local availableSpots = {
 		[0] = true,
@@ -56,14 +52,11 @@ local function getAvailableYOffset()
 	for caller, fs in pairs(fontStrings) do
 		if (fs:IsShown()) then
 			local point, relativeTo, relativePoint, xOffset, yOffset = fs:GetPoint();
-			print(caller .. " has " .. yOffset)
 			availableSpots[yOffset*-1] = false;
 		end
 	end
 	for i, yOffset in ipairs(indexSpots) do
-		print(i)
 		if (availableSpots[yOffset]) then
-			print(yOffset*-1);
 			return yOffset*-1;
 		end
 	end
