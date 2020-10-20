@@ -19,7 +19,7 @@ f:SetScript("OnDragStop", function(self)
 	self:StopMovingOrSizing();
 end);
 f:Hide();
-fontStrings = {};
+local fontStrings = {};
 
 local function createFontString(caller)
 	if (caller) then
@@ -116,7 +116,9 @@ end
 function IRT_PopupUpdate(message, caller)
 	if (caller) then
 		local fs = fontStrings[caller];
-		fs:SetText(message);
+		if (fs) then
+			fs:SetText(message);
+		end
 	end
 end
 function IRT_PopupMove()
@@ -140,13 +142,15 @@ end
 function IRT_PopupHide(caller)
 	if (caller) then
 		local fs = fontStrings[caller];
-		local timer = timers[caller];
-		if (timer) then
-			timer:Cancel();
-			timer = nil;
+		if (fs) then
+			local timer = timers[caller];
+			if (timer) then
+				timer:Cancel();
+				timer = nil;
+			end
+			fs:SetShown(false);
+			hideMainFrame();
 		end
-		fs:SetShown(false);
-		hideMainFrame();
 	end
 end
 
@@ -157,13 +161,18 @@ end
 function IRT_PopupIsShown(caller)
 	if (caller) then
 		local fs = fontStrings[caller];
-		return fs:IsShown();
+		if (fs) then
+			return fs:IsShown();
+		end
 	end
+	return nil;
 end
 function IRT_PopupGetText(caller)
 	if (caller) then
 		local fs = fontStrings[caller];
-		return fs:GetText();
+		if (fs) then
+			return fs:GetText();
+		end
 	end
 	return nil;
 end

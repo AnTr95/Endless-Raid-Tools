@@ -91,7 +91,11 @@ end
 local function printAssignments()
 	local printText = "IRT Assignments:";
 	for i = 1, 3 do
-		printText = printText .. "\n\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_".. i .. ":12\124t"
+		printText = printText .. "\n\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_".. i .. ":12\124t";
+		local debuffedPl = Ambiguate(debuffed[i], "short");
+		if (UnitIsConnected(debuffedPl)) then
+			local debuffedPl = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(debuffedPl))].colorStr, debuffedPl);
+		end
 		for idx = #assignments[i], 1, -1 do
 			local pl = Ambiguate(assignments[i][idx].name, "short");
 			if (UnitIsConnected(pl)) then
@@ -100,7 +104,7 @@ local function printAssignments()
 			if (idx > 1 and idx < IRT_HuntsmanAltimorPlayersPerLine) then
 				printText = printText .. "|cFF00FF00" .. pl .. "|r|cFFFFFFFF, |r";
 			elseif (idx == 1) then
-				printText = printText .. "|cFF00FF00" .. pl .. "|r|cFFFFFFFF, |r" .. "\124TInterface\\Icons\\ability_hunter_assassinate2:12\124t|c296d98FF" .. debuffed[i] .. "|r\124TInterface\\Icons\\ability_hunter_assassinate2:12\124t";
+				printText = printText .. "|cFF00FF00" .. pl .. "|r|cFFFFFFFF, |r" .. "\124TInterface\\Icons\\ability_hunter_assassinate2:12\124t|c296d98FF" .. debuffedPl .. "|r\124TInterface\\Icons\\ability_hunter_assassinate2:12\124t";
 			end
 		end
 	end
