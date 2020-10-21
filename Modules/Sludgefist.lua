@@ -196,17 +196,17 @@ local function onUpdate(self, elapsed)
 			local safe = false;
 			if (UnitIsConnected(pair) and UnitIsVisible(pair)) then
 				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pair))].colorStr, Ambiguate(pair, "short"));
-				if (not IsItemInRange(37727, pair)) then
+				if (not IsItemInRange(63427, pair)) then
 					if (plMark) then
-						IRT_InfoBoxShow("|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 6 yards|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
+						IRT_InfoBoxShow("|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 8 yards|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
 					else
-						IRT_InfoBoxShow("|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 6 yards|r", 56);
+						IRT_InfoBoxShow("|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 8 yards|r", 56);
 					end
 				else
 					if(plMark) then
-						IRT_InfoBoxShow("|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 6 yards|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
+						IRT_InfoBoxShow("|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 8 yards|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
 					else
-						IRT_InfoBoxShow("|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 6 yards|r", 56);
+						IRT_InfoBoxShow("|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 8 yards|r", 56);
 					end
 				end
 			end
