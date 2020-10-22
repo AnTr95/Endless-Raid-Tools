@@ -63,7 +63,7 @@ infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
 infoBorder:SetPoint("TOP", 0, -85);
 
 local info = IRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25)
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -12)
 info:SetSize(510, 200)
 info:SetText(L.OPTIONS_INTERRUPT_INFO)
 info:SetWordWrap(true)
@@ -89,8 +89,50 @@ enabledText:SetText(L.OPTIONS_ENABLED);
 local infoTexture = IRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
 infoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\InterruptNamePlate.tga");
 infoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 400, -215);
-infoTexture:SetSize(121, 128);
-infoTexture:SetTexCoord(0,0.95,0,1);
+infoTexture:SetSize(121, 105);
+infoTexture:SetTexCoord(0,0.95,0,0.82);
+
+local infoTexture2 = IRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
+infoTexture2:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\InterruptNamePlate2.tga");
+infoTexture2:SetPoint("TOPLEFT", infoTexture, "TOPLEFT", 15, 15);
+infoTexture2:SetSize(91, 11);
+infoTexture2:SetTexCoord(0,0.71,0,0.69);
+
+local ag = infoTexture2:CreateAnimationGroup();
+ag:SetLooping("REPEAT");
+
+local aniAppear = ag:CreateAnimation("Alpha");
+aniAppear:SetDuration(5);
+aniAppear:SetToAlpha(1);
+aniAppear:SetFromAlpha(1);
+aniAppear:SetOrder(1);
+
+local aniFade = ag:CreateAnimation("Alpha");
+aniFade:SetDuration(5);
+aniFade:SetToAlpha(0);
+aniFade:SetFromAlpha(0);
+aniFade:SetOrder(2);
+
+local infoTexture3 = IRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
+infoTexture3:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\InterruptNamePlate3.tga");
+infoTexture3:SetPoint("TOPLEFT", infoTexture, "TOPLEFT", 28, 15);
+infoTexture3:SetSize(61, 11);
+infoTexture3:SetTexCoord(0,0.95,0,0.69);
+
+local ag2 = infoTexture3:CreateAnimationGroup();
+ag2:SetLooping("REPEAT");
+
+local aniFade2 = ag2:CreateAnimation("Alpha");
+aniFade2:SetDuration(5);
+aniFade2:SetToAlpha(0);
+aniFade2:SetFromAlpha(0);
+aniFade2:SetOrder(1);
+
+local aniAppear2 = ag2:CreateAnimation("Alpha");
+aniAppear2:SetDuration(5);
+aniAppear2:SetToAlpha(1);
+aniAppear2:SetFromAlpha(1);
+aniAppear2:SetOrder(2);
 
 --[[
 local infoTexture = IRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
@@ -132,6 +174,16 @@ local function createRow()
 	orderEdit:SetScript("OnTextChanged", function(self)
 		local input = self:GetText();
 		input = input:gsub("^%l", string.upper);
+		if (input:find("%s")) then
+			input = input:sub(1, input:find("%s")-1);
+		end
+		if (input:find("%.")) then
+			input = input:sub(1, input:find("%.")-1);
+		end
+		if (input:find(",")) then
+			input = input:sub(1, input:find(",")-1);
+		end
+		GUI[row].orderEdit:SetText(input);
 		IRT_NextInterrupt[row].NextInterrupter = input;
 	end)
 	GUI[row].orderEdit = orderEdit;
@@ -233,11 +285,16 @@ IRT_InterruptOptions:SetScript("OnShow", function(self)
 			end
 		end
 	end
+	ag:Play();
+	ag2:Play();
 	showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -10-(#IRT_NextInterrupt*30));
 	showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -10-(#IRT_NextInterrupt*30));
 	enabledButton:SetChecked(IRT_InterruptEnabled);
-end)
+end);
 
+IRT_InterruptOptions:SetScript("OnHide", function(self)
+	ag:Stop();
+	ag2:Stop();
+end);
 
-
-InterfaceOptions_AddCategory(IRT_InterruptOptions)
+InterfaceOptions_AddCategory(IRT_InterruptOptions);

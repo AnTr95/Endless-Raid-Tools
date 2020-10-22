@@ -112,4 +112,10 @@ IRT_ReadyCheckOptions:SetScript("OnShow", function(self)
 	end
 end)
 
+IRT_ReadyCheckOptions:SetScript("OnHide", function(self)
+	if (IRT_ReadyCheckFlashing) then
+		ag:Stop();
+	end
+end)
+
 InterfaceOptions_AddCategory(IRT_ReadyCheckOptions)
