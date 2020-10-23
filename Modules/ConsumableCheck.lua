@@ -658,6 +658,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 			autoKit:Show();
 			autoOil:Show();
+		elseif (zone ~= lastZone and not instances[zone] and instances[lastZone]) then
+			autoKit:Hide();
+			autoOil:Hide();
 		end
 		lastZone = GetInstanceInfo();
 		--local difficulty = select(3, GetInstanceInfo()); -- This is 0 out of instances
