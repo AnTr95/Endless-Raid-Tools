@@ -269,9 +269,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 					table.remove(hookedPlayers, index);
 					table.remove(targetedPlayers, index);
 				end
-			elseif (logEvent == "SPELL_AURA_APPLIED" and spellID == 331209) then
+			elseif (logEvent == "SPELL_AURA_APPLIED" and spellID == 331209) then -- charge debuff
 				C_ChatInfo.SendAddonMessage("IRT_SLUDGEFIST", "notify", "RAID");
-			elseif (logEvent == "SPELL_AURA_APPLIED" and spellID == 342420) then
+			elseif (logEvent == "SPELL_AURA_APPLIED" and spellID == 342420) then -- pre chain debuff
 				hasAssigned = false;
 				IRT_InfoBoxHide();
 			--elseif (logEvent == "SPELL_CAST_START" and spellID == 331209) then

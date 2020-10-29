@@ -47,6 +47,8 @@ Modules\HungeringDestroyer.lua
 Options\HungeringDestroyerOptions.lua
 Modules\LadyInervaDarkvein.lua
 Options\LadyInervaDarkveinOptions.lua
+Modules\CouncilofBlood.lua
+Options\CouncilofBloodOptions.lua
 Modules\Sludgefist.lua
 Options\SludgefistOptions.lua
 Modules\StoneLegionGenerals.lua
