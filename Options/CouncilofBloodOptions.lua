@@ -68,26 +68,43 @@ info:SetWordWrap(true);
 info:SetJustifyH("LEFT");
 info:SetJustifyV("TOP");
 
-local enabledButton = CreateFrame("CheckButton", "IRT_CouncilofBloodEnabledCheckButton", IRT_CouncilofBloodOptions, "UICheckButtonTemplate");
-enabledButton:SetSize(26, 26);
-enabledButton:SetPoint("TOPLEFT", 60, -345);
-enabledButton:HookScript("OnClick", function(self)
+local drEnabledButton = CreateFrame("CheckButton", "IRT_CouncilofBlood1EnabledCheckButton", IRT_CouncilofBloodOptions, "UICheckButtonTemplate");
+drEnabledButton:SetSize(26, 26);
+drEnabledButton:SetPoint("TOPLEFT", 60, -345);
+drEnabledButton:HookScript("OnClick", function(self)
 	if (self:GetChecked()) then
-		IRT_TheCouncilOfBloodEnabled = true;
+		IRT_TCOB_DREnabled = true;
 		PlaySound(856);
 	else
-		IRT_TheCouncilOfBloodEnabled = false;
+		IRT_TCOB_DREnabled = false;
 		PlaySound(857);
 	end
 end);
 
-local enabledText = IRT_CouncilofBloodOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
-enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
-enabledText:SetText(L.OPTIONS_ENABLED);
+local drEnabledText = IRT_CouncilofBloodOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
+drEnabledText:SetPoint("TOPLEFT", drEnabledButton, "TOPLEFT", 30, -7);
+drEnabledText:SetText(L.OPTIONS_COUNCILOFBLOOD_DR);
+
+local dfEnabledButton = CreateFrame("CheckButton", "IRT_CouncilofBlood2EnabledCheckButton", IRT_CouncilofBloodOptions, "UICheckButtonTemplate");
+dfEnabledButton:SetSize(26, 26);
+dfEnabledButton:SetPoint("TOPLEFT", drEnabledButton, "TOPLEFT", 0, -20);
+dfEnabledButton:HookScript("OnClick", function(self)
+	if (self:GetChecked()) then
+		IRT_TCOB_DFEnabled = true;
+		PlaySound(856);
+	else
+		IRT_TCOB_DFEnabled = false;
+		PlaySound(857);
+	end
+end);
+
+local dfEnabledText = IRT_CouncilofBloodOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
+dfEnabledText:SetPoint("TOPLEFT", dfEnabledButton, "TOPLEFT", 30, -7);
+dfEnabledText:SetText(L.OPTIONS_COUNCILOFBLOOD_DF);
 
 local infoTexture = IRT_CouncilofBloodOptions:CreateTexture(nil, "BACKGROUND");
 infoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\MoveNow.tga");
-infoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 0, -55);
+infoTexture:SetPoint("TOPLEFT", dfEnabledButton, "TOPLEFT", 0, -55);
 infoTexture:SetSize(245, 28);
 infoTexture:SetTexCoord(0,0.96,0,0.88);
 
@@ -98,7 +115,7 @@ infoTexture2:SetSize(208, 28);
 infoTexture2:SetTexCoord(0,0.81,0,0.88);
 
 local previewText = IRT_CouncilofBloodOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
-previewText:SetPoint("TOP", enabledButton, "TOP", 225, -24);
+previewText:SetPoint("TOP", dfEnabledButton, "TOP", 225, -24);
 previewText:SetText(L.OPTIONS_COUNCILOFBLOOD_PREVIEW);
 previewText:SetJustifyH("CENTER");
 previewText:SetJustifyV("TOP");
@@ -106,7 +123,8 @@ previewText:SetSize(570,25);
 previewText:SetWordWrap(true);
 
 IRT_CouncilofBloodOptions:SetScript("OnShow", function(self)
-	enabledButton:SetChecked(IRT_TheCouncilOfBloodEnabled);
+	drEnabledButton:SetChecked(IRT_TCOB_DREnabled);
+	dfEnabledButton:SetChecked(IRT_TCOB_DFEnabled);
 end);
 
 InterfaceOptions_AddCategory(IRT_CouncilofBloodOptions);
