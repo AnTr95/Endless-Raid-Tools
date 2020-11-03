@@ -62,11 +62,9 @@ L.OPTIONS_LADYINERVADARKVEIN_INFO = "|cFFFF0000Important!|r Make sure you are no
 
 L.OPTIONS_COUNCILOFBLOOD_TITLE = "Council of Blood Module";
 L.OPTIONS_COUNCILOFBLOOD_INFO = "|cFF00FFFFDark Recital:|r You get a popup that tells you who you are linked to and once within 8 yards of that person it counts down and lets you know when you have to move to avoid taking damage.\n\n|cFF00FFFFConfig:|r The popup can be individually moved, resized and reset to default positions in the general options.";
-L.OPTIONS_COUNCILOFBLOOD_PREVIEW = "|cFFFFFFFFPreview of the popup text that appears when you are targeted by|r |cFF00FFFFDark Recital|r";
+L.OPTIONS_COUNCILOFBLOOD_PREVIEW = "|cFFFFFFFFPreview of the popup text that appears when you are targeted by|r |cFF00FFFFDark Recital|r|cFFFFFFFF and below is the preview of the infobox of players affected by|r |cFF00FFFFDancing Fever|r|cFFFFFFFF, showing the order to jump, the player and how many stacks they have.|r";
 L.OPTIONS_COUNCILOFBLOOD_DR = "Dark Recital Enabled"
 L.OPTIONS_COUNCILOFBLOOD_DF = "Dancing Fever Enabled"
-
-
 
 L.OPTIONS_HUNTSMANALTIMOR_TITLE = "Huntsman Altimor Module";
 L.OPTIONS_HUNTSMANALTIMOR_INFO = "|cFF00FFFFSummary:|r Evenly distributes players to soak Sinseeker, 3 soakers per line.\n|cFF00FFFFDetailed:|r The debuffed player should always be the furthest player. Always using the first 4 players in group 2, 3 and 4 to soak each player has a standard position.\n|cFF00FFFFAbbrevations:|r G=Group P=Player index in group B=Backup\n\n        ------G2P4B--G2P3--G2P2--G2P1--Star Debuff\nBOSS------G3P4B--G3P3--G3P2--G3P1--Circle Debuff\n        ------G4P4B--G4P3--G4P2--G4P1--Diamond Debuff\n\nBecause of the staggered application of debuffs might cause players to get reassigned in the case that one of the active soakers get debuffed. In the case of reassignment players will be prioritized closest to the boss to reduce distance.\n\n|cFF00FFFFConfig:|r The popup can be individually moved, resized and reset to default positions in the general options.";
