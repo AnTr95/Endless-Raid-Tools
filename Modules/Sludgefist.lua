@@ -53,6 +53,7 @@ local function compare(a, b)
 end
 
 local function initRaid()
+	print("initating raid")
 	for i = 1, GetNumGroupMembers() do
 		local raider = raid .. i;
 		local raiderName = GetUnitName(raider, true);
@@ -60,16 +61,27 @@ local function initRaid()
 			local class = select(2, UnitClass(raiderName));
 			local role = UnitGroupRolesAssigned(raiderName);
 			if (role == "TANK") then
+				print(raiderName .. " is a tank")
 				table.insert(raid[role], raiderName);
 			elseif (role == "HEALER") then
+				print(raiderName .. " is a healer")
 				table.insert(raid[role], raiderName);
 			elseif (class == "WARRIOR" or class == "ROGUE" or class == "MONK" or class == "DEATHKNIGHT" or class == "DEMONHUNTER" or class == "PALADIN") then
+				print(raiderName .. " is a melee dps")
 				table.insert(raid["MELEE"], raiderName);
 			elseif (class == "MAGE" or class == "WARLOCK" or class == "PRIEST") then
+				print(raiderName .. " is a ranged dps")
 				table.insert(raid["RANGED"], raiderName);
 			else
 				if (UnitIsConnected(raiderName)) then
+					print(raiderName .. " is a hybrid dps class asking for spec")
 					C_ChatInfo.SendAddonMessage("IRT_SLUDGEFIST", "spec", "WHISPER", raiderName);
+					C_Timer.After(1, function()
+						if (not IRT_Contains(raid["RANGED"], raiderName) or not IRT_Contains(raid["MELEE"], raiderName)) then
+							print(raiderName .. " got no answer from " .. raiderName .. " putting them as melee")
+							table.insert(raid["MELEE"], raiderName);
+						end
+					end);
 				end
 			end
 		end
@@ -98,6 +110,7 @@ local function printAssignments()
 end
 
 local function playerNotification(mark, duration)
+	print("starting player yell with mark " .. mark .. " and duration " .. duration)
 	local chatText = "{rt" .. mark .. "}";
 	IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration, L.BOSS_FILE);
 	SendChatMessage(chatText, "YELL");
@@ -114,11 +127,14 @@ local function playerNotification(mark, duration)
 end
 
 local function assignMarks()
+	print("starting and reseting assignments")
 	assignments = {};
 	count = 1;
+	print("messaging everyone their partner")
 	for i = 1, 10 do
 		local pl1 = Ambiguate(targetedPlayers[i], "short");
 		local pl2 = Ambiguate(hookedPlayers[i], "short");
+		print(pl1 .. " is linked to " .. pl2);
 		if (UnitIsConnected(pl1)) then
 			C_ChatInfo.SendAddonMessage("IRT_SLUDGEFIST", "pair: " .. pl2, "WHISPER", pl1);
 		end
@@ -127,8 +143,10 @@ local function assignMarks()
 		end
 	end
 	for i = 1, 3 do -- do not assign melee
+		print("assigning " .. priorityLex[i])
 		for index, player in pairs(raid[priorityLex[i]]) do
 			if (not IRT_ContainsKey(assignments, player)) then
+				print(player .. " found and is unassigned")
 				local idx = IRT_Contains(targetedPlayers, player) or IRT_Contains(hookedPlayers, player);
 				local isHooked = IRT_Contains(hookedPlayers, player);
 				local chainedTo = nil;
@@ -138,7 +156,9 @@ local function assignMarks()
 					else
 						chainedTo = hookedPlayers[idx];
 					end
+					print(player .. " is linked to " .. chainedTo);
 					if (chainedTo and not IRT_Contains(raid["MELEE"], chainedTo)) then
+						print(chainedTo .. " is not a melee assigning them to " .. count)
 						assignments[player] = count;
 						assignments[chainedTo] = count;
 						if (UnitIsConnected(player)) then
@@ -149,6 +169,7 @@ local function assignMarks()
 						end
 						count = count + 1;
 						if (count == 5) then
+							print("all marks assigned")
 							printAssignments();
 							return;
 						end
@@ -158,9 +179,12 @@ local function assignMarks()
 		end
 	end
 	if (count < 5) then
+		print("need to assign melee to fill")
 		for i = 1, 4 do --fill with anyone
+			print("assigning " .. priorityLex[i])
 			for index, player in pairs(raid[priorityLex[i]]) do
 				if (not IRT_ContainsKey(assignments, player)) then
+					print(player .. " found and is unassigned")
 					local idx = IRT_Contains(targetedPlayers, player) or IRT_Contains(hookedPlayers, player);
 					local isHooked = IRT_Contains(hookedPlayers, player);
 					if (idx) then
@@ -169,6 +193,7 @@ local function assignMarks()
 						else
 							chainedTo = hookedPlayers[idx];
 						end
+						print(player .. " is linked to " .. chainedTo .. " assigning them to " .. count);
 						assignments[player] = count;
 						assignments[chainedTo] = count;
 						if (UnitIsConnected(player)) then
@@ -179,6 +204,7 @@ local function assignMarks()
 						end
 						count = count + 1;
 						if (count == 5) then
+							print("all marks assigned")
 							printAssignments();
 							return;
 						end
@@ -228,6 +254,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 					C_ChatInfo.SendAddonMessage("IRT_SLUDGEFIST", specName, "WHISPER", leader);
 				end
 			elseif (msg == "notify" and plMark) then
+				print("addon message notify with mark "  .. plMark)
 				playerNotification(plMark, 10);
 			elseif (tonumber(msg)) then
 				msg = tonumber(msg);
@@ -245,6 +272,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				elseif (k == "pair:") then
 					pair = v;
 				end
+				print("recived data of mark " .. plMark .. " and partner " .. pair)
 			end
 		end
 	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED" and IRT_SludgefistEnabled and inEncounter) then
@@ -252,26 +280,33 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (UnitIsUnit(playerName, leader)) then
 			if (logEvent == "SPELL_AURA_APPLIED") then
 				if (spellID == 335293) then
+					print(target .. " was debuffed and put in targetedPlayers")
 					table.insert(targetedPlayers, target);
 					if (not hasAssigned) then
 						hasAssigned = true;
+						print("0.1s passed assigning marks")
 						C_Timer.After(0.1, function() assignMarks(); end);
 					end
 				elseif (spellID == 335468) then --335294?
+					print(target .. " was debuffed and put in hookedPlayers")
 					table.insert(hookedPlayers, target);
 				end
 			elseif (logEvent == "SPELL_AURA_REMOVED" and (spellID == 335468 or spellID == 335293)) then
 				local index = IRT_Contains(targetedPlayers, target);
+				print(target .. " lost debuff")
 				if (not index) then
 					index = IRT_Contains(hookedPlayers, target);
 				end
 				if (index) then
+					print(index .. " index found removing from both arrays")
 					table.remove(hookedPlayers, index);
 					table.remove(targetedPlayers, index);
 				end
 			elseif (logEvent == "SPELL_AURA_APPLIED" and spellID == 331209) then -- charge debuff
+				print("charge debuff applied on " .. target .. " notifying raid")
 				C_ChatInfo.SendAddonMessage("IRT_SLUDGEFIST", "notify", "RAID");
 			elseif (logEvent == "SPELL_AURA_APPLIED" and spellID == 342420) then -- pre chain debuff
+				print("pre chain debuffs are out reseting assignment")
 				hasAssigned = false;
 				IRT_InfoBoxHide();
 			--elseif (logEvent == "SPELL_CAST_START" and spellID == 331209) then
@@ -279,6 +314,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 		if (target and UnitIsUnit(playerName, target)) then
 			if (logEvent == "SPELL_AURA_APPLIED") then
+				print("player got debuffed and starting update script")
 				if (spellID == 335293) then
 					debuffed = true;
 					f:SetScript("OnUpdate", onUpdate);
@@ -287,6 +323,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 					f:SetScript("OnUpdate", onUpdate);
 				end
 			elseif (logEvent == "SPELL_AURA_REMOVED" and (spellID == 335468 or spellID == 335293)) then
+				print("player lost debuff and resting personal data");
 				f:SetScript("OnUpdate", nil);
 				debuffed = false;
 				pair = nil;
@@ -297,6 +334,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local eID = ...;
 		local difficulty = select(3, GetInstanceInfo());
 		if (eID == 2399 and difficulty == 16) then
+			print("sludgefist mythic engaged")
 			inEncounter = true;
 			pair = nil;
 			assignments = {};

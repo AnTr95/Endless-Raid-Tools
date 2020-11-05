@@ -15,6 +15,7 @@ f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("PLAYER_LOGIN");
 
 local function initHealers()
+	print("initating healers: ")
 	healers = {};
 	for i = 1, GetNumGroupMembers() do
 		local raider = "raid"..i;
@@ -22,6 +23,7 @@ local function initHealers()
 		if (UnitIsVisible(raider) and UnitIsConnected(raider)) then
 			local role = UnitGroupRolesAssigned(raider);
 			if (role == "HEALER") then
+				print("Healer found: " .. raiderName)
 				table.insert(healers, raiderName);
 			end
 		end
@@ -29,19 +31,23 @@ local function initHealers()
 end
 
 local function assignDispels()
+	print("Assigning healers to debuffed healers: ");
 	assignments = {};
 	for i, pl in pairs(debuffed) do -- ensure healers dont dispel themselves
 		for j, healer in pairs(healers) do
 			if (IRT_Contains(healers, pl) and not UnitIsUnit(pl, healer)) then
+				print(pl .. " got assigned " .. healer)
 				assignments[pl] = healer;
 				break;
 			end
 		end
 	end
+	print("assigning healers to debuffed dps")
 	for i, pl in pairs(debuffed) do
 		if (not IRT_ContainsKey(assignments, pl)) then
 			for j, healer in pairs(healers) do
 				if (not IRT_Contains(assignments, healer)) then
+					print(pl .. " got assigned " .. healer)
 					assignments[pl] = healer;
 					break;
 				end
@@ -56,12 +62,16 @@ local function updateDispelText()
 	local count = 1;
 	for pl, healer in pairs(assignments) do
 		pl = Ambiguate(pl, "short");
-		pl = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pl))].colorStr, pl);
+		if (UnitIsConnected(pl)) then
+			pl = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pl))].colorStr, pl);
+		end
 		if (UnitIsUnit(healer, playerName) and countdown == -1 and count == 1) then
 			IRT_PopupShow("Dispel " .. pl, 36, L.BOSS_FILE);
 		end
 		healer = Ambiguate(healer, "short");
-		healer = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(healer))].colorStr, healer);
+		if (UnitIsConnected(healer)) then
+			healer = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(healer))].colorStr, healer);
+		end
 		text = text .. "\n" .. count .. ". " .. healer .. " -> " .. pl;
 		if (count == 1 and countdown ~= -1) then
 			text = text .. " " .. countdown .. "s";
@@ -83,12 +93,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local unitName = GetUnitName(unit, true);
 		if (IRT_UnitDebuff(unit, GetSpellInfo(334675))) then
 			if (not IRT_Contains(debuffed, unitName)) then
+				print(unitName .. " got debuffed")
 				debuffed[#debuffed+1] = unitName;
 				countdown = -1;
 				assignDispels();
 			end
 		else
 			if (IRT_Contains(debuffed, unitName)) then
+				print(unitName .. " got debuffed removed")
 				debuffed[IRT_Contains(debuffed, unitName)] = nil;
 				if (UnitIsUnit(playerName, assignments[unitName])) then
 					IRT_PopupHide(L.BOSS_FILE);
@@ -99,6 +111,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 		if (IRT_UnitDebuff(unit, GetSpellInfo(334771))) then
 			if (not IRT_Contains(currentDispelled, unitName)) then
+				print(unitName .. " got 2nd debuff applied starting timer")
 				currentDispelled[#currentDispelled+1] = unitName;
 				countdown = 6;
 				updateDispelText();
@@ -109,6 +122,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 		else
 			if (IRT_Contains(currentDispelled, unitName)) then
+				print(unitName .. " got 2nd debuff removed")
 				currentDispelled[IRT_Contains(currentDispelled, unitName)] = nil;
 				updateDispelText();
 			end
@@ -117,6 +131,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local eID = ...;
 		local difficulty = select(3, GetInstanceInfo());
 		if (eID == 2337 and difficulty == 16) then
+			print("mythic stone legion started")
 			inEncounter = false;
 			healers = {};
 			debuffed = {};

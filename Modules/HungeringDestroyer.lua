@@ -34,9 +34,9 @@ local function initRaid()
 		[3] = {},
 		[4] = {},
 	};
-	for i = 1, 40 do
+	for i = 1, 20 do
 		local name, rank, group, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(i);
-		if (name) then
+		if (name and UnitIsConnected(name) and UnitIsVisible(name)) then
 			if (raid[group]) then
 				table.insert(raid[group], name);
 			end
@@ -131,66 +131,65 @@ local function updateGroups()
 		printText = printText .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. grp .. ":12\124t";
 		for index, player in pairs(raid[grp]) do
 			local playerShort = Ambiguate(player, "short");
-			if (UnitIsConnected(player)) then
-				playerShort = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(playerShort))].colorStr, playerShort);
-			end
 			if (index > 1) then
-				printText = printText .. ", ";
+				printText = printText .. "|cFFFFFFFF,|r ";
 			else
 				printText = printText .. " ";
 			end
 			if (UnitIsConnected(player)) then -- add icons for 1st and 2nd soak and debuff & CHECK DEBUFF DOESNT TIME OUT NEXT 2s
 				if (IRT_ContainsKey(debuffed, player)) then
-					--spam icon over head
 					C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
-					printText = printText .. "|c296d98FF\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t" .. playerShort .. "\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t|cFFFFFFFF";
+					printText = printText .. "|c296d98FF\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t" .. playerShort .. "|r\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t";
 				elseif (not IRT_UnitDebuff(player, spellIDs["Sap"]) and count < 2)then
 					C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
 					count = count + 1;
-					printText = printText .. "|cFF00FF00" .. playerShort .. "|cFFFFFFFF";
+					printText = printText .. "|cFF00FF00" .. playerShort .. "|r";
+				elseif (IRT_UnitDebuff(player, spellIDs["Sap"]) and select(7, IRT_UnitDebuff(player, spellIDs["Sap"]))-GetTime() < 2 and count < 2) then
+					--Assign now?? less than 2s
 				elseif (count == 2) then
 					if (IRT_UnitDebuff(player, spellIDs["Sap"])) then
-						printText = printText .. "|cFFFF0000\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t|cFFFFFFFF";
+						printText = printText .. "|cFFFF0000(\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t)|r";
 					else
-						printText = printText .. "|cFFFF0000" .. playerShort .. "|cFFFFFFFF";
+						printText = printText .. "|cFFFF0000" .. playerShort .. "|r";
 					end
-					C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+					C_ChatInfo.SendAddonMessage("IRT_HD", "soon" .. grp, "WHISPER", player);
 				else
 					-- got debuff but count less than 2 atm
+						-- got debuff but count less than 2 atm
 					local lowestDebuff1 = 100000;
 					local lowestDebuff2 = 100000;
 					if (IRT_UnitDebuff(player, spellIDs["Sap"])) then
 						local stacks = select(4, IRT_UnitDebuff(player, spellIDs["Sap"]));
-						lowestDebuff1 = stacks;
-						lowestDebuff2 = stacks;
+						lowestDebuff1 = expTime;
+						lowestDebuff2 = expTime;
 						for idx, pl in pairs(raid[grp]) do
 							if (count == 0) then
 								if (select(4, IRT_UnitDebuff(pl, spellIDs["Sap"]))) then
-									local nextStacks = select(4, IRT_UnitDebuff(pl, spellIDs["Sap"]));
+									local nextStacks = select(7, IRT_UnitDebuff(pl, spellIDs["Sap"]));
 									if (nextStacks < lowestDebuff1) then
 										lowestDebuff1 = -1;
 										--1 better option palyer out of 2
 									elseif (nextStacks < lowestDebuff2) then
 										--2 better option player this player soaks later
-										printText = printText .. "|cFFFF0000(\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t)|cFFFFFFFF";
-										C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+										printText = printText .. "|cFFFF0000(\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t)|r";
+										C_ChatInfo.SendAddonMessage("IRT_HD", "soon" .. grp, "WHISPER", player);
 										break;
 									end
 								end
 							elseif (count == 1) then
 								if (select(4, IRT_UnitDebuff(pl, spellIDs["Sap"]))) then
-									local nextStacks = select(4, IRT_UnitDebuff(pl, spellIDs["Sap"]));
+									local nextStacks = select(7, IRT_UnitDebuff(pl, spellIDs["Sap"]));
 									if (nextStacks < lowestDebuff1) then
 										--better option player this player soaks later
-										printText = printText .. "|cFFFF0000\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t|cFFFFFFFF";
-										C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+										printText = printText .. "|cFFFF0000\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "|r\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t";
+										C_ChatInfo.SendAddonMessage("IRT_HD", "soon" .. grp, "WHISPER", player);
 										break;
 									end
 								end
 							end
 							-- best option player soak now
 							C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
-							printText = printText .. "|cFF00FF00\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t|cFFFFFFFF";
+							printText = printText .. "|cFF00FF00\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "|r\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t";
 							count = count + 1;
 						end
 					end
@@ -199,18 +198,18 @@ local function updateGroups()
 				previous version tested and works
 				if ((IRT_UnitDebuff(player, spellIDs["Sap"]) and not IRT_ContainsKey(debuffed, player)) or (count == 2 and not IRT_ContainsKey(debuffed, player))) then
 					if (IRT_UnitDebuff(player, spellIDs["Sap"])) then
-						printText = printText .. "|cFFFF0000(\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t)|cFFFFFFFF";
+						printText = printText .. "|cFFFF0000(\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t" .. playerShort .. "\124TInterface\\Icons\\spell_shadow_focusedpower:12\124t)|cFFFFFFFF|r";
 					else
 						printText = printText .. "|cFFFF0000(" .. playerShort .. ")|cFFFFFFFF";
 					end
 					C_ChatInfo.SendAddonMessage("IRT_HD", "soon " .. grp, "WHISPER", player);
 				elseif (IRT_ContainsKey(debuffed, player)) then
 					C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
-					printText = printText .. "|c296d98FF\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t" .. playerShort .. "\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t|cFFFFFFFF";
+					printText = printText .. "|c296d98FF\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t" .. playerShort .. "|r\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t";
 				else
 					C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
 					count = count + 1;
-					printText = printText .. "|cFF00FF00" .. playerShort .. "|cFFFFFFFF";
+					printText = printText .. "|cFF00FF00" .. playerShort .. "|r";
 				end]]
 			end
 		end
@@ -225,18 +224,18 @@ local function playerNotification(mark, duration)
 	local chatText = "{rt" .. mark .. "}";
 	if (hasDebuff) then
 		chatText = chatText .. " DEBUFFED " .. "{rt" .. mark .. "}";
-		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
-	else
-		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. " NOW " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
+		duration = 24;
 	end
 	SendChatMessage(chatText, "YELL");
 	local ticker = C_Timer.NewTicker(1.5, function()
 		if (UnitIsDead("player")) then
 			ticker:Cancel();
+			ticker = nil;
 		else
 			SendChatMessage(chatText, "YELL");
 		end
 	end, math.floor(duration/1.5)-1);
+	IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. " NOW " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration);
 	PlaySoundFile("Interface\\AddOns\\InfiniteRaidTools\\Sound\\"..groupIcons[mark]..".ogg", "Master");
 end
 
@@ -248,9 +247,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local unitName = GetUnitName(unit, true);
 		if (UnitIsUnit(unitName, playerName)) then
 			if (IRT_UnitDebuff(unitName, spellIDs["Miasma"])) then
-				hasDebuff = true;
-			elseif (hasDebuff) then
-				hasDebuff = false;
+				if (not hasDebuff) then
+					hasDebuff = true;
+				end
+			else
+				if (hasDebuff) then
+					hasDebuff = false;
+				end
 			end
 		end
 		if (UnitIsUnit(leader, playerName)) then
@@ -278,11 +281,22 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "CHAT_MSG_ADDON" and inEncounter and IRT_HungeringDestroyerEnabled) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "IRT_HD") then
-			if (msg:match("next")) then
+			if (msg:match("soon")) then
+				local soakTime = time() + 12;
 				local text, mark = strsplit(" ", msg);
-				IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. ", |cFFFF0000DO NOT SOAK|cFFFFFFFF" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 8);
+				IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. ", SOAK IN: |cFFFFFFFF12|r" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 1);
+				C_Timer.NewTicker(1, function()
+					local timeLeft = math.floor(soakTime - time());
+					IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. ", SOAK IN: |cFFFFFFFF" .. timeLeft .. "|r" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 1);
+					if (timeLeft <= 3) then
+						PlaySoundFile("Interface\\AddOns\\InfiniteRaidTools\\Sound\\CalendarNotification\\calnot"..timeLeft..".ogg", "Master");
+					end
+				end, 11);
+				C_Timer.After(12, function()
+					playerNotification(mark, 12);
+				end);
 			else
-				playerNotification(msg, 24);
+				playerNotification(msg, 12);
 			end
 		end
 	elseif (event == "ENCOUNTER_START" and IRT_HungeringDestroyerEnabled) then
@@ -300,7 +314,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 		inEncounter = false;
 		debuffed = {};
 		hasDebuff = false;
-		IRT_PopupHide(L.BOSS_FILE);
 	end
 end);
 
@@ -308,7 +321,7 @@ function HD_Test(p1, p2, p3, p4)
 	inEncounter = true;
 	if (raid == nil) then
 		raid = {
-			[1] = {"Ant", "Ala", "Fed", "Blink", "Dez"},
+			[1] = {"Blink", "Ala", "Fed", "Ant", "Dez"},
 			[2] = {"Pred", "Nost", "Marie", "Cakk", "Sejuka"},
 			[3] = {"Natu", "Moon", "Bram", "Cata", "Mvk"},
 			[4] = {"Sloni", "Janga", "Sloxy", "Emnity", "Warlee"},
