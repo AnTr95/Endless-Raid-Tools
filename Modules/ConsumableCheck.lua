@@ -152,6 +152,14 @@ local instances = {
 	["Castle Nathria"] = "Raid",
 };
 
+local IRT_UnitBuff = IRT_UnitBuff;
+local UnitIsUnit = UnitIsUnit;
+local UnitIsVisible = UnitIsVisible;
+local GetWeaponEnchantInfo = GetWeaponEnchantInfo;
+local GetInventoryItemID = GetInventoryItemID;
+local GetInventorySlotInfo = GetInventorySlotInfo;
+local GetItemInfo = GetItemInfo;
+
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("READY_CHECK");
 f:RegisterEvent("UNIT_AURA");
@@ -283,7 +291,7 @@ local function armorKit()
 			for index, region in pairs(lines) do
 				if (region and region:GetObjectType() == "FontString") then
 					local text = region:GetText() or "";
-					if (text:match("Reinforced %(%+48 Stamina%)")) then
+					if (text:match("Reinforced %(%+9 Stamina%)")) then
 						count = count + 1;
 						local timeUnit = text:reverse():match(".*%)"):reverse();
 						local duration = tonumber(text:reverse():match("%d+"):reverse());
@@ -453,7 +461,7 @@ local function updateConsumables()
 		oilTime = CROSS;
 	end
 	local food, foodIcon, _, _, _, foodTime = IRT_UnitBuff("player", GetSpellInfo(297039)); -- Random Well Fed Buff
-	local rune, runeIcon, _, _, _, runeTime = IRT_UnitBuff("player", GetSpellInfo(270058));
+	local rune, runeIcon, _, _, _, runeTime = IRT_UnitBuff("player", GetSpellInfo(347901));
 	local armorKitCount, armorKitTime = armorKit();
 	local armorKitIcon = 3528447;
 	flaskIcon = flaskIcon and flaskIcon or 2057568;
@@ -603,7 +611,7 @@ end);
 autoKit:HookScript("OnEnter", function(self)
 	updateConsumables();
 	local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFLeft Click loops all slots.|r";
-	for slot, duration in pairs (armorKitTimers) do
+	for slot, duration in pairs(armorKitTimers) do
 		tooltipText = tooltipText .. "\n" .. armorKitSlotSimple[slot] .. ": " .. duration .. "|cFFFFFFFF" .. armorKitSlotBindings[slot] .. "|r";
 	end
 	tooltipText = tooltipText .. "\n|cFFFFFFFFCTRL+ALT+Drag to move\nToggle: /irtc or Middle Click to close.|r";

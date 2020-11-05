@@ -34,6 +34,14 @@ local positionsLex = {
 	["ABORT"] = 6,
 };
 
+local IRT_UnitDebuff = IRT_UnitDebuff;
+local IRT_Contains = IRT_Contains;
+local UnitIsVisible = UnitIsVisible;
+local UnitIsUnit = UnitIsUnit;
+local Ambiguate = Ambiguate;
+local UnitIsConnected = UnitIsConnected;
+local strsplit = strsplit;
+
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("ENCOUNTER_START");
 f:RegisterEvent("ENCOUNTER_END");

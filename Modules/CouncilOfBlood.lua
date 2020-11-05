@@ -12,6 +12,14 @@ local expTime = 0;
 local dfDebuffs = {};
 local leader = nil;
 
+local IRT_UnitDebuff = IRT_UnitDebuff;
+local UnitIsUnit = UnitIsUnit;
+local UnitGroupRolesAssigned = UnitGroupRolesAssigned;
+local Ambiguate = Ambiguate;
+local UnitIsConnected = UnitIsConnected;
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo;
+local strsplit = strsplit;
+
 f:RegisterEvent("ENCOUNTER_START");
 f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("PLAYER_LOGIN");

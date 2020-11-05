@@ -10,6 +10,9 @@ local groupIcons = {
 	["3"] = "DIAMOND",
 };
 
+local IRT_UnitDebuff = IRT_UnitDebuff;
+local IRT_Contains = IRT_Contains;
+local UnitIsUnit = UnitIsUnit;
 
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("ENCOUNTER_START");

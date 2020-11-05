@@ -25,6 +25,7 @@
 ## SavedVariablesPerCharacter: IRT_AutoOilPosition
 ## SavedVariablesPerCharacter: IRT_StoneLegionGeneralsEnabled
 ## SavedVariablesPerCharacter: IRT_HuntsmanAltimorPlayersPerLine
+## SavedVariablesPerCharacter: IRT_HungeringDestroyerSoakCount
 Localization\Localization.enUS.lua
 Core.lua
 Options\Options.lua

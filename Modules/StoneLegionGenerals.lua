@@ -8,6 +8,13 @@ local assignments = {};
 local countdown = -1;
 local currentDispelled = {};
 
+local IRT_UnitDebuff = IRT_UnitDebuff;
+local IRT_Contains = IRT_Contains;
+local UnitIsVisible = UnitIsVisible;
+local UnitIsUnit = UnitIsUnit;
+local Ambiguate = Ambiguate;
+local UnitIsConnected = UnitIsConnected;
+
 f:RegisterEvent("ENCOUNTER_START");
 f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
