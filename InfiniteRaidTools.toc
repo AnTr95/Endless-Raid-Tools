@@ -10,8 +10,7 @@
 ## SavedVariables: IRT_HungeringDestroyerEnabled
 ## SavedVariables: IRT_LadyInervaDarkveinEnabled
 ## SavedVariables: IRT_HuntsmanAltimorEnabled
-## SavedVariables: IRT_TCOB_DFEnabled
-## SavedVariables: IRT_TCOB_DREnabled
+## SavedVariables: IRT_TheCouncilOfBloodEnabled
 ## SavedVariables: IRT_SenderReadyCheck
 ## SavedVariablesPerCharacter: IRT_PopupTextPosition
 ## SavedVariablesPerCharacter: IRT_ConsumableCheckEnabled
