@@ -350,7 +350,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			debuffed = false;
 			targetedPlayers = {};
 			hookedPlayers = {};
-			local raid = {
+			raid = {
 				["TANK"] = {},
 				["HEALER"] = {},
 				["RANGED"] = {},
@@ -369,7 +369,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		debuffed = false;
 		targetedPlayers = {};
 		hookedPlayers = {};
-		local raid = {
+		raid = {
 			["TANK"] = {},
 			["HEALER"] = {},
 			["RANGED"] = {},

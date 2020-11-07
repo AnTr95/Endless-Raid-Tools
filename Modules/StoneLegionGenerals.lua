@@ -38,6 +38,39 @@ local function initHealers()
 	end
 end
 
+local function updateDispelText()
+	local text = "|cFF00FFFFIRT:|r |cFFFFFFFFHeart Rend|r";
+	local count = 1;
+	for pl, healer in pairs(assignments) do
+		pl = Ambiguate(pl, "short");
+		if (UnitIsConnected(pl)) then
+			pl = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pl))].colorStr, pl);
+		end
+		if (UnitIsUnit(healer, playerName) and countdown == -1 and count == 1) then
+			IRT_PopupShow("Dispel " .. pl, 36, L.BOSS_FILE);
+		end
+		healer = Ambiguate(healer, "short");
+		if (UnitIsConnected(healer)) then
+			healer = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(healer))].colorStr, healer);
+		end
+		text = text .. "\n" .. count .. ". " .. healer .. " -> " .. pl;
+		if (count == 1 and countdown ~= -1) then
+			text = text .. " " .. countdown .. "s";
+		end
+		count = count + 1;
+	end
+	if (next(assignments)) then
+		IRT_InfoBoxShow(text, 36);
+	else
+		IRT_InfoBoxHide();
+		if (timer) then
+			timer:Cancel();
+			timer = nil;
+			countdown = -1;
+		end
+	end
+end
+
 local function assignDispels()
 	print("Assigning healers to debuffed healers: ");
 	assignments = {};
@@ -65,33 +98,6 @@ local function assignDispels()
 	updateDispelText();
 end
 
-local function updateDispelText()
-	local text = "|cFF00FFFFIRT:|r |cFFFFFFFFHeart Rend|r";
-	local count = 1;
-	for pl, healer in pairs(assignments) do
-		pl = Ambiguate(pl, "short");
-		if (UnitIsConnected(pl)) then
-			pl = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pl))].colorStr, pl);
-		end
-		if (UnitIsUnit(healer, playerName) and countdown == -1 and count == 1) then
-			IRT_PopupShow("Dispel " .. pl, 36, L.BOSS_FILE);
-		end
-		healer = Ambiguate(healer, "short");
-		if (UnitIsConnected(healer)) then
-			healer = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(healer))].colorStr, healer);
-		end
-		text = text .. "\n" .. count .. ". " .. healer .. " -> " .. pl;
-		if (count == 1 and countdown ~= -1) then
-			text = text .. " " .. countdown .. "s";
-		end
-		count = count + 1;
-	end
-	if (next(assignments)) then
-		IRT_InfoBoxShow(text, 36);
-	else
-		IRT_InfoBoxHide();
-	end
-end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
@@ -122,6 +128,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				updateDispelText();
 				if (timer) then
 					timer:Cancel();
+					timer = nil;
 				end
 				timer = C_Timer.NewTicker(1, function()
 					countdown = countdown - 1;
@@ -146,6 +153,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			assignments = {};
 			countdown = -1;
 			currentDispelled = {};
+			timer = nil;
 			initHealers();
 		end
 	elseif (event == "ENCOUNTER_END" and inEncounter and IRT_StoneLegionGeneralsEnabled) then
@@ -155,6 +163,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		assignments = {};
 		countdown = -1;
 		currentDispelled = {};
+		timer = nil;
 		IRT_InfoBoxHide();
 		IRT_PopupHide(L.BOSS_FILE);
 	end

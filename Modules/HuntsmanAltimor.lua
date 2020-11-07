@@ -3,7 +3,12 @@ local f = CreateFrame("Frame");
 local inEncounter = false;
 local leader = "";
 local debuffed = {};
-local raid = nil;
+local raid = {
+	[1] = {},
+	[2] = {},
+	[3] = {},
+	[4] = {},
+};
 local assignments = {};
 local playerName = GetUnitName("player");
 local assignment = "";
@@ -322,7 +327,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 			debuffed = {};
 			assignment = "";
 			assignments = {};
-			raid = {};
+			raid = {
+				[1] = {},
+				[2] = {},
+				[3] = {},
+				[4] = {},
+			};
 			initRaid();
 			if (timer) then
 				timer:Cancel();
@@ -333,7 +343,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 		inEncounter = false;
 		debuffed = {};
 		assignments = {};
-		raid = {};
+		raid = {
+			[1] = {},
+			[2] = {},
+			[3] = {},
+			[4] = {},
+		};
 		assignment = "";
 		if (timer) then
 			timer:Cancel();
