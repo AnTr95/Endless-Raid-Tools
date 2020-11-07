@@ -235,15 +235,15 @@ local function onUpdate(self, elapsed)
 				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pair))].colorStr, Ambiguate(pair, "short"));
 				if (not IsItemInRange(63427, pair)) then
 					if (plMark) then
-						IRT_InfoBoxShow("IRT: Chain Link + Assignment\n|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 8 yards|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
+						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 8 yards|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
 					else
-						IRT_InfoBoxShow("IRT: Chain Link + Assignment:\n|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 8 yards|r", 56);
+						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 8 yards|r", 56);
 					end
 				else
 					if(plMark) then
-						IRT_InfoBoxShow("IRT: Chain Link + Assignment:\n|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 8 yards|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
+						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 8 yards|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
 					else
-						IRT_InfoBoxShow("IRT: Chain Link + Assignment:\n|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 8 yards|r", 56);
+						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 8 yards|r", 56);
 					end
 				end
 			end

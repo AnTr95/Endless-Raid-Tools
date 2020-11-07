@@ -138,8 +138,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_START" and IRT_StoneLegionGeneralsEnabled) then
 		local eID = ...;
 		local difficulty = select(3, GetInstanceInfo());
-		print(eID)
-		print(difficulty)
 		if (eID == 2417 and difficulty == 16) then
 			print("mythic stone legion started")
 			inEncounter = true;
