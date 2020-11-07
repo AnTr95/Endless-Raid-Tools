@@ -7,6 +7,7 @@ local playerName = GetUnitName("player", true);
 local assignments = {};
 local countdown = -1;
 local currentDispelled = {};
+local timer = nil;
 
 local IRT_UnitDebuff = IRT_UnitDebuff;
 local IRT_Contains = IRT_Contains;
@@ -43,7 +44,7 @@ local function assignDispels()
 	for i, pl in pairs(debuffed) do -- ensure healers dont dispel themselves
 		for j, healer in pairs(healers) do
 			if (IRT_Contains(healers, pl) and not UnitIsUnit(pl, healer)) then
-				print(pl .. " got assigned " .. healer)
+				print(healer .. " got assigned to dispel " .. pl)
 				assignments[pl] = healer;
 				break;
 			end
@@ -54,7 +55,7 @@ local function assignDispels()
 		if (not IRT_ContainsKey(assignments, pl)) then
 			for j, healer in pairs(healers) do
 				if (not IRT_Contains(assignments, healer)) then
-					print(pl .. " got assigned " .. healer)
+					print(healer .. " got assigned to dispel " .. pl)
 					assignments[pl] = healer;
 					break;
 				end
@@ -65,7 +66,7 @@ local function assignDispels()
 end
 
 local function updateDispelText()
-	local text = "|cFFFFFFFFHeart Rend|r";
+	local text = "|cFF00FFFFIRT:|r |cFFFFFFFFHeart Rend|r";
 	local count = 1;
 	for pl, healer in pairs(assignments) do
 		pl = Ambiguate(pl, "short");
@@ -85,10 +86,10 @@ local function updateDispelText()
 		end
 		count = count + 1;
 	end
-	if (text == "|cFFFFFFFFHeart Rend|r") then
-		IRT_InfoBoxHide();
-	else
+	if (next(assignments)) then
 		IRT_InfoBoxShow(text, 36);
+	else
+		IRT_InfoBoxHide();
 	end
 end
 
@@ -98,7 +99,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "UNIT_AURA" and inEncounter and IRT_StoneLegionGeneralsEnabled) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
-		if (IRT_UnitDebuff(unit, GetSpellInfo(334675))) then
+		if (IRT_UnitDebuff(unit, GetSpellInfo(334765))) then
 			if (not IRT_Contains(debuffed, unitName)) then
 				print(unitName .. " got debuffed")
 				debuffed[#debuffed+1] = unitName;
@@ -109,9 +110,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (IRT_Contains(debuffed, unitName)) then
 				print(unitName .. " got debuffed removed")
 				debuffed[IRT_Contains(debuffed, unitName)] = nil;
-				if (UnitIsUnit(playerName, assignments[unitName])) then
-					IRT_PopupHide(L.BOSS_FILE);
-				end
 				assignments[unitName] = nil;
 				updateDispelText();
 			end
@@ -122,7 +120,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 				currentDispelled[#currentDispelled+1] = unitName;
 				countdown = 6;
 				updateDispelText();
-				C_Timer.NewTicker(1, function()
+				if (timer) then
+					timer:Cancel();
+				end
+				timer = C_Timer.NewTicker(1, function()
 					countdown = countdown - 1;
 					updateDispelText();
 				end, 7);
@@ -137,9 +138,11 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_START" and IRT_StoneLegionGeneralsEnabled) then
 		local eID = ...;
 		local difficulty = select(3, GetInstanceInfo());
-		if (eID == 2337 and difficulty == 16) then
+		print(eID)
+		print(difficulty)
+		if (eID == 2417 and difficulty == 16) then
 			print("mythic stone legion started")
-			inEncounter = false;
+			inEncounter = true;
 			healers = {};
 			debuffed = {};
 			assignments = {};

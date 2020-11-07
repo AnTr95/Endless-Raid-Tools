@@ -41,8 +41,8 @@ local function onUpdate(self, elapsed)
 						moveTime = 4;
 					end
 					IRT_PopupShow("MOVE IN " .. moveTime, 1, L.BOSS_FILE);
-					timer = C_Timer.NewTicker(1, function()
-						local moveTime = math.floor(expTime - GetTime())%4;
+					timer = C_Timer.NewTicker(0.5, function()
+						local moveTime = math.floor(expTime - GetTime())%1.5;
 						if (moveTime == 0) then
 							IRT_PopupShow("MOVE NOW!", 1, L.BOSS_FILE);
 						else
@@ -187,7 +187,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				f:SetScript("OnUpdate", nil);
 			elseif (UnitIsUnit(playerName, leader) and spellID == 347350 and IRT_TCOB_DFEnabled) then
 				dfDebuffs[target] = nil;
-				if (#dfDebuffs > 0) then
+				if (next(dfDebuffs)) then
 					print(target .. " got debuff removed still " ..#dfDebuffs .. " debuffs")
 					updateDF();
 				else

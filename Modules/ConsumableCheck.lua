@@ -468,9 +468,9 @@ local function updateConsumables()
 	oilIcon = oilIcon and oilIcon or 463543;
 	foodIcon = foodIcon and foodIcon or 136000;
 	runeIcon = runeIcon and runeIcon or 519379;
-	if (ReadyCheckFrame:IsShown() and (not UnitIsUnit(rcSender, playerName) or IRT_SenderReadyCheck)) then
+	if (ReadyCheckFrame:IsShown() and ReadyCheckFrameText:GetText() and (not UnitIsUnit(rcSender, playerName) or IRT_SenderReadyCheck)) then
 		local blizzText = ReadyCheckFrameText:GetText();
-		if (UnitIsUnit(playerName.."(Consumable Check)", ReadyCheckFrame.initiator)) then
+		if (UnitIsUnit(playerName.."(Consumable Check)", ReadyCheckFrame.initiator)) then --this is a bug without elvui
 			blizzText = playerName .. "(Consumable Check) initiated a ready check";
 		else
 			if (blizzText:find("%-")) then
