@@ -93,29 +93,9 @@ local CHECK = "\124TInterface\\addons\\InfiniteRaidTools\\Res\\check:16\124t";
 local rcSender = "";
 local raiders = {};
 local lastZone = "";
-local armorKitSlots = {"ChestSlot", "LegsSlot", "HandsSlot", "FeetSlot"};
 local playerName = UnitName("player");
 
-local armorKitTimers = {
-	["ChestSlot"] = 0,
-	["LegsSlot"] = 0,
-	["HandsSlot"] = 0,
-	["FeetSlot"] = 0,
-};
-
-local armorKitSlotSimple = {
-	["ChestSlot"] = "Chest",
-	["LegsSlot"] = "Legs",
-	["HandsSlot"] = "Hands",
-	["FeetSlot"] = "Feet",
-};
-
-local armorKitSlotBindings = {
-	["ChestSlot"] = " SHIFT+Left Click to reapply",
-	["LegsSlot"] = " SHIFT+Right Click to reapply",
-	["HandsSlot"] = " CTRL+Left Click to reapply",
-	["FeetSlot"] = " CTRL+Right Click to reapply",
-};
+local armorKitTimer = 0;
 local oilTimers = {
 	["Main Hand"] = 0,
 	["Off Hand"] = 0,
@@ -172,12 +152,8 @@ autoKit:ClearAllPoints();
 autoKit:RegisterForClicks("RightButtonUp", "LeftButtonUp", "MiddleButtonUp");
 autoKit:SetNormalTexture("Interface\\Icons\\inv_leatherworking_armorpatch_heavy");
 
-autoKit:SetAttribute("type", "macro"); 
-autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 5\n/click StaticPopup1Button1");
-autoKit:SetAttribute("shift-macrotext1", "/Use Heavy Desolate Armor Kit\n/use 5\n/click StaticPopup1Button1"); 
-autoKit:SetAttribute("ctrl-macrotext1", "/Use Heavy Desolate Armor Kit\n/use 10\n/click StaticPopup1Button1"); 
-autoKit:SetAttribute("shift-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 7\n/click StaticPopup1Button1"); 
-autoKit:SetAttribute("ctrl-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 8\n/click StaticPopup1Button1"); 
+autoKit:SetAttribute("type1", "macro"); 
+autoKit:SetAttribute("macrotext", "/Use Heavy Desolate Armor Kit\n/use 5\n/click StaticPopup1Button1");
 
 autoKit:SetSize(25,25);
 autoKit:SetPoint("RIGHT", ReadyCheckFrame, "RIGHT", 40, 15);
@@ -187,6 +163,7 @@ autoKit:SetMovable(true);
 autoKit:RegisterForDrag("LeftButton");
 local autoKitCooldown = CreateFrame("Cooldown", "IRT_AutoKitCooldown", autoKit, "CooldownFrameTemplate")
 autoKitCooldown:SetAllPoints();
+autoKit:SetUserPlaced(false);
 autoKit:Hide();
 
 autoKit:SetScript("OnLeave", function(self)
@@ -279,86 +256,62 @@ scanTooltip:AddFontStrings(
 );
 
 local function armorKit()
-	local count = 0;
-	local shortest = nil;
-	for i = 1, #armorKitSlots do
-		local slotID = select(1, GetInventorySlotInfo(armorKitSlots[i]));
-		scanTooltip:ClearLines();
-		local hasItem = scanTooltip:SetInventoryItem("player", slotID);
-		armorKitTimers[armorKitSlots[i]] = RED .. "0min|r";
-		if (hasItem) then
-			local lines = {scanTooltip:GetRegions()};
-			for index, region in pairs(lines) do
-				if (region and region:GetObjectType() == "FontString") then
-					local text = region:GetText() or "";
-					if (text:match("Reinforced %(%+9 Stamina%)")) then
-						count = count + 1;
-						local timeUnit = text:reverse():match(".*%)"):reverse();
-						local duration = tonumber(text:reverse():match("%d+"):reverse());
-						if (timeUnit:match("hours")) then
-							armorKitTimers[armorKitSlots[i]] = GREEN .. "2hrs|r";
+	local duration = nil;
+	local slotID = select(1, GetInventorySlotInfo("ChestSlot"))
+	scanTooltip:ClearLines();
+	local hasItem = scanTooltip:SetInventoryItem("player", slotID);
+	armorKitTimer = RED .. "0m|r";
+	if (hasItem) then
+		local lines = {scanTooltip:GetRegions()};
+		for index, region in pairs(lines) do
+			if (region and region:GetObjectType() == "FontString") then
+				local text = region:GetText() or "";
+				if (text:match("Reinforced %(%+32 Stamina%)")) then
+					local timeUnit = text:reverse():match(".*%)"):reverse();
+					duration = tonumber(text:reverse():match("%d+"):reverse());
+					if (timeUnit:match("hours")) then
+						armorKitTimer = GREEN .. "2hrs|r";
+						duration = 61;
+					elseif(timeUnit:match("hour")) then
+						armorKitTimer = GREEN .. "60min|r";
+						duration = 60;
+					elseif(timeUnit:match("min")) then
+						armorKitTimer = GREEN .. duration .."min|r";
+					else
+						armorKitTimer = GREEN .. "2hrs|r";
+						duration = 61;
+					end
+					--[[
+					for number in text:gmatch("(%d+)") do
+						if (tonumber(number) ~= 48) then
 							if (shortest == nil) then
-								shortest = 61;
-							end
-						elseif(timeUnit:match("hour")) then
-							armorKitTimers[armorKitSlots[i]] = GREEN .. "60min|r";
-							if (shortest == nil) then
-								shortest = 60;
-							elseif (shortest > 60) then
-								shortest = 60;
-							end
-						elseif(timeUnit:match("min")) then
-							armorKitTimers[armorKitSlots[i]] = GREEN .. duration .."min|r";
-							if (shortest == nil) then
-								shortest = duration;
-							elseif (shortest > duration) then
-								shortest = duration;
-							end
-						else
-							armorKitTimers[armorKitSlots[i]] = GREEN .. "2hrs|r";
-							if (shortest == nil) then
-								shortest = 61;
-							end
-						end
-						break;
-						--[[
-						for number in text:gmatch("(%d+)") do
-							if (tonumber(number) ~= 48) then
-								if (shortest == nil) then
+								shortest = tonumber(number);
+							else
+								if (shortest > tonumber(number)) then
 									shortest = tonumber(number);
-								else
-									if (shortest > tonumber(number)) then
-										shortest = tonumber(number);
-									end
 								end
 							end
 						end
-						if (shortest == nil) then
-							shortest = 48;
-						end
-						]]
 					end
+					if (shortest == nil) then
+						shortest = 48;
+					end
+					]]
 				end
 			end
 		end
 	end
-	if (count < 4) then
-		count = RED .. count .. "/4|r ";
-	elseif (count == 4) then
-		count = GREEN .. count .. "/4|r ";
-	end
-	if (shortest == nil) then
-		shortest = "";
-		count = CROSS;
+	if (duration == nil) then
+		duration = CROSS;
 	else
-		if (shortest == 61) then
-			shortest = GREEN .. "2hrs|r";
-		elseif (shortest > 15) then
-			shortest = GREEN .. shortest .. "min|r";
-		elseif (shortest <= 15 and shortest > 8) then
-			shortest = YELLOW .. shortest .. "min|r";
-		elseif (shortest <= 8) then
-			shortest = RED .. shortest .. "min|r";
+		if (duration == 61) then
+			duration = GREEN .. "2h|r";
+		elseif (duration > 15) then
+			duration = GREEN .. duration .. "m|r";
+		elseif (duration <= 15 and duration > 8) then
+			duration = YELLOW .. duration .. "m|r";
+		elseif (duration <= 8) then
+			duration = RED .. duration .. "m|r";
 		end
 	end
 	if(autoOil:IsMouseOver()) then
@@ -380,16 +333,12 @@ local function armorKit()
 	end
 	if(autoKit:IsMouseOver()) then
 		GameTooltip:Hide();
-		local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFLeft Click loops all slots.|r";
-		for slot, duration in pairs (armorKitTimers) do
-			tooltipText = tooltipText .. "\n" .. armorKitSlotSimple[slot] .. ": " .. duration .. "|cFFFFFFFF" .. armorKitSlotBindings[slot] .. "|r";
-		end
-		tooltipText = tooltipText .. "\n|cFFFFFFFFCTRL+ALT+Drag to move\nToggle: /irtc or Middle Click to close.|r";
+		local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFClick to reapply.|r\nChest: " .. armorKitTimer .. "\n|cFFFFFFFFCTRL+ALT+Drag to move\nToggle: /irtc or Middle Click to close.|r";
 		GameTooltip:SetOwner(autoKit);
 		GameTooltip:SetText(tooltipText);
 		GameTooltip:Show();
 	end
-	return count, shortest;
+	return duration;
 	--3528447
 	--Reinforced (+48 Stamina)
 end
@@ -450,11 +399,11 @@ local function updateConsumables()
 			oilCount = "";
 		end
 		if (oilTime > 15) then
-			oilTime = GREEN .. oilTime .. "min|r";
+			oilTime = GREEN .. oilTime .. "m|r";
 		elseif (oilTime <= 15 and oilTime > 8) then
-			oilTime = YELLOW .. oilTime .. "min|r";
+			oilTime = YELLOW .. oilTime .. "m|r";
 		elseif (oilTime <= 8) then
-			oilTime = RED .. oilTime .. "min|r";
+			oilTime = RED .. oilTime .. "m|r";
 		end
 	else
 		oilCount = "";
@@ -462,16 +411,16 @@ local function updateConsumables()
 	end
 	local food, foodIcon, _, _, _, foodTime = IRT_UnitBuff("player", GetSpellInfo(297039)); -- Random Well Fed Buff
 	local rune, runeIcon, _, _, _, runeTime = IRT_UnitBuff("player", GetSpellInfo(347901));
-	local armorKitCount, armorKitTime = armorKit();
+	local armorKitTime = armorKit();
 	local armorKitIcon = 3528447;
 	flaskIcon = flaskIcon and flaskIcon or 2057568;
 	oilIcon = oilIcon and oilIcon or 463543;
 	foodIcon = foodIcon and foodIcon or 136000;
-	runeIcon = runeIcon and runeIcon or 519379;
+	runeIcon = runeIcon and runeIcon or 134078;
 	if (ReadyCheckFrame:IsShown() and ReadyCheckFrameText:GetText() and (not UnitIsUnit(rcSender, playerName) or IRT_SenderReadyCheck)) then
 		local blizzText = ReadyCheckFrameText:GetText();
-		if (UnitIsUnit(playerName.."(Consumable Check)", ReadyCheckFrame.initiator)) then --this is a bug without elvui
-			blizzText = playerName .. "(Consumable Check) initiated a ready check";
+		if (UnitIsUnit("|cFF00FFFFIRT:|r Consumable Check", ReadyCheckFrame.initiator)) then --this is a bug without elvui
+			blizzText = "|cFF00FFFFIRT:|r Consumable Check";
 		else
 			if (blizzText:find("%-")) then
 				local head, tail, name = blizzText:find("([^-]*)");
@@ -485,11 +434,11 @@ local function updateConsumables()
 		flaskTime = flaskTime and math.floor((tonumber(flaskTime)-currTime)/60) or nil;
 		if (flaskTime) then
 			if (flaskTime > 15) then
-				flaskTime = GREEN .. flaskTime .. "min|r";
+				flaskTime = GREEN .. flaskTime .. "m|r";
 			elseif (flaskTime <= 15 and flaskTime > 8) then
-				flaskTime = YELLOW .. flaskTime .. "min|r";
+				flaskTime = YELLOW .. flaskTime .. "m|r";
 			elseif (flaskTime <= 8) then
-				flaskTime = RED .. flaskTime .. "min|r";
+				flaskTime = RED .. flaskTime .. "m|r";
 			end
 		else
 			flaskTime = CROSS;
@@ -524,53 +473,37 @@ local function updateConsumables()
 					count = count + 1;
 				end
 			end
-			if (ReadyCheckFrame.backdrop and ReadyCheckFrame.backdrop.backdropInfo and ReadyCheckFrame.backdrop.backdropInfo.bgFile and ReadyCheckFrame.backdrop.backdropInfo.bgFile:match("ElvUI")) then
+			--if (ReadyCheckFrame.backdrop and ReadyCheckFrame.backdrop.backdropInfo and ReadyCheckFrame.backdrop.backdropInfo.bgFile and ReadyCheckFrame.backdrop.backdropInfo.bgFile:match("ElvUI")) then
 				ReadyCheckFrameText:SetSize(320, 40);
-				ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
-			else
-				f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -17);
-				f2:Show();
-				rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
-			end
+				ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "0/0" .. total) or (RED .. count .. "0/0" .. total)));
+			--else
+			--	f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -17);
+			--	f2:Show();
+			--	rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
+			--end
 			--ReadyCheckFrameText:SetText(blizzText);
 			--text2:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. "  \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime);
 			--text3:SetText("\124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
 			--rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
 		else
-			if (ReadyCheckFrame.backdrop and ReadyCheckFrame.backdrop.backdropInfo and ReadyCheckFrame.backdrop.backdropInfo.bgFile and ReadyCheckFrame.backdrop.backdropInfo.bgFile:match("ElvUI")) then
+			--if (ReadyCheckFrame.backdrop and ReadyCheckFrame.backdrop.backdropInfo and ReadyCheckFrame.backdrop.backdropInfo.bgFile and ReadyCheckFrame.backdrop.backdropInfo.bgFile:match("ElvUI")) then
 				ReadyCheckFrameText:SetSize(320, 40);
-				ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS));
-			else
-				f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -17);
-				f2:Show();
-				rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS));
-			end
+				ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS));
+			--else
+			--	f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -17);
+			--	f2:Show();
+			--	rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS));
+			--end
 			--ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS)); 
 		end
 	end
 end
 
 autoKit:HookScript("OnClick", function(self, button, down)
-	autoKit:SetAttribute("shift-macrotext1", "/Use Heavy Desolate Armor Kit\n/use 5\n/click StaticPopup1Button1"); 
-	autoKit:SetAttribute("ctrl-macrotext1", "/Use Heavy Desolate Armor Kit\n/use 10\n/click StaticPopup1Button1"); 
-	autoKit:SetAttribute("shift-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 7\n/click StaticPopup1Button1"); 
-	autoKit:SetAttribute("ctrl-macrotext2", "/Use Heavy Desolate Armor Kit\n/use 8\n/click StaticPopup1Button1"); 
+	autoKit:SetAttribute("macrotext", "/Use Heavy Desolate Armor Kit\n/use 5\n/click StaticPopup1Button1"); 
 	if (button == "MiddleButton") then
 		autoKit:Hide();
 		autoOil:Hide();
-	elseif (not UnitCastingInfo("player") and select(1, GetItemCooldown(172347) == 0)) then
-		autoKitCooldown:SetCooldown(GetTime()+1.5, 1);
-		currentKitIndex = currentKitIndex + 1;
-		if (currentKitIndex == 1 or currentKitIndex == 5) then
-			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 5\n/click StaticPopup1Button1"); 
-			currentKitIndex = 1;
-		elseif (currentKitIndex == 2) then
-			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 10\n/click StaticPopup1Button1"); 
-		elseif (currentKitIndex == 3) then
-			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 7\n/click StaticPopup1Button1"); 
-		elseif (currentKitIndex == 4) then 
-			autoKit:SetAttribute("macrotext1", "/Use Heavy Desolate Armor Kit\n/use 8\n/click StaticPopup1Button1"); 
-		end
 	end
 end);
 
@@ -610,11 +543,7 @@ end);
 
 autoKit:HookScript("OnEnter", function(self)
 	updateConsumables();
-	local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFLeft Click loops all slots.|r";
-	for slot, duration in pairs(armorKitTimers) do
-		tooltipText = tooltipText .. "\n" .. armorKitSlotSimple[slot] .. ": " .. duration .. "|cFFFFFFFF" .. armorKitSlotBindings[slot] .. "|r";
-	end
-	tooltipText = tooltipText .. "\n|cFFFFFFFFCTRL+ALT+Drag to move\nToggle: /irtc or Middle Click to close.|r";
+	local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFClick to reapply.|r\nChest: " .. armorKitTimer .. "\n|cFFFFFFFFCTRL+ALT+Drag to move\nToggle: /irtc or Middle Click to close.|r";
 	GameTooltip:SetOwner(self);
 	GameTooltip:SetText(tooltipText);
 	GameTooltip:Show();
@@ -631,7 +560,7 @@ ReadyCheckFrame:HookScript("OnShow", function()
 	if (IRT_ConsumableCheckEnabled) then
 		if (UnitIsUnit(ReadyCheckFrame.initiator, playerName) and IRT_SenderReadyCheck) then
 			C_Timer.After(0.5, function()
-				ShowReadyCheck(playerName.."(Consumable Check)", 38); --fool the game its not the player
+				ShowReadyCheck("|cFF00FFFFIRT:|r Consumable Check", 38); --fool the game its not the player
 				SetPortraitTexture(ReadyCheckPortrait, playerName);
 				updateConsumables();
 				autoKit:Show(); 
