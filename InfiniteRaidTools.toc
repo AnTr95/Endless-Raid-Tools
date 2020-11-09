@@ -20,6 +20,8 @@
 ## SavedVariablesPerCharacter: IRT_MinimapMode
 ## SavedVariablesPerCharacter: IRT_MinimapDegree
 ## SavedVariablesPerCharacter: IRT_InfoBoxPosition
+## SavedVariablesPerCharacter: IRT_ConsumablesEnabled
+## SavedVariablesPerCharacter: IRT_ConsumableAutoButtonsEnabled
 ## SavedVariablesPerCharacter: IRT_AutoKitPosition
 ## SavedVariablesPerCharacter: IRT_AutoOilPosition
 ## SavedVariablesPerCharacter: IRT_StoneLegionGeneralsEnabled
