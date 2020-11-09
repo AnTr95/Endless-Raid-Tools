@@ -246,7 +246,7 @@ local function armorKit()
 	local slotID = select(1, GetInventorySlotInfo("ChestSlot"))
 	scanTooltip:ClearLines();
 	local hasItem = scanTooltip:SetInventoryItem("player", slotID);
-	armorKitTimer = RED .. "0m|r";
+	armorKitTimer = RED .. "0min|r";
 	if (hasItem) then
 		local lines = {scanTooltip:GetRegions()};
 		for index, region in pairs(lines) do
@@ -291,16 +291,16 @@ local function armorKit()
 		duration = CROSS;
 	else
 		if (duration == 61) then
-			duration = GREEN .. "2h|r";
+			duration = GREEN .. "2hrs|r";
 		elseif (duration > 15) then
-			duration = GREEN .. duration .. "m|r";
+			duration = GREEN .. duration .. "min|r";
 		elseif (duration <= 15 and duration > 8) then
-			duration = YELLOW .. duration .. "m|r";
+			duration = YELLOW .. duration .. "min|r";
 		elseif (duration <= 8) then
-			duration = RED .. duration .. "m|r";
+			duration = RED .. duration .. "min|r";
 		end
 	end
-	if(autoOil:IsMouseOver()) then
+	if(autoOil:IsMouseOver() and autoOil:IsShown()) then
 		GameTooltip:Hide();
 		local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFLeft+Modifier for main hand\nRight+Modifier for off hand|r\nModifiers:";
 		for id, modifierInfo in pairs (oilBindings) do
@@ -317,7 +317,7 @@ local function armorKit()
 		GameTooltip:SetText(tooltipText);
 		GameTooltip:Show();
 	end
-	if(autoKit:IsMouseOver()) then
+	if(autoKit:IsMouseOver() and autoKit:IsShown()) then
 		GameTooltip:Hide();
 		local tooltipText = "|cFF00FFFFIRT:|r\n|cFFFFFFFFClick to reapply.|r\nChest: " .. armorKitTimer .. "\n|cFFFFFFFFCTRL+ALT+Drag to move\nToggle: /irtc or Middle Click to close.|r";
 		GameTooltip:SetOwner(autoKit);
@@ -355,25 +355,25 @@ local function updateConsumables()
 	if (oilTime and offhandOilTime) then
 		oilTime = math.floor(tonumber(oilTime)/1000/60);
 		offhandOilTime = math.floor(tonumber(offhandOilTime)/1000/60);
-		oilTimers["Main Hand"] = GREEN .. oilTime .. "m|r";
-		oilTimers["Off Hand"] = GREEN .. offhandOilTime .. "m|r";
+		oilTimers["Main Hand"] = GREEN .. oilTime .. "min|r";
+		oilTimers["Off Hand"] = GREEN .. offhandOilTime .. "min|r";
 		oilCount = 2;
 		if (oilTime > offhandOilTime) then
 			oilTime = offhandOilTime;
 		end
 	elseif (oilTime) then
 		oilTime = math.floor(tonumber(oilTime)/1000/60);
-		oilTimers["Main Hand"] = GREEN .. oilTime .. "m|r";
-		oilTimers["Off Hand"] = RED .. "0m|r";
+		oilTimers["Main Hand"] = GREEN .. oilTime .. "min|r";
+		oilTimers["Off Hand"] = RED .. "0min|r";
 		oilCount = 1;
 	elseif (offhandOilTime) then
 		oilTime = math.floor(tonumber(offhandOilTime)/1000/60);
-		oilTimers["Main Hand"] = RED .. "0m|r"
-		oilTimers["Off Hand"] = GREEN .. oilTime .. "m|r";
+		oilTimers["Main Hand"] = RED .. "0min|r"
+		oilTimers["Off Hand"] = GREEN .. oilTime .. "min|r";
 		oilCount = 1;
 	else
-		oilTimers["Main Hand"] = RED .. "0m|r";
-		oilTimers["Off Hand"] = RED .. "0m|r";
+		oilTimers["Main Hand"] = RED .. "0min|r";
+		oilTimers["Off Hand"] = RED .. "0min|r";
 		oilTime = nil;
 	end
 	if (oilTime) then
@@ -385,11 +385,11 @@ local function updateConsumables()
 			oilCount = "";
 		end
 		if (oilTime > 15) then
-			oilTime = GREEN .. oilTime .. "m|r";
+			oilTime = GREEN .. oilTime .. "min|r";
 		elseif (oilTime <= 15 and oilTime > 8) then
-			oilTime = YELLOW .. oilTime .. "m|r";
+			oilTime = YELLOW .. oilTime .. "min|r";
 		elseif (oilTime <= 8) then
-			oilTime = RED .. oilTime .. "m|r";
+			oilTime = RED .. oilTime .. "min|r";
 		end
 	else
 		oilCount = "";
@@ -405,8 +405,8 @@ local function updateConsumables()
 	runeIcon = runeIcon and runeIcon or 134078;
 	if (ReadyCheckFrame:IsShown() and ReadyCheckFrameText:GetText() and (not UnitIsUnit(rcSender, playerName) or IRT_SenderReadyCheck)) then
 		local blizzText = ReadyCheckFrameText:GetText();
-		if (UnitIsUnit("|cFF00FFFFIRT:|r Consumable Check", ReadyCheckFrame.initiator)) then --this is a bug without elvui
-			blizzText = "|cFF00FFFFIRT:|r Consumable Check";
+		if (UnitIsUnit(playerName.."(Consumable Check)", ReadyCheckFrame.initiator)) then --this is a bug without elvui
+			blizzText = playerName .. "(Consumable Check) initiated a ready check";
 		else
 			if (blizzText:find("%-")) then
 				local head, tail, name = blizzText:find("([^-]*)");
@@ -420,11 +420,11 @@ local function updateConsumables()
 		flaskTime = flaskTime and math.floor((tonumber(flaskTime)-currTime)/60) or nil;
 		if (flaskTime) then
 			if (flaskTime > 15) then
-				flaskTime = GREEN .. flaskTime .. "m|r";
+				flaskTime = GREEN .. flaskTime .. "min|r";
 			elseif (flaskTime <= 15 and flaskTime > 8) then
-				flaskTime = YELLOW .. flaskTime .. "m|r";
+				flaskTime = YELLOW .. flaskTime .. "min|r";
 			elseif (flaskTime <= 8) then
-				flaskTime = RED .. flaskTime .. "m|r";
+				flaskTime = RED .. flaskTime .. "min|r";
 			end
 		else
 			flaskTime = CROSS;
@@ -461,7 +461,7 @@ local function updateConsumables()
 			end
 			if (ReadyCheckFrame.backdrop and ReadyCheckFrame.backdrop.backdropInfo and ReadyCheckFrame.backdrop.backdropInfo.bgFile and ReadyCheckFrame.backdrop.backdropInfo.bgFile:match("ElvUI")) then
 				ReadyCheckFrameText:SetSize(320, 40);
-				ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "0/0" .. total) or (RED .. count .. "/" .. total)));
+				ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
 			else
 				f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -17);
 				f2:Show();
@@ -546,21 +546,27 @@ ReadyCheckFrame:HookScript("OnShow", function()
 	if (IRT_ConsumableCheckEnabled) then
 		if (UnitIsUnit(ReadyCheckFrame.initiator, playerName) and IRT_SenderReadyCheck) then
 			C_Timer.After(0.5, function()
-				ShowReadyCheck("|cFF00FFFFIRT:|r Consumable Check", 38); --fool the game its not the player
+				ShowReadyCheck(playerName.."(Consumable Check)", 38); --fool the game its not the player
 				SetPortraitTexture(ReadyCheckPortrait, playerName);
 				updateConsumables();
-				autoKit:Show(); 
-				autoOil:Show();
+				if (IRT_ConsumableAutoButtonsEnabled) then
+					autoKit:Show(); 
+					autoOil:Show();
+				end
 				f2:Show();
 			end);
 		elseif (not UnitIsUnit(ReadyCheckFrame.initiator, playerName)) then
 			f2:Show();
-			autoKit:Show(); 
-			autoOil:Show();
+			if (IRT_ConsumableAutoButtonsEnabled) then
+				autoKit:Show(); 
+				autoOil:Show();
+			end
 		elseif (not IRT_SenderReadyCheck) then
 			--updateConsumables();
-			autoKit:Show(); 
-			autoOil:Show();
+			if (IRT_ConsumableAutoButtonsEnabled) then
+				autoKit:Show(); 
+				autoOil:Show();
+			end
 		end
 		--ReadyCheckFrame:Show();
 		--ReadyCheckListenerFrame:Show();
@@ -571,20 +577,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (IRT_ConsumableCheckEnabled == nil) then IRT_ConsumableCheckEnabled = true; end
 		if (IRT_SenderReadyCheck == nil) then IRT_SenderReadyCheck = true; end
 		if (IRT_ConsumableAutoButtonsEnabled == nil) then IRT_ConsumableAutoButtonsEnabled = true; end
-		if (IRT_ConsumablesEnabled == nil) then
-			IRT_ConsumablesEnabled = {
-				["Flask"] = true,
-				["Oil"] = true,
-				["ArmorKit"] = true,
-				["Food"] = true,
-				["AugmentRune"] = true,
-				["Buff"] = true,
-			};
-			local class = select(2, UnitClass("player"));
-			if (class ~= "MAGE" and class ~= "PRIEST" and class ~= "WARRIOR") then
-				IRT_ConsumablesEnabled["Buff"] = false;
-			end
-		end
 	elseif (event == "READY_CHECK" and IRT_ConsumableCheckEnabled) then
 		local sender = ...;
 		rcSender = sender;
