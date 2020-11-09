@@ -92,7 +92,6 @@ local CROSS = "\124TInterface\\addons\\InfiniteRaidTools\\Res\\cross:16\124t";
 local CHECK = "\124TInterface\\addons\\InfiniteRaidTools\\Res\\check:16\124t";
 local rcSender = "";
 local raiders = {};
-local lastZone = "";
 local playerName = UnitName("player");
 
 local armorKitTimer = 0;
@@ -120,18 +119,6 @@ local buffIconIDs = {
 	["WARRIOR"] = 132333,
 };
 
-local instances = {
-	["De Other Side"] = "Dungeon",
-	["Halls of Atonement"] = "Dungeon",
-	["Mist of Tirna Scithe"] = "Dungeon",
-	["Plaguefall"] = "Dungeon",
-	["Sanguine Depths"] = "Dungeon",
-	["Spire of Ascension"] = "Dungeon",
-	["The Necrotic Wake"] = "Dungeon",
-	["Theater of Pain"] = "Dungeon",
-	["Castle Nathria"] = "Raid",
-};
-
 local IRT_UnitBuff = IRT_UnitBuff;
 local UnitIsUnit = UnitIsUnit;
 local UnitIsVisible = UnitIsVisible;
@@ -144,7 +131,6 @@ f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("READY_CHECK");
 f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("UNIT_INVENTORY_CHANGED");
-f:RegisterEvent("ZONE_CHANGED_NEW_AREA");
 
 local currentKitIndex = 1;
 local autoKit = CreateFrame("Button", "IRT_AutoKitButton", nil, "SecureActionButtonTemplate");
@@ -475,7 +461,7 @@ local function updateConsumables()
 			end
 			--if (ReadyCheckFrame.backdrop and ReadyCheckFrame.backdrop.backdropInfo and ReadyCheckFrame.backdrop.backdropInfo.bgFile and ReadyCheckFrame.backdrop.backdropInfo.bgFile:match("ElvUI")) then
 				ReadyCheckFrameText:SetSize(320, 40);
-				ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "0/0" .. total) or (RED .. count .. "0/0" .. total)));
+				ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
 			--else
 			--	f2:SetPoint("BOTTOM", ReadyCheckFrame, "BOTTOM", 0, -17);
 			--	f2:Show();
@@ -584,34 +570,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		if (IRT_ConsumableCheckEnabled == nil) then IRT_ConsumableCheckEnabled = true; end
 		if (IRT_SenderReadyCheck == nil) then IRT_SenderReadyCheck = true; end
-		lastZone = GetInstanceInfo();
-	elseif (event == "ZONE_CHANGED_NEW_AREA" and IRT_ConsumableCheckEnabled) then
-		local zone, instanceType = GetInstanceInfo();
-		if (zone ~= lastZone and instances[zone]) then
-			if (instanceType == "party") then
-				f:RegisterEvent("CHALLENGE_MODE_START");
-			elseif(instanceType == "raid") then
-				f:RegisterEvent("ENCOUNTER_START");
-			end
-			autoKit:Show();
-			autoOil:Show();
-		elseif (zone ~= lastZone and not instances[zone] and instances[lastZone]) then
-			autoKit:Hide();
-			autoOil:Hide();
-		end
-		lastZone = GetInstanceInfo();
-		--local difficulty = select(3, GetInstanceInfo()); -- This is 0 out of instances
-	elseif (event == "CHALLENGE_MODE_START" and IRT_ConsumableCheckEnabled) then
-		f:UnregisterEvent("CHALLENGE_MODE_START");
-		f:RegisterEvent("PLAYER_REGEN_DISABLED");
-	elseif (event == "ENCOUNTER_START" and IRT_ConsumableCheckEnabled) then
-		f:UnregisterEvent("ENCOUNTER_START");
-		autoKit:Hide();
-		autoOil:Hide();
-	elseif (event == "PLAYER_REGEN_DISABLED" and IRT_ConsumableCheckEnabled) then
-		f:UnregisterEvent("PLAYER_REGEN_DISABLED");
-		autoKit:Hide();
-		autoOil:Hide();
 	elseif (event == "READY_CHECK" and IRT_ConsumableCheckEnabled) then
 		local sender = ...;
 		rcSender = sender;
