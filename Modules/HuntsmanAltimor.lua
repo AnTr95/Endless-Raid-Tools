@@ -852,6 +852,7 @@ end
 
 function HA_Test(p1, p2, p3)
 	inEncounter = true;
+	raid = nil;
 	if (raid == nil) then
 		raid = {
 			[1] = {"Bram", "Nost", "Marie", "Cata", "Dez"},
@@ -903,7 +904,7 @@ function HA_Test(p1, p2, p3)
 				debuffed[i] = raid[rngGroup][rngPlayer];
 				print(raid[rngGroup][rngPlayer]);
 				local unitName = raid[rngGroup][rngPlayer];
-				--SetRaidTarget(unitName, #debuffed);
+				SetRaidTarget(unitName, #debuffed);
 				local expTime = GetTime()+5;
 				if (not expTime) then
 					expTime = select(7, IRT_UnitDebuff(unit, GetSpellInfo(335112)));
