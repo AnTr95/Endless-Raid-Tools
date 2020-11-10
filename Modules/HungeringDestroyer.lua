@@ -247,6 +247,14 @@ local function updateGroups()
 								C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
 								count = count + 1;
 								assignments[grp][count] = player;
+								for j, pl in pairs(raid[grp]) do
+									if (not IRT_Contains(assignments[grp], pl) and debuffed[pl] == nil) then
+										print(pl .. " soaks next debuff instead count is " .. count)
+										C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", pl);
+										assignments[grp][#assignments[grp]+1] = pl;
+									end
+								end
+								break;
 							end
 						end
 					end
@@ -493,11 +501,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 							break;
 						end
 					end
-					if (#debuffed == 4 and not hasAssigned) then
-						print("all debuffs are out, starting assignments")
-						hasAssigned = true;
-						updateGroups();
-					end
+					C_Timer.After(0.1, function() 
+						if (not hasAssigned) then 
+							hasAssigned = true; 
+							print("all debuffs are out starting assignments"); 
+							updateGroups(); 
+						end
+					end);
 				end
 			else
 				if (debuffed[unitName]) then
@@ -505,15 +515,15 @@ f:SetScript("OnEvent", function(self, event, ...)
 					assignments[debuffed[unitName]] = {};
 					debuffed[unitName] = nil;
 					SetRaidTarget(unitName, 0);
-					hasAssigned = false;
+					if (next(debuffed) == nil) then
+						hasAssigned = false;
+					end
 				end
 			end
 		end
 	elseif (event == "CHAT_MSG_ADDON" and inEncounter and IRT_HungeringDestroyerEnabled) then
 		local prefix, msg, channel, sender = ...;
-		print(prefix)
 		if (prefix == "IRT_HD") then
-		print(msg)
 			if (msg:match("soon")) then
 				local soakTime = time() + 12;
 				local text, mark = strsplit(" ", msg);
@@ -547,13 +557,23 @@ f:SetScript("OnEvent", function(self, event, ...)
 			print("hungering destroyer mythic engaged")
 			assignments = {};
 			inEncounter = true;
-			raid = {};
+			raid = {
+				[1] = {},
+				[2] = {},
+				[3] = {},
+				[4] = {},
+			};
 			leader = IRT_GetRaidLeader();
 			hasDebuff = false;
 			initRaid();
 		end
 	elseif (event == "ENCOUNTER_END" and IRT_HungeringDestroyerEnabled and inEncounter) then
-		raid = {};
+		raid = {
+			[1] = {},
+			[2] = {},
+			[3] = {},
+			[4] = {},
+		};
 		assignments = {};
 		inEncounter = false;
 		debuffed = {};

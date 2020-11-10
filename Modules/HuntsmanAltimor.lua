@@ -66,9 +66,9 @@ local function initRaid()
 		[3] = {},
 		[4] = {},
 	};
-	for i = 1, 20 do
+	for i = 1, 40 do
 		local name, rank, group, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(i);
-		if (name and UnitIsConnected(name) and UnitIsVisible(name)) then
+		if (name and UnitIsConnected(name) and UnitIsVisible(name) and group < 5) then
 			if (raid[group]) then
 				table.insert(raid[group], name);
 			end
@@ -289,10 +289,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (IRT_Contains(debuffed, unitName)) then
 					debuffed[IRT_Contains(debuffed, unitName)] = nil;
 					SetRaidTarget(unitName, 0);
-					resetAssignments();
-					if (timer) then
-						timer:Cancel();
-						timer = nil;
+					if (#debuffed == 0) then
+						resetAssignments();
 					end
 				end
 			end
@@ -302,6 +300,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (prefix == "IRT_HA") then
 			if(msg == "reset") then
 				assignment = "";
+				if (timer) then
+					timer:Cancel();
+					timer = nil;
+				end
 			else
 				local mark, pos = strsplit(" ", msg);
 				if (assignment and assignment ~= "" and assignment ~= msg) then
