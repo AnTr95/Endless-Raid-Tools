@@ -150,12 +150,14 @@ local function playerNotification(mark, pos, duration)
 	if (tonumber(pos)) then --debuffed
 		chatText = "{rt" .. mark .. "} " .. math.ceil(pos-GetTime()) .. " {rt" .. mark .. "}";
 		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration, L.BOSS_FILE);
+		PlaySoundFile("Interface\\AddOns\\InfiniteRaidTools\\Sound\\"..groupIcons[mark]..".ogg", "Master");
 	elseif (pos == positions[5]) then
 		chatText = "DO NOT SOAK";
 		IRT_PopupShow("|cFFFF0000DO NOT SOAK!|r", duration, L.BOSS_FILE);
 	else
 		chatText = "{rt" .. mark .. "} " .. pos .. " {rt" .. mark .. "}";
-		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. ", POSITION: " .. pos .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration, L.BOSS_FILE);
+		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. ", " .. pos .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration, L.BOSS_FILE);
+		PlaySoundFile("Interface\\AddOns\\InfiniteRaidTools\\Sound\\"..groupIcons[mark]..".ogg", "Master");
 	end
 	SendChatMessage(chatText, "YELL");
 	timer = C_Timer.NewTicker(1, function()
@@ -169,7 +171,6 @@ local function playerNotification(mark, pos, duration)
 			SendChatMessage(chatText, "YELL");
 		end
 	end, math.floor(duration-1));
-	PlaySoundFile("Interface\\AddOns\\InfiniteRaidTools\\Sound\\"..groupIcons[mark]..".ogg", "Master");
 end
 
 local function assignMarks()
@@ -853,8 +854,8 @@ function HA_Test(p1, p2, p3)
 	inEncounter = true;
 	if (raid == nil) then
 		raid = {
-			[1] = {"Pred", "Nost", "Marie", "Bram", "Dez"},
-			[2] = {"Ala", "Ant", "Blink", "Fed", "Sloxy"},
+			[1] = {"Bram", "Nost", "Marie", "Cata", "Dez"},
+			[2] = {"Ala", "Fed", "Blink", "Antv", "Sloxy"},
 			[3] = {"Natu", "Cakk", "Moon", "Mvk", "Cata"},
 			[4] = {"Sloni", "Janga", "Sejuka", "Emnity", "Warlee"},
 		};
@@ -902,7 +903,7 @@ function HA_Test(p1, p2, p3)
 				debuffed[i] = raid[rngGroup][rngPlayer];
 				print(raid[rngGroup][rngPlayer]);
 				local unitName = raid[rngGroup][rngPlayer];
-				SetRaidTarget(unitName, #debuffed);
+				--SetRaidTarget(unitName, #debuffed);
 				local expTime = GetTime()+5;
 				if (not expTime) then
 					expTime = select(7, IRT_UnitDebuff(unit, GetSpellInfo(335112)));
