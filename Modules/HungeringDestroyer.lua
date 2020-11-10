@@ -70,14 +70,22 @@ end
 
 local function printAssignments()
 	local printText = "IRT Assignments:";
+	local sortedArray = {};
 	for debuffedPlayer, group in pairs(debuffed) do
+		table.insert(sortedArray, {debuffedPlayer, group});
+	end
+	table.sort(sortedArray, compare);
+	for i, data in pairs(sortedArray) do
+		local debuffedPlayer = data[1];
+		local group = data[2];
 		local pl = Ambiguate(debuffedPlayer, "short");
 		if (UnitIsConnected(debuffedPlayer)) then
 			pl = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pl))].colorStr, pl);
+			pl = "|c296d98FF" .. pl .. "|r";
 		else
 			pl = "|c296d98FF" .. pl .. "|r";
 		end
-		printText = printText .. "\n\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t" .. pl .. "\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t";
+		printText = printText .. "\n\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. group .. ":12\124t\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t" .. pl .. "\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t";
 		for index, player in pairs(assignments[group]) do
 			local playerText = Ambiguate(player, "short");
 			if (UnitIsConnected(player)) then
@@ -171,6 +179,29 @@ local function updateGroups()
 					break;
 				end
 			end
+			if (#raid[grp] > 5) then
+				for i = #raid[grp], 1, -1 do --for each player reversed
+					if (#raid[grp] > 5) then -- during each iteration make sure still more than 5
+						local player = raid[grp][i];
+						print(grp .. " has more than 5 players trying to move " .. player)
+						-- check if debuff is running out or low stacks
+						local _, _, _, stacks, _, _, exp = IRT_UnitDebuff(player, spellIDs["Sap"]);
+						if (stacks and exp and (math.floor(exp-GetTime()-3) <= 0 or stacks <=2) and debuffed[player] == nil and UnitGroupRolesAssigned(player) ~= "TANK") then --Dont swap debuffed players nor players that cant soak because still debuffed nor tanks
+							print(player .. " does not have sap or miasma debuff and is not a tank, iterating new group for them")
+							for newGrp = 1, 4 do
+								if (#raid[newGrp] < 5) then
+									print(newGrp .. " has less than 5 players moving " .. player .. " from " .. grp .. " to " .. newGrp)
+									table.insert(raid[newGrp], player);
+									table.remove(raid[grp], IRT_Contains(raid[grp], player));
+									break;
+								end
+							end
+						end
+					else
+						break;
+					end
+				end
+			end
 		end
 	end
 	if (IRT_HungeringDestroyerSoakCount == 1) then
@@ -191,6 +222,14 @@ local function updateGroups()
 							C_ChatInfo.SendAddonMessage("IRT_HD", "soon " .. grp, "WHISPER", player);
 							count = count + 1;
 							assignments[grp][count] = player;
+							for j, pl in pairs(raid[grp]) do
+								if (not IRT_Contains(assignments[grp], pl) and debuffed[pl] == nil) then
+									print(pl .. " soaks next debuff instead count is " .. count)
+									C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", pl);
+									assignments[grp][#assignments[grp]+1] = pl;
+								end
+							end
+							break;
 						end
 					elseif (count == 2) then
 						print(player .. " is assigned to next soak as count is " .. count)
@@ -234,7 +273,7 @@ local function updateGroups()
 			if (count == 1) then -- check if someones debuff is about to expire
 				print("still need 1 soaker for 2nd part of debuff")
 				for index, player in pairs(raid[grp]) do
-					if (UnitIsConnected(player) and debuffed[player] == nil) then
+					if (UnitIsConnected(player) and debuffed[player] == nil and not IRT_Contains(assignments[grp], player)) then
 						if (count == 2) then
 							print(player .. " soaks next debuff instead count is " .. count)
 							C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
@@ -264,7 +303,7 @@ local function updateGroups()
 				print("need soakers, going to last resort who has less stacks")
 				local soaker = nil;
 				for index, player in pairs(raid[grp]) do --assign each person
-					if (UnitIsConnected(player) and debuffed[player] == nil) then
+					if (UnitIsConnected(player) and debuffed[player] == nil and not IRT_Contains(assignments[grp], player)) then
 						if (count < 2) then
 							print("still need soakers checking stacks on " .. player)
 							local lowestDebuff1 = 100000;
@@ -278,7 +317,7 @@ local function updateGroups()
 								for idx, pl in pairs(raid[grp]) do -- check if current person is best suited or not
 									local _, _, _, nextStacks, _, _, nextExp = IRT_UnitDebuff(player, spellIDs["Sap"]);
 									print("comparing to " .. pl .. " which has " .. nextStacks .. " stacks and debuff runs out in " .. math.floor(nextExp-GetTime()) .. "s")
-									if (count == 0) then
+									if (count == 0 and not UnitIsUnit(player, pl)) then
 										if (nextStacks) then
 											if (nextStacks < lowestDebuff1) then
 												print(pl .. " has lower stacks but checking for 1 more player as count is " .. count)
@@ -293,8 +332,8 @@ local function updateGroups()
 												break;
 											end
 										end
-									elseif (count == 1) then
-										if (nextExp and math.floor(nextExp-GetTime()-13) <= 0) then
+									elseif (count == 1 and not UnitIsUnit(player, pl)) then
+										if (nextExp and math.floor(nextExp-GetTime()-13) <= 0 and not IRT_Contains(assignments[grp], pl)) then
 											C_ChatInfo.SendAddonMessage("IRT_HD", "soon " .. grp, "WHISPER", pl);
 											C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
 											soaker = pl;
@@ -303,7 +342,7 @@ local function updateGroups()
 											assignments[grp][#assignments[grp]+1] = player;
 											break;
 										end
-										if (nextStacks) then
+										if (nextStacks and not IRT_Contains(assignments[grp], pl)) then
 											if (nextStacks < lowestDebuff1) then
 												--better option player this player soaks later
 												lowestDebuff1 = -1;
@@ -312,20 +351,20 @@ local function updateGroups()
 												break;
 											end
 										end
-									elseif (count == 2) then
+									elseif (count == 2 and not UnitIsUnit(player, pl)) then
 										C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
 										assignments[grp][#assignments[grp]+1] = player;
 										break;
 									end
 									-- best option player soak now
 								end
-								if ((count == 0 and lowestDebuff1 > -1 and lowestDebuff2 > -2) or (count == 1 and lowestDebuff1 > -1)) then
+								if ((count == 0 and lowestDebuff1 > -1 and lowestDebuff2 > -1) or (count == 1 and lowestDebuff1 > -1)) then
 									C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
 									count = count + 1;
 									assignments[grp][count] = player;
 								end
 							end
-						elseif (count >= 2) then
+						elseif (count >= 2 and not IRT_Contains(assignments[grp], player)) then
 							if (soaker) then
 								if (not UnitIsUnit(player, soaker)) then
 									print(player .. " soaks next debuff instead as count is " .. count)
