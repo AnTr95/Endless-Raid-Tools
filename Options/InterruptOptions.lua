@@ -14,9 +14,13 @@ local raidDatabase = {
 		["Sire Denathrius"] = 2407,
 		["No boss"] = 1,
 	},
+	["Out of Raid"] = {
+		["Out of Raid"] = -1,
+	},
 };
 local raidLex = {
 	[1] = "Castle Nathria",
+	[2] = "Out of Raid",
 };   
 local bossLex = {
 	["Castle Nathria"] = {
@@ -31,6 +35,9 @@ local bossLex = {
 		[9] = "Stone Legion Generals",
 		[10] = "Sire Denathrius",
 		[11] = "No boss",
+	},
+	["Out of Raid"] = {
+		[1] = "Out of Raid",
 	},
 };
 

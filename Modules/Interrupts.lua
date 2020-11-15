@@ -23,6 +23,7 @@ local inEncounter = false;
 local trackedInterrupter = nil;
 local timers = {};
 local playerName = UnitName("player");
+local inCombat = false;
 
 local UnitIsUnit = UnitIsUnit;
 local UnitGUID = UnitGUID;
@@ -35,6 +36,8 @@ f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 f:RegisterEvent("NAME_PLATE_UNIT_REMOVED");
 f:RegisterEvent("CHAT_MSG_ADDON");
+f:RegisterEvent("PLAYER_REGEN_DISABLED");
+f:RegisterEvent("PLAYER_REGEN_ENABLED");
 
 C_ChatInfo.RegisterAddonMessagePrefix("IRT_INTERRUPT");
 
@@ -163,7 +166,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (IRT_InterruptEnabled == nil) then IRT_InterruptEnabled = true; end
 		if (IRT_NextInterrupt == nil) then IRT_NextInterrupt = {[1] = {bossID = 1}}; end
 		if (type(IRT_NextInterrupt)) == "string" then IRT_NextInterrupt = {[1] = {bossID = 1}}; end-- convert people from older version
-	elseif (event == "CHAT_MSG_ADDON" and IRT_InterruptEnabled and inEncounter) then
+	elseif (event == "CHAT_MSG_ADDON" and IRT_InterruptEnabled and (inEncounter or inCombat)) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "IRT_INTERRUPT") then
 			local guid, player, interrupted = strsplit(" ", msg);
@@ -182,14 +185,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
-	elseif (event == "NAME_PLATE_UNIT_REMOVED" and IRT_InterruptEnabled and trackedInterrupter and inEncounter) then
+	elseif (event == "NAME_PLATE_UNIT_REMOVED" and IRT_InterruptEnabled and trackedInterrupter and (inEncounter or inCombat)) then
 		local unit = ...;
 		local guid = UnitGUID(unit);
 		local namePlate = getFontStringForGUID(guid);
 		if (namePlate) then
 			removeFontString(guid, namePlate);
 		end
-	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED" and IRT_InterruptEnabled and trackedInterrupter and inEncounter) then
+	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED" and IRT_InterruptEnabled and trackedInterrupter and (inEncounter or inCombat)) then
 		local _, logEvent, _, _, caster, _, _, targetGUID, target, _, _, spellID = CombatLogGetCurrentEventInfo();
 		if (logEvent == "SPELL_CAST_SUCCESS") then
 			if (UnitIsUnit(caster, trackedInterrupter) and spellIDs[spellID]) then
@@ -230,6 +233,32 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "ENCOUNTER_END" and inEncounter and IRT_InterruptEnabled) then
 		inEncounter = false;
+		trackedInterrupter = nil;
+		namePlateIDs = {};
+		for fs, guid in pairs(fontStrings) do
+			fs:SetText("");
+			fontStrings[fs] = "";
+			fs:ClearAllPoints();
+			fs:Hide();
+			if (timers[fs]) then
+				timers[fs]:Cancel();
+			end
+		end
+		IRT_PopupHide(L.INTERRUPT_FILE);
+	elseif (event == "PLAYER_REGEN_DISABLED" and IRT_InterruptEnabled and not inCombat and not inEncounter) then
+		C_Timer.After(0.5, function()
+			if (not inEncounter) then
+				inCombat = true;
+				for i = 1, #IRT_NextInterrupt do
+					print(IRT_NextInterrupt[i].bossID)
+					if (-1 == IRT_NextInterrupt[i].bossID) then
+						trackedInterrupter = IRT_NextInterrupt[i].NextInterrupter;
+					end
+				end
+			end
+		end);
+	elseif (event == "PLAYER_REGEN_ENABLED" and inCombat and IRT_InterruptEnabled) then
+		inCombat = false;
 		trackedInterrupter = nil;
 		namePlateIDs = {};
 		for fs, guid in pairs(fontStrings) do
