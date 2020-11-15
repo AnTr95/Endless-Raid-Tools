@@ -250,7 +250,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (not inEncounter) then
 				inCombat = true;
 				for i = 1, #IRT_NextInterrupt do
-					print(IRT_NextInterrupt[i].bossID)
 					if (-1 == IRT_NextInterrupt[i].bossID) then
 						trackedInterrupter = IRT_NextInterrupt[i].NextInterrupter;
 					end
