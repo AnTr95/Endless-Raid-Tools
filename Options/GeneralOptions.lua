@@ -23,14 +23,14 @@ version:SetText(L.OPTIONS_VERSION)
 
 local infoBorder = IRT_GeneralOptions:CreateTexture(nil, "BACKGROUND");
 infoBorder:SetTexture("Interface\\GMChatFrame\\UI-GMStatusFrame-Pulse.PNG");
-infoBorder:SetWidth(470);
+infoBorder:SetWidth(530);
 infoBorder:SetHeight(120);
 infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
 infoBorder:SetPoint("TOP", 0, -85);
 
 local info = IRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25)
-info:SetSize(450, 200)
+info:SetSize(510, 200)
 info:SetText(L.OPTIONS_GENERAL_INFO)
 info:SetWordWrap(true)
 info:SetJustifyV("TOP");
@@ -60,7 +60,7 @@ end)
 
 local popupToggleButton = CreateFrame("Button", "IRT_PopupToggleButton", IRT_GeneralOptions, "UIPanelButtonTemplate");
 popupToggleButton:SetSize(150, 35);
-popupToggleButton:SetPoint("TOPLEFT", fontText, "TOPLEFT", 160, 0);
+popupToggleButton:SetPoint("TOPLEFT", fontText, "TOPLEFT", 190, 0);
 popupToggleButton:SetText(L.OPTIONS_FONTSLIDER_BUTTON_TEXT);
 popupToggleButton:HookScript("OnClick", function(self)
 	IRT_PopupMove();
@@ -88,7 +88,7 @@ minimapModeText:SetText(L.OPTIONS_MINIMAP_MODE_TEXT);
 minimapModeText:SetPoint("TOPLEFT", generalText, "TOPLEFT", 0, -25);
 
 local minimapStateMenu = CreateFrame("Button", nil, IRT_GeneralOptions, "UIDropDownMenuTemplate");
-minimapStateMenu:SetPoint("TOPLEFT", minimapModeText, "TOPLEFT", 145, 8);
+minimapStateMenu:SetPoint("TOPLEFT", minimapModeText, "TOPLEFT", 175, 8);
 
 local minimapStates = {"Always", "On Hover", "Never"};
 
@@ -130,6 +130,35 @@ vcButton:SetText(L.OPTIONS_VERSIONCHECK_BUTTON_TEXT);
 vcButton:HookScript("OnClick", function(self)
 	C_ChatInfo.SendAddonMessage("IRT_VC", "vc", "RAID");
 end);
+
+local resetPositionsText = IRT_GeneralOptions:CreateFontString(nil, "ARTWORK", "GameFontWhite");
+resetPositionsText:SetText(L.OPTIONS_RESETPOSITIONS_TEXT);
+resetPositionsText:SetPoint("TOPLEFT", vcText, "TOPLEFT", 0, -50);
+
+local resetPositionsButton = CreateFrame("Button", "IRT_VCButton", IRT_GeneralOptions, "UIPanelButtonTemplate");
+resetPositionsButton:SetSize(150, 35);
+resetPositionsButton:SetPoint("TOPLEFT", resetPositionsText, "TOPLEFT", 190, 15);
+resetPositionsButton:SetText(L.OPTIONS_RESETPOSITIONS_BUTTON);
+resetPositionsButton:HookScript("OnClick", function(self)
+	StaticPopup_Show("IRT_RESETPOSITIONS");
+end);
+
+StaticPopupDialogs["IRT_RESETPOSITIONS"] = {
+  text = L.WARNING_RESETPOSITIONS_DIALOG,
+  button1 = "Yes",
+  button2 = "No",
+  OnAccept = function()
+		IRT_InfoBoxSetPosition("TOPLEFT", 30, -150, nil, nil);
+		IRT_PopupSetPosition("TOP", 0, -30, nil, nil);
+		IRT_AutoKitSetPosition("RIGHT", ReadyCheckFrame, "RIGHT", 40, 15);
+		IRT_AutoOilSetPosition("RIGHT", ReadyCheckFrame, "RIGHT", 40, -15);
+		IRT_SetMinimapPoint(42);
+  end,
+  timeout = 0,
+  whileDead = true,
+  hideOnEscape = true,
+  preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+};
 
 IRT_GeneralOptions:SetScript("OnShow", function(self)
 	fontSlider:SetValue(IRT_PopupTextFontSize)

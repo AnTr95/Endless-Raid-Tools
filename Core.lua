@@ -8,7 +8,11 @@ SLASH_INFINITERAIDTOOLS3 = "/irt";
 SLASH_INFINITERAIDTOOLS4 = "/infiniteraidtools";
 local playersChecked = {};
 local initCheck = false;
-local recievedOutOfDateMessage = false;
+local recievedOutOfDateMessage = false;			
+
+local UnitBuff = UnitBuff;
+local UnitDebuff = UnitDebuff;
+
 local function handler(msg, editbox)
 	local arg = string.lower(msg);
 	if (arg ~= nil and arg == "vc") then
@@ -132,6 +136,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 			if (IRT_MinimapDegree) then IRT_SetMinimapPoint(IRT_MinimapDegree); end
 			if (IRT_MinimapMode == nil) then IRT_MinimapMode = "Always"; end
+			if (IRT_AutoKitPosition ~= nil) then
+				IRT_AutoKitSetPosition(IRT_AutoKitPosition.point, IRT_AutoKitPosition.relativeTo, IRT_AutoKitPosition.relativePoint, IRT_AutoKitPosition.xOffset, IRT_AutoKitPosition.yOffset);
+			end
+			if (IRT_AutoOilPosition ~= nil) then
+				IRT_AutoOilSetPosition(IRT_AutoOilPosition.point, IRT_AutoOilPosition.relativeTo, IRT_AutoOilPosition.relativePoint, IRT_AutoOilPosition.xOffset, IRT_AutoOilPosition.yOffset);
+			end
 			IRT_PopupUpdateFontSize();
 			IRT_InfoBoxUpdateFontSize();
 			if (IsInGuild()) then
@@ -173,6 +183,7 @@ function IRT_Contains(arr, value)
 	end
 	return false;
 end
+
 --[[
 	Checking if a table contains a given value and if it does, what index is the value located at
 	param(arr) table

@@ -1,6 +1,8 @@
+local L = IRTLocals;
 local f = CreateFrame("Frame");
-SLASH_IRTINNERVATE1 = "/endlessinnervate";
-SLASH_IRTINNERVATE2 = "/irtinnervate";
+SLASH_INFINITEINNERVATE1 = "/irtinnervate";
+SLASH_INFINITEINNERVATE2 = "/infiniteinnervate";
+SLASH_INFINITEINNERVATE3 = "/endlessinnervate";
 f:RegisterEvent("CHAT_MSG_ADDON");
 f:RegisterEvent("PLAYER_LOGIN");
 local timer = nil;
@@ -11,7 +13,7 @@ local function handler(msg, editbox)
 		C_ChatInfo.SendAddonMessage("IRT_INNERVATE", UnitName("player"), "WHISPER", arg);
 	end
 end
-SlashCmdList["IRTINNERVATE"] = handler;
+SlashCmdList["INFINITEINNERVATE"] = handler;
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		if (IRT_InnervateEnabled == nil) then IRT_InnervateEnabled = true; end
@@ -20,7 +22,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		sender = Ambiguate(sender, "short");
 		if (prefix == "IRT_INNERVATE") then
 			sender = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(sender))].colorStr, sender);
-			timer = IRT_PopupShow("\124TInterface\\Icons\\spell_nature_lightning:30\124t INNERVATE ON " .. sender .. " \124TInterface\\Icons\\spell_nature_lightning:30\124t" , 5);
+			timer = IRT_PopupShow("\124TInterface\\Icons\\spell_nature_lightning:30\124t INNERVATE ON " .. sender .. " \124TInterface\\Icons\\spell_nature_lightning:30\124t", 5, L.INNERVATE_FILE);
 			f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 			C_Timer.After(5, function()
 				f:UnregisterEvent("UNIT_SPELLCAST_SUCCEEDED");
@@ -30,7 +32,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local unit, _, spellID = ...;
 		if (UnitIsUnit(unit, UnitName("player")) and spellID == 29166) then
 			if (timer) then
-				IRT_PopupHide();
+				IRT_PopupHide(L.INNERVATE_FILE);
 				timer = nil;
 				f:UnregisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 			end

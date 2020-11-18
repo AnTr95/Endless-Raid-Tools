@@ -85,6 +85,7 @@ function IRT_InfoBoxGetSize()
 end
 
 function IRT_InfoBoxSetPosition(point, relativeTo, relativePoint, xOffset, yOffset)
+	f:ClearAllPoints();
 	f:SetPoint(point, relativeTo, relativePoint, xOffset, yOffset);
 end
 

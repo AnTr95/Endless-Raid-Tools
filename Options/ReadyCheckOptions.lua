@@ -1,38 +1,38 @@
 local L = IRTLocals;
 
-IRT_ReadyCheckOptions = CreateFrame("Frame", "IRT_ReadyCheckOptionsFrame", InterfaceOptionsFramePanelContainer)
-IRT_ReadyCheckOptions.name = "Ready Check Module"
-IRT_ReadyCheckOptions.parent = "|cFFFFFF00General Modules|r"
-IRT_ReadyCheckOptions:Hide()
+IRT_ReadyCheckOptions = CreateFrame("Frame", "IRT_ReadyCheckOptionsFrame", InterfaceOptionsFramePanelContainer);
+IRT_ReadyCheckOptions.name = "Ready Check Module";
+IRT_ReadyCheckOptions.parent = "|cFFFFFF00General Modules|r";
+IRT_ReadyCheckOptions:Hide();
 
-local title = IRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-title:SetPoint("TOP", 0, -16)
-title:SetText(L.OPTIONS_TITLE)
+local title = IRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
+title:SetPoint("TOP", 0, -16);
+title:SetText(L.OPTIONS_TITLE);
 
-local tabinfo = IRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-tabinfo:SetPoint("TOPLEFT", 16, -16)
-tabinfo:SetText(L.OPTIONS_READYCHECK_TITLE)
+local tabinfo = IRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
+tabinfo:SetPoint("TOPLEFT", 16, -16);
+tabinfo:SetText(L.OPTIONS_READYCHECK_TITLE);
 
-local author = IRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-author:SetPoint("TOPLEFT", 450, -20)
-author:SetText(L.OPTIONS_AUTHOR)
+local author = IRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+author:SetPoint("TOPLEFT", 450, -20);
+author:SetText(L.OPTIONS_AUTHOR);
 
-local version = IRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-version:SetPoint("TOPLEFT", author, "BOTTOMLEFT", 0, -10)
-version:SetText(L.OPTIONS_VERSION)
+local version = IRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+version:SetPoint("TOPLEFT", author, "BOTTOMLEFT", 0, -10);
+version:SetText(L.OPTIONS_VERSION);
 
 local infoBorder = IRT_ReadyCheckOptions:CreateTexture(nil, "BACKGROUND");
 infoBorder:SetTexture("Interface\\GMChatFrame\\UI-GMStatusFrame-Pulse.PNG");
-infoBorder:SetWidth(470);
+infoBorder:SetWidth(530);
 infoBorder:SetHeight(120);
 infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
 infoBorder:SetPoint("TOP", 0, -85);
 
-local info = IRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25)
-info:SetSize(450, 200)
-info:SetText(L.OPTIONS_READYCHECK_INFO)
-info:SetWordWrap(true)
+local info = IRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25);
+info:SetSize(510, 200);
+info:SetText(L.OPTIONS_READYCHECK_INFO);
+info:SetWordWrap(true);
 info:SetJustifyV("TOP");
 
 local enabledButton = CreateFrame("CheckButton", "IRT_ReadyCheckEnabledCheckButton", IRT_ReadyCheckOptions, "UICheckButtonTemplate");
@@ -84,32 +84,38 @@ previewText:SetPoint("TOP", readyCheckListInfoTexture, "TOP", -130, 85);
 previewText:SetText(L.OPTIONS_READYCHECK_PREVIEW);
 previewText:SetJustifyH("CENTER");
 
-local flashingButton = CreateFrame("CheckButton", "IRT_ReadyCheckFlashingCheckButton", IRT_ReadyCheckOptions, "UICheckButtonTemplate")
-flashingButton:SetSize(26, 26)
-flashingButton:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 0, -20)
+local flashingButton = CreateFrame("CheckButton", "IRT_ReadyCheckFlashingCheckButton", IRT_ReadyCheckOptions, "UICheckButtonTemplate");
+flashingButton:SetSize(26, 26);
+flashingButton:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 0, -20);
 flashingButton:HookScript("OnClick", function(self)
 	if self:GetChecked() then
-		IRT_ReadyCheckFlashing = true
+		IRT_ReadyCheckFlashing = true;
 		ag:Play();
-		PlaySound(856)
+		PlaySound(856);
 	else
-		IRT_ReadyCheckFlashing = false
+		IRT_ReadyCheckFlashing = false;
 		ag:Stop();
-		PlaySound(857)
+		PlaySound(857);
 	end
 end)
 
-local flashingText = IRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-flashingText:SetPoint("TOPLEFT", flashingButton, "TOPLEFT", 30, -7)
-flashingText:SetText(L.OPTIONS_READYCHECK_FLASHING)
+local flashingText = IRT_ReadyCheckOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
+flashingText:SetPoint("TOPLEFT", flashingButton, "TOPLEFT", 30, -7);
+flashingText:SetText(L.OPTIONS_READYCHECK_FLASHING);
 flashingText:SetJustifyH("LEFT");
 
 IRT_ReadyCheckOptions:SetScript("OnShow", function(self)
-	enabledButton:SetChecked(IRT_ReadyCheckEnabled)
-	flashingButton:SetChecked(IRT_ReadyCheckFlashing)
+	enabledButton:SetChecked(IRT_ReadyCheckEnabled);
+	flashingButton:SetChecked(IRT_ReadyCheckFlashing);
 	if (IRT_ReadyCheckFlashing) then
 		ag:Play();
 	end
 end)
 
-InterfaceOptions_AddCategory(IRT_ReadyCheckOptions)
+IRT_ReadyCheckOptions:SetScript("OnHide", function(self)
+	if (IRT_ReadyCheckFlashing) then
+		ag:Stop();
+	end
+end)
+
+InterfaceOptions_AddCategory(IRT_ReadyCheckOptions);

@@ -1,123 +1,45 @@
+local L = IRTLocals;
+local GUI = nil;
 local raidDatabase = {
-	["Uldir"] = {
-		["Taloc"] = 2144,
-		["MOTHER"] = 2141,
-		["Fetid Devourer"] = 2128,
-		["Zek'voz"] = 2136,
-		["Vectis"] = 2134,
-		["Zul"] = 2145,
-		["Mythrax"] = 2135,
-		["G'huun"] = 2122,
+	["Castle Nathria"] = {
+		["Shriekwing"] = 2398,
+		["Huntsman Altimor"] = 2418,
+		["Hungering Destroyer"] = 2383,
+		["Lady Inerva Darkvein"] = 2406,
+		["Sun King's Salvation"] = 2402,
+		["Artificer Xy'mox"] = 2405,
+		["The Council of Blood"] = 2412,
+		["Sludgefist"] = 2399,
+		["Stone Legion Generals"] = 2417,
+		["Sire Denathrius"] = 2407,
 		["No boss"] = 1,
 	},
-	["Battle of Dazar'alor"] = {
-		["Champion Of Light"] = 2265,
-		["Grong, The Jungle Lord"] = 2263,
-		["Jadefire Masters"] = 2266,
-		["Opulence"] = 2271,
-		["Conclave of the Chosen"] = 2268,
-		["King Rastakhan"] = 2272,
-		["High Tinker Mekkatorque"] = 2276,
-		["Stormwall Blockade"] = 2280,
-		["Lady Jaina Proudmore"] = 2281,
-		["No boss"] = 1,
-	},
-	["Crucible of Storms"] = {
-		["The Restless Cabal"] = 2269,
-		["Uu'nat"] = 2273,
-		["No boss"] = 1,
-	},
-	["The Eternal Palace"] = {
-		["Sivarra"] = 2298,
-		["Blackwater Behemoth"] = 2289,
-		["Radiance of Azshara"] = 2305,
-		["Lady Ashvane"] = 2304,
-		["Orgoza"] = 2303,
-		["Queen's Court"] = 2311,
-		["Za'qul"] = 2293,
-		["Queen Azshara"] = 2299,
-		["No boss"] = 1,
-	},
-	["Ny'alotha, the Waking City"] = {
-		["Wrathion"] = 2329,
-		["Maut"] = 2327,
-		["Prophet Skitra"] = 2334,
-		["Dark Inquisitor Xanesh"] = 2338,
-		["The Hivemind"] = 2333,
-		["Shad'har the Insatiable"] = 2335,
-		["Drest'agath"] = 2343,
-		["Vexiona"] = 2336,
-		["Ra-Den the Despoiled"] = 2331,
-		["Il'gynoth, Corruption Reborn"] = 2345,
-		["Carapace of N'Zoth"] = 2337,
-		["N'Zoth, the Corruptor"] = 2344,
+	["Out of Raid"] = {
+		["Out of Raid"] = -1,
 	},
 };
 local raidLex = {
-	[1] = "Uldir",
-	[2] = "Battle of Dazar'alor",
-	[3] = "Crucible of Storms",
-	[4] = "The Eternal Palace",
-	[5] = "Ny'alotha, the Waking City",
-}; 
+	[1] = "Castle Nathria",
+	[2] = "Out of Raid",
+};   
 local bossLex = {
-	["Uldir"] = {
-		[1] = "Taloc",
-		[2] = "MOTHER",
-		[3] = "Fetid Devourer",
-		[4] = "Zek'voz",
-		[5] = "Vectis",
-		[6] = "Zul",
-		[7] = "Mythrax",
-		[8] = "G'huun",
-		[9] = "No boss",
+	["Castle Nathria"] = {
+		[1] = "Shriekwing",
+		[2] = "Huntsman Altimor",
+		[3] = "Hungering Destroyer",
+		[4] = "Lady Inerva Darkvein",
+		[5] = "Sun King's Salvation",
+		[6] = "Artificer Xy'mox",
+		[7] = "The Council of Blood",
+		[8] = "Sludgefist",
+		[9] = "Stone Legion Generals",
+		[10] = "Sire Denathrius",
+		[11] = "No boss",
 	},
-	["Battle of Dazar'alor"] = {
-		[1] = "Champion Of Light",
-		[2] = "Grong, The Jungle Lord",
-		[3] = "Jadefire Masters",
-		[4] = "Opulence",
-		[5] = "Conclave of the Chosen",
-		[6] = "King Rastakhan",
-		[7] = "High Tinker Mekkatorque",
-		[8] = "Stormwall Blockade",
-		[9] = "Lady Jaina Proudmore",
-		[10] = "No boss",
+	["Out of Raid"] = {
+		[1] = "Out of Raid",
 	},
-	["Crucible of Storms"] = {
-		[1] = "The Restless Cabal",
-		[2] = "Uu'nat",
-		[3] = "No boss",
-	},
-	["The Eternal Palace"] = {
-		[1] = "Sivarra",
-		[2] = "Blackwater Behemoth",
-		[3] = "Radiance of Azshara",
-		[4] = "Lady Ashvane",
-		[5] = "Orgoza",
-		[6] = "Queen's Court",
-		[7] = "Za'qul",
-		[8] = "Queen Azshara",
-		[9] = "No boss",
-	},
-	["Ny'alotha, the Waking City"] = {
-		[1] = "Wrathion",
-		[2] = "Maut",
-		[3] = "Prophet Skitra",
-		[4] = "Dark Inquisitor Xanesh",
-		[5] = "The Hivemind",
-		[6] = "Shad'har the Insatiable",
-		[7] = "Drest'agath",
-		[8] = "Vexiona",
-		[9] = "Ra-Den the Despoiled",
-		[10] = "Il'gynoth, Corruption Reborn",
-		[11] = "Carapace of N'Zoth",
-		[12] = "N'Zoth, the Corruptor",
-		[13] = "No boss",
-	}
 };
-local GUI = nil;
-local L = IRTLocals;
 
 IRT_InterruptOptions = CreateFrame("Frame", "IRT_InterruptOptionsFrame", InterfaceOptionsFramePanelContainer);
 IRT_InterruptOptions.name = "Interrupt Module";
@@ -142,14 +64,14 @@ version:SetText(L.OPTIONS_VERSION)
 
 local infoBorder = IRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
 infoBorder:SetTexture("Interface\\GMChatFrame\\UI-GMStatusFrame-Pulse.PNG");
-infoBorder:SetWidth(470);
-infoBorder:SetHeight(120);
+infoBorder:SetWidth(530);
+infoBorder:SetHeight(125);
 infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
 infoBorder:SetPoint("TOP", 0, -85);
 
 local info = IRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -25)
-info:SetSize(450, 200)
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -12)
+info:SetSize(510, 200)
 info:SetText(L.OPTIONS_INTERRUPT_INFO)
 info:SetWordWrap(true)
 info:SetJustifyV("TOP");
@@ -170,13 +92,63 @@ end);
 local enabledText = IRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
 enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
+
+local infoTexture = IRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
+infoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\InterruptNamePlate.tga");
+infoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 400, -215);
+infoTexture:SetSize(121, 105);
+infoTexture:SetTexCoord(0,0.95,0,0.82);
+
+local infoTexture2 = IRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
+infoTexture2:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\InterruptNamePlate2.tga");
+infoTexture2:SetPoint("TOPLEFT", infoTexture, "TOPLEFT", 15, 15);
+infoTexture2:SetSize(91, 11);
+infoTexture2:SetTexCoord(0,0.71,0,0.69);
+
+local ag = infoTexture2:CreateAnimationGroup();
+ag:SetLooping("REPEAT");
+
+local aniAppear = ag:CreateAnimation("Alpha");
+aniAppear:SetDuration(5);
+aniAppear:SetToAlpha(1);
+aniAppear:SetFromAlpha(1);
+aniAppear:SetOrder(1);
+
+local aniFade = ag:CreateAnimation("Alpha");
+aniFade:SetDuration(5);
+aniFade:SetToAlpha(0);
+aniFade:SetFromAlpha(0);
+aniFade:SetOrder(2);
+
+local infoTexture3 = IRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
+infoTexture3:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\InterruptNamePlate3.tga");
+infoTexture3:SetPoint("TOPLEFT", infoTexture, "TOPLEFT", 28, 15);
+infoTexture3:SetSize(61, 11);
+infoTexture3:SetTexCoord(0,0.95,0,0.69);
+
+local ag2 = infoTexture3:CreateAnimationGroup();
+ag2:SetLooping("REPEAT");
+
+local aniFade2 = ag2:CreateAnimation("Alpha");
+aniFade2:SetDuration(5);
+aniFade2:SetToAlpha(0);
+aniFade2:SetFromAlpha(0);
+aniFade2:SetOrder(1);
+
+local aniAppear2 = ag2:CreateAnimation("Alpha");
+aniAppear2:SetDuration(5);
+aniAppear2:SetToAlpha(1);
+aniAppear2:SetFromAlpha(1);
+aniAppear2:SetOrder(2);
+
 --[[
 local infoTexture = IRT_InterruptOptions:CreateTexture(nil, "BACKGROUND");
-infoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\Interrupt.tga");
-infoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 130, -50);
-infoTexture:SetSize(320, 100);
-infoTexture:SetTexCoord(0,1,0,0.2);
-
+infoTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\InterruptNamePlate.tga");
+infoTexture:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 320, -140);
+infoTexture:SetSize(216, 228);
+infoTexture:SetTexCoord(0,0.85,0,0.89);
+]]
+--[[
 local previewText = IRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
 previewText:SetPoint("TOP", infoTexture, "TOP", 0, 20);
 previewText:SetText(L.OPTIONS_INTERRUPT_PREVIEW);
@@ -191,7 +163,7 @@ local function createRow()
 	local row = #GUI+1;
 	GUI[row] = {};
 	local orderEdit = CreateFrame("EditBox", nil, IRT_InterruptOptions, "InputBoxTemplate");
-	orderEdit:SetPoint("TOPLEFT", orderText, "TOPLEFT", 0, -2-((row-1)*40));
+	orderEdit:SetPoint("TOPLEFT", orderText, "TOPLEFT", 0, -2-((row-1)*30));
 	orderEdit:SetAutoFocus(false);
 	orderEdit:SetSize(250, 45);
 	orderEdit:SetText("");
@@ -209,12 +181,22 @@ local function createRow()
 	orderEdit:SetScript("OnTextChanged", function(self)
 		local input = self:GetText();
 		input = input:gsub("^%l", string.upper);
+		if (input:find("%s")) then
+			input = input:sub(1, input:find("%s")-1);
+		end
+		if (input:find("%.")) then
+			input = input:sub(1, input:find("%.")-1);
+		end
+		if (input:find(",")) then
+			input = input:sub(1, input:find(",")-1);
+		end
+		GUI[row].orderEdit:SetText(input);
 		IRT_NextInterrupt[row].NextInterrupter = input;
 	end)
 	GUI[row].orderEdit = orderEdit;
 
 	local dropDown = CreateFrame("FRAME", "IRT_Interrupt_Dropdown" .. row, IRT_InterruptOptions, "UIDropDownMenuTemplate");
-	dropDown:SetPoint("TOPLEFT", orderText, "TOPLEFT", 270, -12-((row-1)*40));
+	dropDown:SetPoint("TOPLEFT", orderText, "TOPLEFT", 270, -12-((row-1)*30));
 
 	local function dropDown_OnClick (self, bossName, bossID, checked)
 		IRT_NextInterrupt[row].bossID = bossID;
@@ -268,7 +250,7 @@ end
 local showButtonRemove = CreateFrame("Button", "IRT_RemoveButton", IRT_InterruptOptions, "UIPanelButtonTemplate");
 showButtonRemove:SetText("-");
 showButtonRemove:SetSize(30, 25);
-showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -2);
+showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -10);
 showButtonRemove:HookScript("OnClick", function(self)
 	if (#IRT_NextInterrupt > 1) then
 		GUI[#IRT_NextInterrupt].dropDown:Hide();
@@ -276,20 +258,20 @@ showButtonRemove:HookScript("OnClick", function(self)
 		GUI[#IRT_NextInterrupt] = nil;  
 		IRT_NextInterrupt[#IRT_NextInterrupt] = nil;
 	end
-	showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -2-(#IRT_NextInterrupt*40));
-	IRT_AddButton:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -2-(#IRT_NextInterrupt*40));
+	showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -10-(#IRT_NextInterrupt*30));
+	IRT_AddButton:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -10-(#IRT_NextInterrupt*30));
 end)
 
 local showButtonAdd = CreateFrame("Button", "IRT_AddButton", IRT_InterruptOptions, "UIPanelButtonTemplate")
 showButtonAdd:SetText("+");
 showButtonAdd:SetSize(30, 25);
-showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -2);
+showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -6);
 showButtonAdd:HookScript("OnClick", function(self)
-	if (#IRT_NextInterrupt < 8) then
+	if (#IRT_NextInterrupt < 10) then
 		IRT_NextInterrupt[#IRT_NextInterrupt+1] = {bossID=1};
 		createRow();
-		showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -2-(#IRT_NextInterrupt*40));
-		showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -2-(#IRT_NextInterrupt*40));
+		showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -10-(#IRT_NextInterrupt*30));
+		showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -10-(#IRT_NextInterrupt*30));
 	end
 end);
 
@@ -310,11 +292,16 @@ IRT_InterruptOptions:SetScript("OnShow", function(self)
 			end
 		end
 	end
-	showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -2-(#IRT_NextInterrupt*40));
-	showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -2-(#IRT_NextInterrupt*40));
+	ag:Play();
+	ag2:Play();
+	showButtonAdd:SetPoint("TOPLEFT", orderText, "TOPLEFT", 100, -10-(#IRT_NextInterrupt*30));
+	showButtonRemove:SetPoint("TOPLEFT", orderText, "TOPLEFT", 200, -10-(#IRT_NextInterrupt*30));
 	enabledButton:SetChecked(IRT_InterruptEnabled);
-end)
+end);
 
+IRT_InterruptOptions:SetScript("OnHide", function(self)
+	ag:Stop();
+	ag2:Stop();
+end);
 
-
-InterfaceOptions_AddCategory(IRT_InterruptOptions)
+InterfaceOptions_AddCategory(IRT_InterruptOptions);
