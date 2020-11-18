@@ -12,7 +12,7 @@ local raid = {
 local assignments = {};
 local playerName = GetUnitName("player");
 local assignment = "";
-local printDebug = true;
+local printDebug = false;
 local testResultText = "";
 local testResultsCount = 0;
 local groupIcons = {
@@ -855,8 +855,8 @@ function HA_Test(p1, p2, p3)
 	raid = nil;
 	if (raid == nil) then
 		raid = {
-			[1] = {"Bram", "Nost", "Marie", "Cata", "Dez"},
-			[2] = {"Ala", "Fed", "Blink", "Antv", "Sloxy"},
+			[1] = {"Pred", "Nost", "Marie", "Bram", "Dez"},
+			[2] = {"Ala", "Ant", "Blink", "Fed", "Sloxy"},
 			[3] = {"Natu", "Cakk", "Moon", "Mvk", "Cata"},
 			[4] = {"Sloni", "Janga", "Sejuka", "Emnity", "Warlee"},
 		};

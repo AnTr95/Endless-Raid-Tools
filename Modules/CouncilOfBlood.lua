@@ -5,6 +5,7 @@ local inEncounter = false;
 local playerName = UnitName("player");
 local dfDebuffs = {};
 local leader = nil;
+local printDebug = false;
 
 local IRT_UnitDebuff = IRT_UnitDebuff;
 local UnitIsUnit = UnitIsUnit;
@@ -22,6 +23,14 @@ f:RegisterEvent("CHAT_MSG_ADDON");
 
 C_ChatInfo.RegisterAddonMessagePrefix("IRT_TCOB");
 
+function IRT_TCOB_Debug()
+	if (printDebug) then
+		printDebug = false;
+	else
+		printDebug = true;
+	end
+end
+
 local function compare(a, b)
 	if (a[3] == b[3]) then
 		return a[2] < b[2];
@@ -31,7 +40,9 @@ local function compare(a, b)
 end
 
 local function updateDF()
-	print("updating df list")
+	if (printDebug) then
+		print("updating df list")
+	end
 	local addonText = "";
 	local sortedArray = {};
 	for pl, stacks in pairs(dfDebuffs) do
@@ -39,7 +50,9 @@ local function updateDF()
 		if (role == "TANK") then
 			role = "DAMAGER";
 		end
-		print(pl .. " has " .. stacks .. " stacks and is a " .. role)
+		if (printDebug) then
+			print(pl .. " has " .. stacks .. " stacks and is a " .. role)
+		end
 		local tbl = {Ambiguate(pl, "short"), stacks, role};
 		table.insert(sortedArray, tbl);
 	end
@@ -80,8 +93,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (msg == "hide") then
 				IRT_InfoBoxHide();
 			else
-				print("converting data")
-				print(msg)
+				if (printDebug) then
+					print("converting data")
+					print(msg)
+				end
 				convertMsgToInfoBox(msg);
 			end
 		end
@@ -90,7 +105,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (logEvent == "SPELL_AURA_APPLIED") then
 			if (UnitIsUnit(leader, playerName) and spellID == 347350) then
 				if (dfDebuffs[target] == nil) then
-					print(target .. " got df debuff 3 stacks applied")
+					if (printDebug) then
+						print(target .. " got df debuff 3 stacks applied")
+					end
 					dfDebuffs[target] = 3;
 					updateDF();
 				end
@@ -99,22 +116,30 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (UnitIsUnit(playerName, leader) and spellID == 347350) then
 				dfDebuffs[target] = nil;
 				if (next(dfDebuffs)) then
-					print(target .. " got debuff removed still " ..#dfDebuffs .. " debuffs")
+					if (printDebug) then
+						print(target .. " got debuff removed still " ..#dfDebuffs .. " debuffs")
+					end
 					updateDF();
 				else
-					print("hiding infobox 0 debuffs")
+					if (printDebug) then
+						print("hiding infobox 0 debuffs")
+					end
 					C_ChatInfo.SendAddonMessage("IRT_TCOB", "hide", "RAID");
 				end
 			end
 		elseif (UnitIsUnit(playerName, leader) and logEvent == "SPELL_AURA_REMOVED_DOSE" and spellID == 347350) then
-			print(target .. " lost a stack now at " .. stacks .. " stacks")
+			if (printDebug) then
+				print(target .. " lost a stack now at " .. stacks .. " stacks")
+			end
 			dfDebuffs[target] = stacks;
 			updateDF();
 		end
 	elseif (event == "ENCOUNTER_START" and IRT_TheCouncilOfBloodEnabled) then
 		local eID = ...;
 		if (eID == 2412) then
-			print("council engaged")
+			if (printDebug) then
+				print("council engaged")
+			end
 			inEncounter = true;
 			leader = IRT_GetRaidLeader();
 			dfDebuffs = {};
@@ -143,7 +168,9 @@ function DF_Test()
 			rngPlayer = math.random(1, 5);
 		end
 		dfDebuffs[raid[rngGroup][rngPlayer]] = 3;
-		print(raid[rngGroup][rngPlayer])
+		if (printDebug) then
+			print(raid[rngGroup][rngPlayer])
+		end
 	end
 	updateDF();
 end

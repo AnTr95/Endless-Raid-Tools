@@ -1,6 +1,6 @@
 ## Interface: 90002
 ## Title: Infinite Raid Tools
-## Version: 9.03
+## Version: 9.04
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: IRT_InterruptEnabled
@@ -25,7 +25,6 @@
 ## SavedVariablesPerCharacter: IRT_AutoOilPosition
 ## SavedVariablesPerCharacter: IRT_StoneLegionGeneralsEnabled
 ## SavedVariablesPerCharacter: IRT_HuntsmanAltimorPlayersPerLine
-## SavedVariablesPerCharacter: IRT_HungeringDestroyerSoakCount
 Localization\Localization.enUS.lua
 Core.lua
 Options\Options.lua

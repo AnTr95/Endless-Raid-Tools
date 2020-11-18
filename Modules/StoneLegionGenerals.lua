@@ -8,6 +8,7 @@ local assignments = {};
 local countdown = -1;
 local currentDispelled = {};
 local timer = nil;
+local printDebug = false;
 
 local IRT_UnitDebuff = IRT_UnitDebuff;
 local IRT_Contains = IRT_Contains;
@@ -22,8 +23,18 @@ f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("PLAYER_LOGIN");
 
+function IRT_SLG_Debug()
+	if (printDebug) then
+		printDebug = false;
+	else
+		printDebug = true;
+	end
+end
+
 local function initHealers()
-	print("initating healers: ")
+	if (printDebug) then
+		print("initating healers: ")
+	end
 	healers = {};
 	for i = 1, GetNumGroupMembers() do
 		local raider = "raid"..i;
@@ -31,7 +42,9 @@ local function initHealers()
 		if (UnitIsVisible(raider) and UnitIsConnected(raider)) then
 			local role = UnitGroupRolesAssigned(raider);
 			if (role == "HEALER") then
-				print("Healer found: " .. raiderName)
+				if (printDebug) then
+					print("Healer found: " .. raiderName)
+				end
 				table.insert(healers, raiderName);
 			end
 		end
@@ -72,7 +85,9 @@ local function updateDispelText()
 end
 
 local function assignDispels()
-	print("Assigning healers to debuffed healers: ");
+	if (printDebug) then
+		print("Assigning healers to debuffed healers: ");
+	end
 	assignments = {};
 	for i, pl in pairs(debuffed) do -- ensure healers dont dispel themselves
 		for j, healer in pairs(healers) do
@@ -83,12 +98,16 @@ local function assignDispels()
 			end
 		end
 	end
-	print("assigning healers to debuffed dps")
+	if (printDebug) then
+		print("assigning healers to debuffed dps")
+	end
 	for i, pl in pairs(debuffed) do
 		if (not IRT_ContainsKey(assignments, pl)) then
 			for j, healer in pairs(healers) do
 				if (not IRT_Contains(assignments, healer)) then
-					print(healer .. " got assigned to dispel " .. pl)
+					if (printDebug) then
+						print(healer .. " got assigned to dispel " .. pl)
+					end
 					assignments[pl] = healer;
 					break;
 				end
@@ -107,14 +126,18 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local unitName = GetUnitName(unit, true);
 		if (IRT_UnitDebuff(unit, GetSpellInfo(334765))) then
 			if (not IRT_Contains(debuffed, unitName)) then
-				print(unitName .. " got debuffed")
+				if (printDebug) then
+					print(unitName .. " got debuffed")
+				end
 				debuffed[#debuffed+1] = unitName;
 				countdown = -1;
 				assignDispels();
 			end
 		else
 			if (IRT_Contains(debuffed, unitName)) then
-				print(unitName .. " got debuffed removed")
+				if (printDebug) then
+					print(unitName .. " got debuffed removed")
+				end
 				debuffed[IRT_Contains(debuffed, unitName)] = nil;
 				assignments[unitName] = nil;
 				updateDispelText();
@@ -122,7 +145,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 		if (IRT_UnitDebuff(unit, GetSpellInfo(334771))) then
 			if (not IRT_Contains(currentDispelled, unitName)) then
-				print(unitName .. " got 2nd debuff applied starting timer")
+				if (printDebug) then
+					print(unitName .. " got 2nd debuff applied starting timer")
+				end
 				currentDispelled[#currentDispelled+1] = unitName;
 				countdown = 6;
 				updateDispelText();
@@ -137,7 +162,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 		else
 			if (IRT_Contains(currentDispelled, unitName)) then
-				print(unitName .. " got 2nd debuff removed")
+				if (printDebug) then
+					print(unitName .. " got 2nd debuff removed")
+				end
 				currentDispelled[IRT_Contains(currentDispelled, unitName)] = nil;
 				updateDispelText();
 			end
@@ -146,7 +173,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local eID = ...;
 		local difficulty = select(3, GetInstanceInfo());
 		if (eID == 2417 and difficulty == 16) then
-			print("mythic stone legion started")
+			if (printDebug) then
+				print("mythic stone legion started")
+			end
 			inEncounter = true;
 			healers = {};
 			debuffed = {};
