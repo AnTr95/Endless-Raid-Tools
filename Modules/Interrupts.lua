@@ -185,7 +185,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
-	elseif (event == "NAME_PLATE_UNIT_REMOVED" and IRT_InterruptEnabled and trackedInterrupter and (inEncounter or inCombat)) then
+	elseif (event == "NAME_PLATE_UNIT_REMOVED" and IRT_InterruptEnabled and (inEncounter or inCombat)) then
 		local unit = ...;
 		local guid = UnitGUID(unit);
 		local namePlate = getFontStringForGUID(guid);
@@ -203,7 +203,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 					getNamePlateForGUID(targetGUID);
 					C_ChatInfo.SendAddonMessage("IRT_INTERRUPT", targetGUID .. " " .. playerName .. " false", "RAID");
 				end
-				IRT_PopupShow(L.INTERRUPT_NEXT_POPUP, 10, L.INTERRUPT_FILE);
+				IRT_PopupShow(L.INTERRUPT_NEXT_POPUP, 8, L.INTERRUPT_FILE);
 			elseif (UnitIsUnit(caster, playerName)) then
 				if (spellIDs[spellID]) then
 					IRT_PopupHide(L.INTERRUPT_FILE);
@@ -217,7 +217,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 			else
 				removeFontString(targetGUID);
 			end
-			IRT_PopupHide(L.INTERRUPT_FILE);
 		end
 	elseif (event == "ENCOUNTER_START" and IRT_InterruptEnabled) then
 		inEncounter = true;
@@ -225,6 +224,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		for i = 1, #IRT_NextInterrupt do
 			if (eID == IRT_NextInterrupt[i].bossID) then
 				trackedInterrupter = IRT_NextInterrupt[i].NextInterrupter;
+				break;
 			end
 		end
 		if (trackedInterrupter and (not UnitExists(trackedInterrupter) or not UnitIsConnected(trackedInterrupter))) then
@@ -245,17 +245,16 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 		end
 		IRT_PopupHide(L.INTERRUPT_FILE);
-	elseif (event == "PLAYER_REGEN_DISABLED" and IRT_InterruptEnabled and not inCombat and not inEncounter) then
-		C_Timer.After(0.5, function()
-			if (not inEncounter) then
-				inCombat = true;
-				for i = 1, #IRT_NextInterrupt do
-					if (-1 == IRT_NextInterrupt[i].bossID) then
-						trackedInterrupter = IRT_NextInterrupt[i].NextInterrupter;
-					end
+	elseif (event == "PLAYER_REGEN_DISABLED" and IRT_InterruptEnabled and not inCombat) then
+		if (select(2, GetInstanceInfo()) ~= "raid") then
+			inCombat = true;
+			for i = 1, #IRT_NextInterrupt do
+				if (-1 == IRT_NextInterrupt[i].bossID) then
+					trackedInterrupter = IRT_NextInterrupt[i].NextInterrupter;
+					break;
 				end
 			end
-		end);
+		end
 	elseif (event == "PLAYER_REGEN_ENABLED" and inCombat and IRT_InterruptEnabled) then
 		inCombat = false;
 		trackedInterrupter = nil;
