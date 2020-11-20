@@ -144,15 +144,15 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 			IRT_PopupUpdateFontSize();
 			IRT_InfoBoxUpdateFontSize();
-			if (IsInGuild()) then
-				C_ChatInfo.SendAddonMessage("IRT_UPDATE", version, "GUILD");
-			end
 		end
 	elseif (event == "PLAYER_LOGIN") then
 		if (IRT_MinimapMode == "Always") then
 			IRT_MinimapButton:Show();
 		else
 			IRT_MinimapButton:Hide();
+		end
+		if (IsInGuild()) then
+			C_ChatInfo.SendAddonMessage("IRT_UPDATE", version, "GUILD");
 		end
 	end
 end);
