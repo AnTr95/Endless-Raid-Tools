@@ -171,12 +171,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (prefix == "IRT_INTERRUPT") then
 			local guid, player, interrupted = strsplit(" ", msg);
 			if (interrupted == "true") then
+				--[[
 				C_Timer.After(0.5, function()	
 					local fs = getFontStringForGUID(guid);
 					if ((fs and fs:GetText():match(player)) or (fs and fs:GetText():match(L.INTERRUPT_NEXT) and UnitIsUnit(player, playerName))) then
 						removeFontString(guid, fs);
 					end
-				end);
+				end);]]
 			else	
 				if (namePlateIDs[guid]) then
 					createFontString(guid, namePlateIDs[guid], player);
@@ -227,7 +228,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				break;
 			end
 		end
-		if (trackedInterrupter and (not UnitExists(trackedInterrupter) or not UnitIsConnected(trackedInterrupter))) then
+		if (trackedInterrupter and (not UnitExists(trackedInterrupter) or not UnitIsConnected(trackedInterrupter)) and select(2, GetInstanceInfo()) == "raid") then
 			print(L.INTERRUPT_ERROR1 .. "|cFFFFFFFF" .. trackedInterrupter .. "|r" .. L.INTERRUPT_ERROR2);
 			trackedInterrupter = nil;
 		end
