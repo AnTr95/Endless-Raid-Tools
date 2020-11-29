@@ -15,6 +15,7 @@ local assignment = "";
 local printDebug = false;
 local testResultText = "";
 local testResultsCount = 0;
+local testMode = false;
 local groupIcons = {
 	["1"] = "STAR",
 	["2"] = "CIRCLE",
@@ -91,6 +92,16 @@ local function resetAssignments()
 		end
 	end
 	C_ChatInfo.SendAddonMessage("IRT_HA", "reset", "RAID");
+end
+
+function IRT_HA_TestMode()
+	if (testMode) then
+		testMode = false;
+		print("IRT: HA Test mode disabled");
+	else
+		testMode = true;
+		print("IRT: HA Test mode enabled");
+	end
 end
 
 function IRT_HA_Debug()
@@ -324,6 +335,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_START" and IRT_HuntsmanAltimorEnabled) then
 		local eID = ...;
 		local difficulty = select(3, GetInstanceInfo());
+		if (testMode) then
+			difficulty = 16;
+		end
 		if (eID == 2418 and difficulty == 16) then
 			inEncounter = true;
 			leader = IRT_GetRaidLeader();

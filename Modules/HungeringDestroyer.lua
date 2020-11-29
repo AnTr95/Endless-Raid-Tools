@@ -9,6 +9,7 @@ local debuffed = {};
 local hasDebuff = false;
 local assignments = {};
 local printDebug = false;
+local testMode = false;
 local groupIcons = {
 	["1"] = "STAR",
 	["2"] = "CIRCLE",
@@ -42,6 +43,16 @@ f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("CHAT_MSG_ADDON");
 f:RegisterEvent("PLAYER_LOGIN");
+
+function IRT_HD_TestMode()
+	if (testMode) then
+		testMode = false;
+		print("IRT: HD Test mode disabled");
+	else
+		testMode = true;
+		print("IRT: HD Test mode enabled");
+	end
+end
 
 function IRT_HD_Debug()
 	if (printDebug) then
@@ -607,6 +618,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_START" and IRT_HungeringDestroyerEnabled) then
 		local eID = ...;
 		local difficulty = select(3, GetInstanceInfo());
+		if (testMode) then
+			difficulty = 16;
+		end
 		if (eID == 2383 and difficulty == 16) then
 			if (printDebug) then
 				print("hungering destroyer mythic engaged")

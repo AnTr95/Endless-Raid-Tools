@@ -13,6 +13,7 @@ local pair = nil;
 local plMark = nil;
 local hasAssigned = false;
 local printDebug = false;
+local testMode = false;
 local raid = {
 	["TANK"] = {},
 	["HEALER"] = {},
@@ -57,6 +58,16 @@ f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 f:RegisterEvent("CHAT_MSG_ADDON");
 
 C_ChatInfo.RegisterAddonMessagePrefix("IRT_SLUDGEFIST");
+
+function IRT_SF_TestMode()
+	if (testMode) then
+		testMode = false;
+		print("IRT: SF Test mode disabled");
+	else
+		testMode = true;
+		print("IRT: SF Test mode enabled");
+	end
+end
 
 function IRT_SF_Debug()
 	if (printDebug) then
@@ -410,6 +421,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_START" and IRT_SludgefistEnabled) then
 		local eID = ...;
 		local difficulty = select(3, GetInstanceInfo());
+		if (testMode) then
+			difficulty = 16;
+		end
 		if (eID == 2399 and difficulty == 16) then
 			if (printDebug) then
 				print("sludgefist mythic engaged")
