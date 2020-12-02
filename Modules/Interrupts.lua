@@ -171,13 +171,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (prefix == "IRT_INTERRUPT") then
 			local guid, player, interrupted = strsplit(" ", msg);
 			if (interrupted == "true") then
-				--[[
-				C_Timer.After(0.5, function()	
+				C_Timer.After(0.1, function()	
 					local fs = getFontStringForGUID(guid);
 					if ((fs and fs:GetText():match(player)) or (fs and fs:GetText():match(L.INTERRUPT_NEXT) and UnitIsUnit(player, playerName))) then
 						removeFontString(guid, fs);
 					end
-				end);]]
+				end);
 			else	
 				if (namePlateIDs[guid]) then
 					createFontString(guid, namePlateIDs[guid], player);
