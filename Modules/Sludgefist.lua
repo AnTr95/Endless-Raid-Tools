@@ -29,10 +29,10 @@ local priorityLex = {
 };
 
 local groupIcons = {
-	["1"] = "STAR",
-	["2"] = "CIRCLE",
-	["3"] = "DIAMOND",
-	["4"] = "TRIANGLE",
+	["1"] = "BACK-LEFT",
+	["2"] = "BACK-RIGHT",
+	["3"] = "FRONT-LEFT",
+	["4"] = "FRONT-RIGHT",
 };
 
 
@@ -139,27 +139,27 @@ local function printAssignments()
 	end
 	table.sort(sortedTable, compare);
 	for i, data in pairs(sortedTable) do
-		local mark = data[2];
+		local mark = tostring(data[2]);
 		local pl = Ambiguate(data[1], "short");
 		if (UnitIsConnected(pl)) then
 			pl = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pl))].colorStr, pl);
+		else
+			pl = "|cFF00FF00" .. pl .. "|r";
 		end
 		if (i%2 == 1) then
-			printText = printText .. "\n\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_".. mark .. ":12\124t";
+			printText = printText .. "\n" .. groupIcons[mark] .. ": ";
 		end
-		printText = printText .. "|cFF00FF00" .. pl .. "|r|cFFFFFFFF, |r";
+		printText = printText .. pl .. "|cFFFFFFFF, |r";
 	end
-	if (printDebug) then
-		print(printText);
-	end
+	print(printText);
 end
 
 local function playerNotification(mark, duration)
 	if (printDebug) then
 		print("starting player yell with mark " .. mark .. " and duration " .. duration)
 	end
-	local chatText = "{rt" .. mark .. "}";
-	IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." SOAK " .. groupIcons[mark] .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration, L.BOSS_FILE);
+	local chatText = groupIcons[mark];
+	IRT_PopupShow("SOAK " .. groupIcons[mark], duration, L.BOSS_FILE);
 	SendChatMessage(chatText, "YELL");
 	duration = math.ceil(duration/1.5)-1;
 	timer = C_Timer.NewTicker(1.5, function()
@@ -170,7 +170,6 @@ local function playerNotification(mark, duration)
 			SendChatMessage(chatText, "YELL");
 		end
 	end, duration);
-	PlaySoundFile("Interface\\AddOns\\InfiniteRaidTools\\Sound\\"..groupIcons[mark]..".ogg", "Master");
 end
 
 local function assignMarks()
@@ -299,13 +298,13 @@ local function onUpdate(self, elapsed)
 				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pair))].colorStr, Ambiguate(pair, "short"));
 				if (not IsItemInRange(63427, pair)) then
 					if (plMark) then
-						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 8 yards|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
+						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 8 yards|r\nYour soak: " .. groupIcons[plMark], 56);
 					else
 						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 8 yards|r", 56);
 					end
 				else
 					if(plMark) then
-						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 8 yards|r\nYour mark: " .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. plMark .. ":20\124t", 56);
+						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 8 yards|r\nYour soak: " .. groupIcons[plMark], 56);
 					else
 						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 8 yards|r", 56);
 					end
@@ -471,7 +470,7 @@ function SF_Test()
 	raid = {
 		["TANK"] = {"Pred", "Nost"},
 		["HEALER"] = {"Marie", "Natu", "Janga", "Warlee"},
-		["RANGED"] = {"Ala", "Antv", "Blink", "Fed", "Cakk", "Antt", "Mvk", "Sloni", "Sejuka", "Emnity"},
+		["RANGED"] = {"Ala", "Ant", "Blink", "Fed", "Cakk", "Antt", "Mvk", "Sloni", "Sejuka", "Emnity"},
 		["MELEE"] = {"Bram", "Dez", "Sloxy", "Cata"},
 	};
 	assignments = {};

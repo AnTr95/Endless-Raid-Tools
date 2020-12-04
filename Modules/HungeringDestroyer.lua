@@ -105,9 +105,8 @@ local function printAssignments()
 		local pl = Ambiguate(debuffedPlayer, "short");
 		if (UnitIsConnected(debuffedPlayer)) then
 			pl = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pl))].colorStr, pl);
-			pl = "|c296d98FF" .. pl .. "|r";
 		else
-			pl = "|c296d98FF" .. pl .. "|r";
+			pl = "|cFF00FF00" .. pl .. "|r";
 		end
 		printText = printText .. "\n\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_" .. group .. ":12\124t\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t" .. pl .. "\124TInterface\\Icons\\ability_deathknight_frozencenter:12\124t";
 		for index, player in pairs(assignments[group]) do
