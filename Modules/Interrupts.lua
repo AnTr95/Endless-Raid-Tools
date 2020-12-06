@@ -181,10 +181,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (namePlateIDs[guid]) then
 					createFontString(guid, namePlateIDs[guid], player);
 				else
-					local namePlate = getNamePlateForGUID(guid);
-					if (namePlate) then
-						createFontString(guid, getNamePlateForGUID(guid), player);
-					end
+					createFontString(guid, getNamePlateForGUID(guid), player);
 				end
 			end
 		end
@@ -203,10 +200,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (namePlate) then
 					C_ChatInfo.SendAddonMessage("IRT_INTERRUPT", targetGUID .. " " .. playerName .. " false", "RAID");
 				else
-					namePlate = getNamePlateForGUID(targetGUID);
-					if (nameplate) then
-						C_ChatInfo.SendAddonMessage("IRT_INTERRUPT", targetGUID .. " " .. playerName .. " false", "RAID");
-					end
+					getNamePlateForGUID(targetGUID);
+					C_ChatInfo.SendAddonMessage("IRT_INTERRUPT", targetGUID .. " " .. playerName .. " false", "RAID");
 				end
 				IRT_PopupShow(L.INTERRUPT_NEXT_POPUP, 8, L.INTERRUPT_FILE);
 			elseif (UnitIsUnit(caster, playerName)) then
