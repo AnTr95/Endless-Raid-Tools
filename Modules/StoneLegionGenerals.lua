@@ -9,7 +9,6 @@ local countdown = -1;
 local currentDispelled = {};
 local timer = nil;
 local printDebug = false;
-local testMode = false;
 
 local IRT_UnitDebuff = IRT_UnitDebuff;
 local IRT_Contains = IRT_Contains;
@@ -23,16 +22,6 @@ f:RegisterEvent("ENCOUNTER_END");
 f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("PLAYER_LOGIN");
-
-function IRT_SLG_TestMode()
-	if (testMode) then
-		testMode = false;
-		print("IRT: SLG Test mode disabled");
-	else
-		testMode = true;
-		print("IRT: SLG Test mode enabled");
-	end
-end
 
 function IRT_SLG_Debug()
 	if (printDebug) then
@@ -182,11 +171,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "ENCOUNTER_START" and IRT_StoneLegionGeneralsEnabled) then
 		local eID = ...;
-		local difficulty = select(3, GetInstanceInfo());
-		if (testMode) then
-			difficulty = 16;
-		end
-		if (eID == 2417 and difficulty == 16) then
+		if (eID == 2417) then
 			if (printDebug) then
 				print("mythic stone legion started")
 			end

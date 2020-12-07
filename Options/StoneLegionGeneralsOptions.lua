@@ -25,12 +25,19 @@ local difficultyText = IRT_StoneLegionGeneralsOptions:CreateFontString(nil, "ART
 difficultyText:SetPoint("TOPLEFT", version, "BOTTOMLEFT", 0, -10);
 difficultyText:SetText(L.OPTIONS_DIFFICULTY);
 
+local heroicTexture = IRT_StoneLegionGeneralsOptions:CreateTexture(nil,"BACKGROUND");
+heroicTexture:SetTexture("Interface\\EncounterJournal\\UI-EJ-Icons.png");
+heroicTexture:SetWidth(32);
+heroicTexture:SetHeight(32);
+IRT_SetFlagIcon(heroicTexture, 3);
+heroicTexture:SetPoint("TOPLEFT", difficultyText, "TOPLEFT", 60, 10);
+
 local mythicTexture = IRT_StoneLegionGeneralsOptions:CreateTexture(nil,"BACKGROUND");
 mythicTexture:SetTexture("Interface\\EncounterJournal\\UI-EJ-Icons.png");
 mythicTexture:SetWidth(32);
 mythicTexture:SetHeight(32);
 IRT_SetFlagIcon(mythicTexture, 12);
-mythicTexture:SetPoint("TOPLEFT", difficultyText, "TOPLEFT", 60, 10);
+mythicTexture:SetPoint("TOPLEFT", heroicTexture, "TOPLEFT", 20, 0);
 
 local bossTexture = IRT_StoneLegionGeneralsOptions:CreateTexture(nil,"BACKGROUND");
 bossTexture:SetTexture("Interface\\ENCOUNTERJOURNAL\\UI-EJ-BOSS-StoneLegionGenerals.PNG");
