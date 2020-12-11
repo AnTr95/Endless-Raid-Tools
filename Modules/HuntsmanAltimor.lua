@@ -60,6 +60,22 @@ local function compare(a, b)
 	return tonumber(positionsLex[tostring(a[3])]) < tonumber(positionsLex[tostring(b[3])]);
 end
 
+local function resetAssignments()
+	assignments = {};
+	for mark = 1, 3 do
+		assignments[mark] = {};
+		local group = mark+1;
+		for index, player in pairs(raid[group]) do
+			if (index >= IRT_HuntsmanAltimorPlayersPerLine+1) then
+				break;
+			else
+				assignments[mark][index] = {["name"] = player, ["mark"] = mark, ["pos"] = positions[index]};
+			end
+		end
+	end
+	C_ChatInfo.SendAddonMessage("IRT_HA", "reset", "RAID");
+end
+
 local function initRaid()
 	raid = {
 		[1] = {},
@@ -76,22 +92,6 @@ local function initRaid()
 		end
 	end
 	resetAssignments();
-end
-
-local function resetAssignments()
-	assignments = {};
-	for mark = 1, 3 do
-		assignments[mark] = {};
-		local group = mark+1;
-		for index, player in pairs(raid[group]) do
-			if (index >= IRT_HuntsmanAltimorPlayersPerLine+1) then
-				break;
-			else
-				assignments[mark][index] = {["name"] = player, ["mark"] = mark, ["pos"] = positions[index]};
-			end
-		end
-	end
-	C_ChatInfo.SendAddonMessage("IRT_HA", "reset", "RAID");
 end
 
 function IRT_HA_TestMode()
@@ -159,6 +159,7 @@ end
 local function playerNotification(mark, pos, duration)
 	local chatText = "";
 	if (tonumber(pos)) then --debuffed
+		pos = pos + GetTime();
 		chatText = "{rt" .. mark .. "} " .. math.ceil(pos-GetTime()) .. " {rt" .. mark .. "}";
 		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration, L.BOSS_FILE);
 		PlaySoundFile("Interface\\AddOns\\InfiniteRaidTools\\Sound\\"..groupIcons[mark]..".ogg", "Master");

@@ -158,7 +158,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 end);
 function IRT_FindMissingPlayers()
 	for i = 1, GetNumGroupMembers() do
-		if (not IRT_Contains(playersChecked, UnitName("raid"..i)) and UnitName("raid"..i) ~= UnitName("player")) then
+		if (not IRT_Contains(playersChecked, Ambiguate(UnitName("raid"..i), "short") and UnitName("raid"..i) ~= UnitName("player")) then
 			print(GetUnitName("raid"..i, true) .. "-not installed");
 		end
 	end

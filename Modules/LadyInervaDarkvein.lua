@@ -43,7 +43,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
 		if (UnitIsUnit(leader, playerName)) then
-			if (IRT_UnitDebuff(unit, GetSpellInfo(325064))) then
+			if (IRT_UnitDebuff(unit, GetSpellInfo(324983))) then
 				if (not IRT_Contains(debuffed, unitName)) then
 					debuffed[#debuffed+1] = unitName;
 					if (#debuffed == 3) then
