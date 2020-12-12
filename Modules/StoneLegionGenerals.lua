@@ -1,3 +1,4 @@
+local L = IRTLocals;
 local f = CreateFrame("Frame");
 
 local inEncounter = false;

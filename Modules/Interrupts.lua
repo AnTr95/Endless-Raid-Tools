@@ -195,7 +195,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED" and IRT_InterruptEnabled and trackedInterrupter and (inEncounter or inCombat)) then
 		local _, logEvent, _, _, caster, _, _, targetGUID, target, _, _, spellID = CombatLogGetCurrentEventInfo();
 		if (logEvent == "SPELL_CAST_SUCCESS") then
-			if (UnitIsUnit(caster, trackedInterrupter) and spellIDs[spellID]) then
+			if (caster and UnitIsUnit(caster, trackedInterrupter) and spellIDs[spellID]) then
 				local namePlate = namePlateIDs[targetGUID];
 				if (namePlate) then
 					C_ChatInfo.SendAddonMessage("IRT_INTERRUPT", targetGUID .. " " .. playerName .. " false", "RAID");

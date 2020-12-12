@@ -549,7 +549,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 							if (printDebug) then
 								print("found " .. unitName .. " in group " .. group)
 							end
-							debuffed[unitName] = group;
+							debuffed[unitName] = i;
 							break;
 						end
 					end
@@ -571,9 +571,11 @@ f:SetScript("OnEvent", function(self, event, ...)
 					assignments[debuffed[unitName]] = {};
 					debuffed[unitName] = nil;
 					SetRaidTarget(unitName, 0);
+					hasAssigned = false;
+					--[[
 					if (next(debuffed) == nil) then
 						hasAssigned = false;
-					end
+					end]]
 				end
 			end
 		end

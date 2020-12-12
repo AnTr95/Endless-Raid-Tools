@@ -54,8 +54,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (IRT_Contains(debuffed, unitName)) then
 					debuffed[IRT_Contains(debuffed, unitName)] = nil;
 					SetRaidTarget(unitName, 0);
-					IRT_PopupHide(L.BOSS_FILE);
 				end
+			end
+		end
+		if(UnitIsUnit(unit, playerName)) then
+			if (IRT_PopupIsShown(L.BOSS_FILE) and not IRT_UnitDebuff(unit, GetSpellInfo(324983))) then
+				IRT_PopupHide(L.BOSS_FILE);
 			end
 		end
 	elseif (event == "CHAT_MSG_ADDON" and IRT_LadyInervaDarkveinEnabled and inEncounter) then

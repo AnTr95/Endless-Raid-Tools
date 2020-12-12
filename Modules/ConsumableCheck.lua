@@ -131,7 +131,6 @@ f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("READY_CHECK");
 f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("UNIT_INVENTORY_CHANGED");
-f:RegisterEvent("PLAYER_REGEN_DISABLED");
 f:RegisterEvent("ENCOUNTER_START");
 
 local currentKitIndex = 1;
@@ -579,7 +578,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (IRT_ConsumableCheckEnabled == nil) then IRT_ConsumableCheckEnabled = true; end
 		if (IRT_SenderReadyCheck == nil) then IRT_SenderReadyCheck = true; end
 		if (IRT_ConsumableAutoButtonsEnabled == nil) then IRT_ConsumableAutoButtonsEnabled = true; end
-	elseif ((event == "PLAYER_REGEN_DISABLED" or "ENCOUNTER_START") and (autoOil:IsShown() or autoKit:IsShown())) then
+	elseif (event == "ENCOUNTER_START" and (autoOil:IsShown() or autoKit:IsShown())) then
 		autoKit:Hide();
 		autoOil:Hide();
 	elseif (event == "READY_CHECK" and IRT_ConsumableCheckEnabled) then
