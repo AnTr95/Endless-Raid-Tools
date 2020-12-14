@@ -128,8 +128,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (IRT_PopupTextFontSize == nil) then
 				IRT_PopupTextFontSize = 28;
 			end
-			if (IRT_InfoBoxTextPosition ~= nil) then
-				IRT_InfoBoxSetPosition(IRT_InfoBoxTextPosition.point, IRT_InfoBoxTextPosition.relativeTo, IRT_InfoBoxTextPosition.relativePoint, IRT_InfoBoxTextPosition.xOffset, IRT_InfoBoxTextPosition.yOffset);
+			if (IRT_InfoBoxPosition ~= nil) then
+				IRT_InfoBoxSetPosition(IRT_InfoBoxPosition.point, IRT_InfoBoxPosition.relativeTo, IRT_InfoBoxPosition.relativePoint, IRT_InfoBoxPosition.xOffset, IRT_InfoBoxPosition.yOffset);
 			end
 			if (IRT_InfoBoxTextFontSize == nil) then
 				IRT_InfoBoxTextFontSize = 14;
