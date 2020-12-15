@@ -93,7 +93,9 @@ local function assignDispels()
 	for i, pl in pairs(debuffed) do -- ensure healers dont dispel themselves
 		for j, healer in pairs(healers) do
 			if (IRT_Contains(healers, pl) and not UnitIsUnit(pl, healer)) then
-				print(healer .. " got assigned to dispel " .. pl)
+				if (printDebug) then
+					print(healer .. " got assigned to dispel " .. pl)
+				end
 				assignments[pl] = healer;
 				break;
 			end
