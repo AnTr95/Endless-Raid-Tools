@@ -25,7 +25,7 @@ local COLORCODES = {
 
 local spellIDs = {
 	["Miasma"] = GetSpellInfo(329298),
-	["Sap"] = GetSpellInfo(344755),
+	["Sap"] = GetSpellInfo(334755),
 };
 
 local IRT_UnitDebuff = IRT_UnitDebuff;
