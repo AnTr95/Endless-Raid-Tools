@@ -628,6 +628,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 			assignments = {};
 			inEncounter = true;
+			debuffed = {};
 			raid = {
 				[1] = {},
 				[2] = {},
@@ -636,6 +637,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			};
 			leader = IRT_GetRaidLeader();
 			hasDebuff = false;
+			hasAssigned = false;
 			initRaid();
 		end
 	elseif (event == "ENCOUNTER_END" and IRT_HungeringDestroyerEnabled and inEncounter) then
@@ -648,6 +650,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		assignments = {};
 		inEncounter = false;
 		debuffed = {};
+		hasAssigned = false;
 		hasDebuff = false;
 	end
 end);
