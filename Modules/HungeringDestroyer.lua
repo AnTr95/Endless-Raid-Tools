@@ -307,7 +307,7 @@ local function updateGroups()
 					if (printDebug) then
 						print(player .. " debuffs runs out in " .. math.floor(exp-GetTime()))
 					end
-					if (exp and math.floor(exp-GetTime()-3) <= 0) then
+					if (exp and tonumber(exp) and math.floor(exp-GetTime()-3) <= 0) then
 						if (printDebug) then
 							print(player .. "'s debuff runs out in less than 2s assining to " .. grp .. " and count is " .. count)
 						end
@@ -358,7 +358,7 @@ local function updateGroups()
 						if (printDebug) then
 							print(player .. " debuffs runs out in " .. math.floor(exp-GetTime()))
 						end
-						if (exp and math.floor(exp-GetTime()-13) <= 0) then
+						if (exp and tonumber(exp) and math.floor(exp-GetTime()-13) <= 0) then
 							if (printDebug) then
 								print(player .. "'s debuff runs out in less than 12s assining to " .. grp .. " and count is " .. count)
 							end
@@ -499,8 +499,10 @@ local function playerNotification(mark, duration)
 	end
 	local ticker = C_Timer.NewTicker(1.5, function()
 		if (UnitIsDead("player")) then
-			ticker:Cancel();
-			ticker = nil;
+			if(ticker) then
+				ticker:Cancel();
+				ticker = nil;
+			end
 		else
 			SendChatMessage(chatText, "YELL");
 		end
