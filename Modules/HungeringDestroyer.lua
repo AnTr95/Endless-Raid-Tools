@@ -234,7 +234,7 @@ local function updateGroups()
 							print(grp .. " has more than 5 players trying to move " .. player)
 						end
 						-- check if debuff is running out or low stacks
-						local _, _, _, stacks, _, _, exp = IRT_UnitDebuff(player, spellIDs["Sap"]);
+						local _, _, _, stacks, _, exp = IRT_UnitDebuff(player, spellIDs["Sap"]);
 						if (stacks and exp and (math.floor(exp-GetTime()-3) <= 0 or stacks <=2) and debuffed[player] == nil and UnitGroupRolesAssigned(player) ~= "TANK") then --Dont swap debuffed players nor players that cant soak because still debuffed nor tanks
 							if (printDebug) then
 								print(player .. " does not have sap or miasma debuff and is not a tank, iterating new group for them")
@@ -303,7 +303,7 @@ local function updateGroups()
 			end
 			for index, player in pairs(raid[grp]) do
 				if (UnitIsConnected(player) and debuffed[player] == nil) then
-					local exp = select(7, IRT_UnitDebuff(player, spellIDs["Sap"]));
+					local exp = select(6, IRT_UnitDebuff(player, spellIDs["Sap"]));
 					if (printDebug) then
 						print(player .. " debuffs runs out in " .. math.floor(exp-GetTime()))
 					end
@@ -354,7 +354,7 @@ local function updateGroups()
 						C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
 						assignments[grp][#assignments[grp]+1] = player;
 					else
-						local exp = select(7, IRT_UnitDebuff(player, spellIDs["Sap"]));
+						local exp = select(6, IRT_UnitDebuff(player, spellIDs["Sap"]));
 						if (printDebug) then
 							print(player .. " debuffs runs out in " .. math.floor(exp-GetTime()))
 						end
@@ -393,7 +393,7 @@ local function updateGroups()
 						end
 						local lowestDebuff1 = 100000;
 						local lowestDebuff2 = 100000;
-						local _, _, _, stacks, _, _, exp = IRT_UnitDebuff(player, spellIDs["Sap"]);
+						local _, _, _, stacks, _, exp  = IRT_UnitDebuff(player, spellIDs["Sap"]);
 						if (printDebug) then
 							print(player .. " has " .. stacks .. " and debuff runs out in " .. math.floor(exp-GetTime()) .. "s")
 						end
@@ -404,7 +404,7 @@ local function updateGroups()
 								print("comparing " .. player .. " with others in grp")
 							end
 							for idx, pl in pairs(raid[grp]) do -- check if current person is best suited or not
-								local _, _, _, nextStacks, _, _, nextExp = IRT_UnitDebuff(player, spellIDs["Sap"]);
+								local _, _, _, nextStacks, _, nextExp = IRT_UnitDebuff(player, spellIDs["Sap"]);
 								if (printDebug) then
 									print("comparing to " .. pl .. " which has " .. nextStacks .. " stacks and debuff runs out in " .. math.floor(nextExp-GetTime()) .. "s")
 								end

@@ -892,10 +892,10 @@ function HA_Test(p1, p2, p3)
 				SetRaidTarget(unitName, #debuffed);
 				local expTime = GetTime()+5;
 				if (not expTime) then
-					expTime = select(7, IRT_UnitDebuff(unit, GetSpellInfo(335112)));
+					expTime = select(6, IRT_UnitDebuff(unit, GetSpellInfo(335112)));
 				end
 				if (not expTime) then
-					expTime = select(7, IRT_UnitDebuff(unit, GetSpellInfo(335113)));
+					expTime = select(6, IRT_UnitDebuff(unit, GetSpellInfo(335113)));
 				end
 				if (UnitIsConnected(unitName)) then
 					C_ChatInfo.SendAddonMessage("IRT_HA", #debuffed .. " " .. expTime, "WHISPER", unitName);
@@ -921,10 +921,10 @@ function HA_Test(p1, p2, p3)
 				SetRaidTarget(unitName, #debuffed);
 				local expTime = GetTime()+5;
 				if (not expTime) then
-					expTime = select(7, IRT_UnitDebuff(unit, GetSpellInfo(335112)));
+					expTime = select(6, IRT_UnitDebuff(unit, GetSpellInfo(335112)));
 				end
 				if (not expTime) then
-					expTime = select(7, IRT_UnitDebuff(unit, GetSpellInfo(335113)));
+					expTime = select(6, IRT_UnitDebuff(unit, GetSpellInfo(335113)));
 				end
 				if (UnitIsConnected(unitName)) then
 					C_ChatInfo.SendAddonMessage("IRT_HA", #debuffed .. " " .. expTime, "WHISPER", unitName);
