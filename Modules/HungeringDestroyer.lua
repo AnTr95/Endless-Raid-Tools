@@ -30,6 +30,7 @@ local spellIDs = {
 
 local IRT_UnitDebuff = IRT_UnitDebuff;
 local IRT_Contains = IRT_Contains;
+local UnitIsDead = UnitIsDead;
 local UnitIsVisible = UnitIsVisible;
 local UnitIsUnit = UnitIsUnit;
 local Ambiguate = Ambiguate;
@@ -264,7 +265,7 @@ local function updateGroups()
 		end
 		count = 0;
 		for index, player in pairs(raid[grp]) do --find undebuffed players
-			if (UnitIsConnected(player) and debuffed[player] == nil) then
+			if (UnitIsConnected(player) and not UnitIsDead(player) and debuffed[player] == nil) then
 				if (not IRT_UnitDebuff(player, spellIDs["Sap"]) and count < 2) then
 					if (printDebug) then
 						print(player .. " is connected and does not have debuff, assigning " .. player .. " to group " .. grp .. " and count is " .. count)
@@ -302,7 +303,7 @@ local function updateGroups()
 				print("did not find any players without debuffs looking for exp timer")
 			end
 			for index, player in pairs(raid[grp]) do
-				if (UnitIsConnected(player) and debuffed[player] == nil) then
+				if (UnitIsConnected(player) and not UnitIsDead(player) and debuffed[player] == nil) then
 					local exp = select(6, IRT_UnitDebuff(player, spellIDs["Sap"]));
 					if (printDebug) then
 						print(player .. " debuffs runs out in " .. math.floor(exp-GetTime()))
@@ -324,7 +325,7 @@ local function updateGroups()
 				print("did not find any players to assign looking for low stacks")
 			end
 			for index, player in pairs(raid[grp]) do
-				if (UnitIsConnected(player) and debuffed[player] == nil) then
+				if (UnitIsConnected(player) and not UnitIsDead(player) and debuffed[player] == nil) then
 					local stacks = select(4, IRT_UnitDebuff(player, spellIDs["Sap"]));
 					if (printDebug) then
 						print(player .. " has " .. stacks .. " stacks")
@@ -346,7 +347,7 @@ local function updateGroups()
 				print("still need 1 soaker for 2nd part of debuff")
 			end
 			for index, player in pairs(raid[grp]) do
-				if (UnitIsConnected(player) and debuffed[player] == nil and not IRT_Contains(assignments[grp], player)) then
+				if (UnitIsConnected(player) and not UnitIsDead(player) and debuffed[player] == nil and not IRT_Contains(assignments[grp], player)) then
 					if (count == 2) then
 						if (printDebug) then
 							print(player .. " soaks next debuff instead count is " .. count)
@@ -386,7 +387,7 @@ local function updateGroups()
 			end
 			local soaker = nil;
 			for index, player in pairs(raid[grp]) do --assign each person
-				if (UnitIsConnected(player) and debuffed[player] == nil and not IRT_Contains(assignments[grp], player)) then
+				if (UnitIsConnected(player) and not UnitIsDead(player) and debuffed[player] == nil and not IRT_Contains(assignments[grp], player)) then
 					if (count < 2) then
 						if (printDebug) then
 							print("still need soakers checking stacks on " .. player)
