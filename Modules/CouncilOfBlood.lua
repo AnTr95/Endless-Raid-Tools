@@ -147,6 +147,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_END" and inEncounter and IRT_TheCouncilOfBloodEnabled) then
 		inEncounter = false;
 		dfDebuffs = {};
+		IRT_InfoBoxHide();
 	end 
 end);
 

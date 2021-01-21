@@ -204,7 +204,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 					C_ChatInfo.SendAddonMessage("IRT_INTERRUPT", targetGUID .. " " .. playerName .. " false", "RAID");
 				end
 				IRT_PopupShow(L.INTERRUPT_NEXT_POPUP, 8, L.INTERRUPT_FILE);
-			elseif (UnitIsUnit(caster, playerName)) then
+			elseif (caster and UnitIsUnit(caster, playerName)) then
 				if (spellIDs[spellID]) then
 					IRT_PopupHide(L.INTERRUPT_FILE);
 					C_ChatInfo.SendAddonMessage("IRT_INTERRUPT", targetGUID .. " " .. caster .. " true", "RAID");
