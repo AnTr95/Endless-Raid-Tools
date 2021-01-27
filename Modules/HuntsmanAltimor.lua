@@ -326,11 +326,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 						timer:Cancel();
 					end
 					assignment = msg;
-					SendChatMessage(pos, "WHISPER", "COMMON", "Ant")
 					playerNotification(mark, pos, 5);
 				elseif (assignment == "") then
 					assignment = msg;
-					SendChatMessage(pos, "WHISPER", "COMMON", "Ant")
 					playerNotification(mark, pos, 5);
 				end
 			end
