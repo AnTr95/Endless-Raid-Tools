@@ -159,6 +159,7 @@ end
 local function playerNotification(mark, pos, duration)
 	local chatText = "";
 	if (tonumber(pos)) then --debuffed
+		pos = math.floor(GetTime()+5);
 		chatText = "{rt" .. mark .. "} " .. math.ceil(pos-GetTime()) .. " {rt" .. mark .. "}";
 		IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. " \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", duration, L.BOSS_FILE);
 		PlaySoundFile("Interface\\AddOns\\InfiniteRaidTools\\Sound\\"..groupIcons[mark]..".ogg", "Master");
@@ -325,9 +326,11 @@ f:SetScript("OnEvent", function(self, event, ...)
 						timer:Cancel();
 					end
 					assignment = msg;
+					SendChatMessage(pos, "WHISPER", "COMMON", "Ant")
 					playerNotification(mark, pos, 5);
 				elseif (assignment == "") then
 					assignment = msg;
+					SendChatMessage(pos, "WHISPER", "COMMON", "Ant")
 					playerNotification(mark, pos, 5);
 				end
 			end

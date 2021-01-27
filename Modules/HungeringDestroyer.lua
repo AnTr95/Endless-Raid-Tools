@@ -234,7 +234,7 @@ local function updateGroups()
 							print(grp .. " has more than 5 players trying to move " .. player)
 						end
 						-- check if debuff is running out or low stacks
-						local _, _, _, stacks, _, exp = IRT_UnitDebuff(player, spellIDs["Sap"]);
+						local _, _, stacks, _, _, exp = IRT_UnitDebuff(player, spellIDs["Sap"]);
 						if (stacks and exp and (math.floor(exp-GetTime()-3) <= 0 or stacks <=2) and debuffed[player] == nil and UnitGroupRolesAssigned(player) ~= "TANK") then --Dont swap debuffed players nor players that cant soak because still debuffed nor tanks
 							if (printDebug) then
 								print(player .. " does not have sap or miasma debuff and is not a tank, iterating new group for them")
@@ -264,7 +264,7 @@ local function updateGroups()
 		end
 		count = 0;
 		for index, player in pairs(raid[grp]) do --find undebuffed players
-			if (UnitIsConnected(player) and debuffed[player] == nil) then
+			if (UnitIsConnected(player) and debuffed[player] == nil and not UnitIsDead(player)) then
 				if (not IRT_UnitDebuff(player, spellIDs["Sap"]) and count < 2) then
 					if (printDebug) then
 						print(player .. " is connected and does not have debuff, assigning " .. player .. " to group " .. grp .. " and count is " .. count)
@@ -302,7 +302,7 @@ local function updateGroups()
 				print("did not find any players without debuffs looking for exp timer")
 			end
 			for index, player in pairs(raid[grp]) do
-				if (UnitIsConnected(player) and debuffed[player] == nil) then
+				if (UnitIsConnected(player) and debuffed[player] == nil and not UnitIsDead(player)) then
 					local exp = select(6, IRT_UnitDebuff(player, spellIDs["Sap"]));
 					if (printDebug) then
 						print(player .. " debuffs runs out in " .. math.floor(exp-GetTime()))
@@ -324,8 +324,8 @@ local function updateGroups()
 				print("did not find any players to assign looking for low stacks")
 			end
 			for index, player in pairs(raid[grp]) do
-				if (UnitIsConnected(player) and debuffed[player] == nil) then
-					local stacks = select(4, IRT_UnitDebuff(player, spellIDs["Sap"]));
+				if (UnitIsConnected(player) and debuffed[player] == nil and not UnitIsDead(player)) then
+					local stacks = select(3, IRT_UnitDebuff(player, spellIDs["Sap"]));
 					if (printDebug) then
 						print(player .. " has " .. stacks .. " stacks")
 					end
@@ -346,7 +346,7 @@ local function updateGroups()
 				print("still need 1 soaker for 2nd part of debuff")
 			end
 			for index, player in pairs(raid[grp]) do
-				if (UnitIsConnected(player) and debuffed[player] == nil and not IRT_Contains(assignments[grp], player)) then
+				if (UnitIsConnected(player) and debuffed[player] == nil and not IRT_Contains(assignments[grp], player) and not UnitIsDead(player)) then
 					if (count == 2) then
 						if (printDebug) then
 							print(player .. " soaks next debuff instead count is " .. count)
@@ -386,14 +386,14 @@ local function updateGroups()
 			end
 			local soaker = nil;
 			for index, player in pairs(raid[grp]) do --assign each person
-				if (UnitIsConnected(player) and debuffed[player] == nil and not IRT_Contains(assignments[grp], player)) then
+				if (UnitIsConnected(player) and debuffed[player] == nil and not IRT_Contains(assignments[grp], player) and not UnitIsDead(player)) then
 					if (count < 2) then
 						if (printDebug) then
 							print("still need soakers checking stacks on " .. player)
 						end
 						local lowestDebuff1 = 100000;
 						local lowestDebuff2 = 100000;
-						local _, _, _, stacks, _, exp  = IRT_UnitDebuff(player, spellIDs["Sap"]);
+						local _, _, stacks, _, _, exp  = IRT_UnitDebuff(player, spellIDs["Sap"]);
 						if (printDebug) then
 							print(player .. " has " .. stacks .. " and debuff runs out in " .. math.floor(exp-GetTime()) .. "s")
 						end
@@ -404,7 +404,7 @@ local function updateGroups()
 								print("comparing " .. player .. " with others in grp")
 							end
 							for idx, pl in pairs(raid[grp]) do -- check if current person is best suited or not
-								local _, _, _, nextStacks, _, nextExp = IRT_UnitDebuff(player, spellIDs["Sap"]);
+								local _, _, nextStacks, _, _, nextExp = IRT_UnitDebuff(player, spellIDs["Sap"]);
 								if (printDebug) then
 									print("comparing to " .. pl .. " which has " .. nextStacks .. " stacks and debuff runs out in " .. math.floor(nextExp-GetTime()) .. "s")
 								end
