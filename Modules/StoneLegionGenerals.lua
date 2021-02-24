@@ -142,6 +142,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 					print(unitName .. " got debuffed removed")
 				end
 				debuffed[IRT_Contains(debuffed, unitName)] = nil;
+				if (UnitIsUnit(assignments[unitName], playerName)) then
+					IRT_PopupHide(L.BOSS_FILE);
+				end
 				assignments[unitName] = nil;
 				updateDispelText();
 			end
