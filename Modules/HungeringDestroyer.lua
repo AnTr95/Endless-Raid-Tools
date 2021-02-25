@@ -488,9 +488,15 @@ local function playerNotification(mark, duration)
 		print("starting player notification")
 	end
 	local chatText = "{rt" .. mark .. "}";
+	local hp = nil;
 	if (hasDebuff) then
+		if (IRT_HungeringDestroyerPercent) then
+			hp = math.floor(UnitHealth("player")/UnitHealthMax("player")*100);
+			chatText = chatText .. " " .. hp .. "% {rt" .. mark .. "}";
+		else
+			chatText = chatText .. " DEBUFFED " .. "{rt" .. mark .. "}";
+		end
 		print("player has debuff")
-		chatText = chatText .. " DEBUFFED " .. "{rt" .. mark .. "}";
 		duration = 24;
 	end
 	SendChatMessage(chatText, "YELL");
@@ -498,6 +504,12 @@ local function playerNotification(mark, duration)
 		print("starting yell ticker")
 	end
 	local ticker = C_Timer.NewTicker(1.5, function()
+		if (hasDebuff) then
+			if (IRT_HungeringDestroyerPercent) then
+				hp = math.floor(UnitHealth("player")/UnitHealthMax("player")*100);
+				chatText = chatText .. " " .. hp .. "% {rt" .. mark .. "}";
+			end
+		end
 		if (UnitIsDead("player")) then
 			if(ticker) then
 				ticker:Cancel();
@@ -517,6 +529,7 @@ end
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		if (IRT_HungeringDestroyerEnabled == nil) then IRT_HungeringDestroyerEnabled = true; end
+		if (IRT_HungeringDestroyerPercent == nil) then IRT_HungeringDestroyerPercent = false; end
 	elseif (event == "UNIT_AURA" and inEncounter and IRT_HungeringDestroyerEnabled) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);

@@ -78,6 +78,19 @@ local enabledText = IRT_HungeringDestroyerOptions:CreateFontString(nil, "ARTWORK
 enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
 
+local percentButton = CreateFrame("CheckButton", "IRT_HungeringDestroyerPercentCheckButton", IRT_HungeringDestroyerOptions, "UICheckButtonTemplate");
+percentButton:SetSize(26, 26);
+percentButton:SetPoint("TOPLEFT", enabledButton, "TOPELFT" 0, -30);
+percentButton:HookScript("OnClick", function(self)
+	if (self:GetChecked()) then
+		IRT_HungeringDestroyerPercent = true;
+		PlaySound(856);
+	else
+		IRT_HungeringDestroyerPercent = false;
+		PlaySound(857);
+	end
+end);
+
 local moveToStarTexture = IRT_HungeringDestroyerOptions:CreateTexture(nil, "BACKGROUND");
 moveToStarTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\MoveToStar.tga");
 moveToStarTexture:SetPoint("TOPLEFT", enabledButton, "TOP", 30, -65);

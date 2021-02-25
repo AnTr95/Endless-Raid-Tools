@@ -1,6 +1,6 @@
 ## Interface: 90002
 ## Title: Infinite Raid Tools
-## Version: 9.14
+## Version: 9.15
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: IRT_InterruptEnabled
@@ -13,6 +13,7 @@
 ## SavedVariables: IRT_TheCouncilOfBloodEnabled
 ## SavedVariables: IRT_SludgefistEnabled
 ## SavedVariables: IRT_SenderReadyCheck
+## SavedVariables: IRT_HungeringDestroyerPercent
 ## SavedVariablesPerCharacter: IRT_PopupTextPosition
 ## SavedVariablesPerCharacter: IRT_ConsumableCheckEnabled
 ## SavedVariablesPerCharacter: IRT_CalendarNotificationEnabled
