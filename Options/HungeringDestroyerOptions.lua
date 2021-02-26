@@ -80,7 +80,7 @@ enabledText:SetText(L.OPTIONS_ENABLED);
 
 local percentButton = CreateFrame("CheckButton", "IRT_HungeringDestroyerPercentCheckButton", IRT_HungeringDestroyerOptions, "UICheckButtonTemplate");
 percentButton:SetSize(26, 26);
-percentButton:SetPoint("TOPLEFT", enabledButton, "TOPELFT" 0, -30);
+percentButton:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 0, -25);
 percentButton:HookScript("OnClick", function(self)
 	if (self:GetChecked()) then
 		IRT_HungeringDestroyerPercent = true;
@@ -91,9 +91,13 @@ percentButton:HookScript("OnClick", function(self)
 	end
 end);
 
+local percentText = IRT_HungeringDestroyerOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
+percentText:SetPoint("TOPLEFT", percentButton, "TOPLEFT", 30, -7);
+percentText:SetText(L.OPTIONS_HUNGERINGDESTROYER_PERCENT);
+
 local moveToStarTexture = IRT_HungeringDestroyerOptions:CreateTexture(nil, "BACKGROUND");
 moveToStarTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\MoveToStar.tga");
-moveToStarTexture:SetPoint("TOPLEFT", enabledButton, "TOP", 30, -65);
+moveToStarTexture:SetPoint("TOPLEFT", percentButton, "TOP", 30, -65);
 moveToStarTexture:SetSize(164, 16);
 moveToStarTexture:SetTexCoord(0,0.64,0,1);
 
@@ -105,7 +109,7 @@ yellStarDebuff:SetTexCoord(0,0.81,0,1);
 
 local soakStarTexture = IRT_HungeringDestroyerOptions:CreateTexture(nil, "BACKGROUND");
 soakStarTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\SoakStar.tga");
-soakStarTexture:SetPoint("TOPLEFT", enabledButton, "TOP", 295, -65);
+soakStarTexture:SetPoint("TOPLEFT", percentButton, "TOP", 295, -65);
 soakStarTexture:SetSize(110, 16);
 soakStarTexture:SetTexCoord(0,0.86,0,1);
 
@@ -136,7 +140,7 @@ starTexture4:SetPoint("TOPLEFT", moveToStarTexture, "TOPRIGHT", 1, 1);
 starTexture4:SetSize(20, 20);
 
 local previewText = IRT_HungeringDestroyerOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
-previewText:SetPoint("TOP", enabledButton, "TOP", 225, -24);
+previewText:SetPoint("TOP", percentButton, "TOP", 225, -24);
 previewText:SetText(L.OPTIONS_HUNGERINGDESTROYER_PREVIEW);
 previewText:SetJustifyH("CENTER");
 previewText:SetJustifyV("TOP");
@@ -146,6 +150,7 @@ previewText:SetWordWrap(true);
 
 IRT_HungeringDestroyerOptions:SetScript("OnShow", function(self)
 	enabledButton:SetChecked(IRT_HungeringDestroyerEnabled);
+	percentButton:SetChecked(IRT_HungeringDestroyerPercent)
 end);
 
 InterfaceOptions_AddCategory(IRT_HungeringDestroyerOptions);
