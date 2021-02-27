@@ -96,7 +96,7 @@ local function initRaid()
 					print(raiderName .. " is a tank")
 				end
 				table.insert(raid[role], raiderName);
-			elseif (role == "HEALER") then
+			elseif (role == "HEALER" and (not class == "PALADIN" or class == "MONK")) then
 				if (printDebug) then
 					print(raiderName .. " is a healer")
 				end
@@ -197,6 +197,132 @@ local function assignMarks()
 		end
 	end
 	for i = 1, 3 do -- do not assign melee
+		if (count == 1) then
+			if (printDebug) then
+				print("assigning " .. priorityLex[i])
+			end
+			for index, player in pairs(raid[priorityLex[i]]) do
+				if (not IRT_ContainsKey(assignments, player)) then
+					if (printDebug) then
+						print(player .. " found and is unassigned")
+					end
+					local idx = IRT_Contains(targetedPlayers, player) or IRT_Contains(hookedPlayers, player);
+					local isHooked = IRT_Contains(hookedPlayers, player);
+					local chainedTo = nil;
+					if (idx) then
+						if (isHooked) then
+							chainedTo = targetedPlayers[idx];
+						else
+							chainedTo = hookedPlayers[idx];
+						end
+						if (printDebug) then
+							print(player .. " is linked to " .. chainedTo);
+						end
+						if (chainedTo and not IRT_Contains(raid["MELEE"], chainedTo)) then
+							if (printDebug) then
+								print(chainedTo .. " is not a melee assigning them to " .. count)
+							end
+							assignments[player] = count;
+							assignments[chainedTo] = count;
+							if (UnitIsConnected(player)) then
+								C_ChatInfo.SendAddonMessage("IRT_SLUDGEFIST", "mark: " .. count, "WHISPER", player);
+							end
+							if (UnitIsConnected(chainedTo)) then
+								C_ChatInfo.SendAddonMessage("IRT_SLUDGEFIST", "mark: " .. count, "WHISPER", chainedTo);
+							end
+							count = count + 1;
+							break;
+						end
+					end
+				end
+			end
+		end
+	end
+	for i = 3, 3 do -- do not assign melee
+		if (count == 2) then
+			if (printDebug) then
+				print("assigning " .. priorityLex[i])
+			end
+			for index, player in pairs(raid[priorityLex[i]]) do
+				if (not IRT_ContainsKey(assignments, player)) then
+					if (printDebug) then
+						print(player .. " found and is unassigned")
+					end
+					local idx = IRT_Contains(targetedPlayers, player) or IRT_Contains(hookedPlayers, player);
+					local isHooked = IRT_Contains(hookedPlayers, player);
+					local chainedTo = nil;
+					if (idx) then
+						if (isHooked) then
+							chainedTo = targetedPlayers[idx];
+						else
+							chainedTo = hookedPlayers[idx];
+						end
+						if (printDebug) then
+							print(player .. " is linked to " .. chainedTo);
+						end
+						if (chainedTo and not IRT_Contains(raid["MELEE"], chainedTo)) then
+							if (printDebug) then
+								print(chainedTo .. " is not a melee assigning them to " .. count)
+							end
+							assignments[player] = count;
+							assignments[chainedTo] = count;
+							if (UnitIsConnected(player)) then
+								C_ChatInfo.SendAddonMessage("IRT_SLUDGEFIST", "mark: " .. count, "WHISPER", player);
+							end
+							if (UnitIsConnected(chainedTo)) then
+								C_ChatInfo.SendAddonMessage("IRT_SLUDGEFIST", "mark: " .. count, "WHISPER", chainedTo);
+							end
+							count = count + 1;
+							break;
+						end
+					end
+				end
+			end
+		end
+	end
+	for i = 4, 4 do -- do not assign melee
+		if (count == 3) then
+			if (printDebug) then
+				print("assigning " .. priorityLex[i])
+			end
+			for index, player in pairs(raid[priorityLex[i]]) do
+				if (not IRT_ContainsKey(assignments, player)) then
+					if (printDebug) then
+						print(player .. " found and is unassigned")
+					end
+					local idx = IRT_Contains(targetedPlayers, player) or IRT_Contains(hookedPlayers, player);
+					local isHooked = IRT_Contains(hookedPlayers, player);
+					local chainedTo = nil;
+					if (idx) then
+						if (isHooked) then
+							chainedTo = targetedPlayers[idx];
+						else
+							chainedTo = hookedPlayers[idx];
+						end
+						if (printDebug) then
+							print(player .. " is linked to " .. chainedTo);
+						end
+						if (chainedTo) then
+							if (printDebug) then
+								print(chainedTo .. " is not a melee assigning them to " .. count)
+							end
+							assignments[player] = count;
+							assignments[chainedTo] = count;
+							if (UnitIsConnected(player)) then
+								C_ChatInfo.SendAddonMessage("IRT_SLUDGEFIST", "mark: " .. count, "WHISPER", player);
+							end
+							if (UnitIsConnected(chainedTo)) then
+								C_ChatInfo.SendAddonMessage("IRT_SLUDGEFIST", "mark: " .. count, "WHISPER", chainedTo);
+							end
+							count = count + 1;
+							break;
+						end
+					end
+				end
+			end
+		end
+	end
+	for i = 3, 3 do -- do not assign melee
 		if (printDebug) then
 			print("assigning " .. priorityLex[i])
 		end
@@ -246,7 +372,7 @@ local function assignMarks()
 		if (printDebug) then
 			print("need to assign melee to fill")
 		end
-		for i = 1, 4 do --fill with anyone
+		for i = 2, 4 do --fill with anyone
 			if (printDebug) then
 				print("assigning " .. priorityLex[i])
 			end
