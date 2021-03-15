@@ -507,7 +507,7 @@ local function playerNotification(mark, duration)
 		if (hasDebuff) then
 			if (IRT_HungeringDestroyerPercent) then
 				hp = math.floor(UnitHealth("player")/UnitHealthMax("player")*100);
-				chatText = chatText .. " " .. hp .. "% {rt" .. mark .. "}";
+				chatText = "{rt" .. mark .. "} " .. hp .. "% {rt" .. mark .. "}";
 			end
 		end
 		if (UnitIsDead("player")) then
