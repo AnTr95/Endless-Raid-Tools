@@ -35,8 +35,11 @@ local UnitIsUnit = UnitIsUnit;
 local Ambiguate = Ambiguate;
 local UnitIsConnected = UnitIsConnected;
 local strsplit = strsplit;
+local xrealmMode = false;
 
 C_ChatInfo.RegisterAddonMessagePrefix("IRT_HD");
+C_ChatInfo.RegisterAddonMessagePrefix("IRT_CRHD");
+
 
 f:RegisterEvent("ENCOUNTER_START");
 f:RegisterEvent("ENCOUNTER_END");
@@ -78,6 +81,9 @@ local function initRaid()
 			if (raid[group]) then
 				if (printDebug) then
 					print(name .. " added to group " .. group)
+				end
+				if (not xrealmMode and name:match("%-")) then
+					xrealmMode = true;
 				end
 				table.insert(raid[group], name);
 			end
@@ -181,7 +187,11 @@ local function updateGroups()
 						print("new group found for " .. player .. ", moved from group " .. group .. " to " .. i .. " old group now has " .. debuffedGroups[group] .. " debuffs and new group has " .. debuffedGroups[i] .. " debuffs")
 						print("marking with " .. groupIcons[tostring(i)] .. " and sending addon message to debuffed player " .. player)
 					end
-					C_ChatInfo.SendAddonMessage("IRT_HD", i, "WHISPER", player);
+					if (player:match("-")) then
+						C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " " .. i, "RAID");
+					else
+						C_ChatInfo.SendAddonMessage("IRT_HD", i, "WHISPER", player);
+					end
 					SetRaidTarget(player, i);
 					break;
 				end
@@ -190,7 +200,11 @@ local function updateGroups()
 			if (printDebug) then
 				print(group .. "group has 1 debuffs" .. "marking with " .. groupIcons[tostring(group)] .. " and sending addon message to debuffed player " .. player)
 			end
-			C_ChatInfo.SendAddonMessage("IRT_HD", group, "WHISPER", player);
+			if (player:match("-")) then
+				C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " " .. group, "RAID");
+			else
+				C_ChatInfo.SendAddonMessage("IRT_HD", group, "WHISPER", player);
+			end
 			SetRaidTarget(player, group);
 		end
 	end
@@ -270,11 +284,19 @@ local function updateGroups()
 						print(player .. " is connected and does not have debuff, assigning " .. player .. " to group " .. grp .. " and count is " .. count)
 					end
 					if (count == 0) then
-						C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
+						if (player:match("-")) then
+							C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " " .. grp, "RAID");
+						else
+							C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
+						end
 						count = count + 1;
 						assignments[grp][count] = player;
 					elseif (count == 1) then
-						C_ChatInfo.SendAddonMessage("IRT_HD", "soon " .. grp, "WHISPER", player);
+						if (player:match("-")) then
+							C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " soon " .. grp, "RAID");
+						else
+							C_ChatInfo.SendAddonMessage("IRT_HD", "soon " .. grp, "WHISPER", player);
+						end
 						count = count + 1;
 						assignments[grp][count] = player;
 						for j, pl in pairs(raid[grp]) do
@@ -282,7 +304,11 @@ local function updateGroups()
 								if (printDebug) then
 									print(pl .. " soaks next debuff instead count is " .. count)
 								end
-								C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", pl);
+								if (pl:match("-")) then
+									C_ChatInfo.SendAddonMessage("IRT_CRHD", pl .. " next " .. grp, "RAID");
+								else
+									C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", pl);
+								end
 								assignments[grp][#assignments[grp]+1] = pl;
 							end
 						end
@@ -292,7 +318,11 @@ local function updateGroups()
 					if (printDebug) then
 						print(player .. " is assigned to next soak as count is " .. count)
 					end
-					C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+					if (player:match("-")) then
+						C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " next " .. grp, "RAID");
+					else
+						C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+					end
 					assignments[grp][#assignments[grp]+1] = player;
 				end
 			end
@@ -311,7 +341,11 @@ local function updateGroups()
 						if (printDebug) then
 							print(player .. "'s debuff runs out in less than 2s assining to " .. grp .. " and count is " .. count)
 						end
-						C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
+						if (player:match("-")) then
+							C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " " .. grp, "RAID");
+						else
+							C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
+						end
 						count = count + 1;
 						assignments[grp][count] = player;
 						break;
@@ -333,7 +367,11 @@ local function updateGroups()
 						if (printDebug) then
 							print(player .. " has less than 3 stacks assigning to " .. grp .. " and count is " .. count)
 						end
-						C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
+						if (player:match("-")) then
+							C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " " .. grp, "RAID");
+						else
+							C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
+						end
 						count = count + 1;
 						assignments[grp][count] = player;
 						break;
@@ -351,7 +389,11 @@ local function updateGroups()
 						if (printDebug) then
 							print(player .. " soaks next debuff instead count is " .. count)
 						end
-						C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+						if (player:match("-")) then
+							C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " next " .. grp, "RAID");
+						else
+							C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+						end
 						assignments[grp][#assignments[grp]+1] = player;
 					else
 						local exp = select(6, IRT_UnitDebuff(player, spellIDs["Sap"]));
@@ -362,7 +404,11 @@ local function updateGroups()
 							if (printDebug) then
 								print(player .. "'s debuff runs out in less than 12s assining to " .. grp .. " and count is " .. count)
 							end
-							C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
+							if (player:match("-")) then
+								C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " " .. grp, "RAID");
+							else
+								C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
+							end
 							count = count + 1;
 							assignments[grp][count] = player;
 							for j, pl in pairs(raid[grp]) do
@@ -370,7 +416,11 @@ local function updateGroups()
 									if (printDebug) then
 										print(pl .. " soaks next debuff instead count is " .. count)
 									end
-									C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", pl);
+									if (pl:match("-")) then
+										C_ChatInfo.SendAddonMessage("IRT_CRHD", pl .. " next " .. grp, "RAID");
+									else
+										C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", pl);
+									end
 									assignments[grp][#assignments[grp]+1] = pl;
 								end
 							end
@@ -422,15 +472,27 @@ local function updateGroups()
 												print(pl .. " has lower stacks as well " .. player .. " soaks next debuff instead")
 											end
 											lowestDebuff2 = -1;
-											C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+											if (player:match("-")) then
+												C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " next " .. grp, "RAID");
+											else
+												C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+											end
 											assignments[grp][2-count+#assignments[grp]+1] = player;
 											break;
 										end
 									end
 								elseif (count == 1 and not UnitIsUnit(player, pl)) then
 									if (nextExp and math.floor(nextExp-GetTime()-13) <= 0 and not IRT_Contains(assignments[grp], pl)) then
-										C_ChatInfo.SendAddonMessage("IRT_HD", "soon " .. grp, "WHISPER", pl);
-										C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+										if (pl:match("-")) then
+											C_ChatInfo.SendAddonMessage("IRT_CRHD", pl .. " soon " .. grp, "RAID");
+										else
+											C_ChatInfo.SendAddonMessage("IRT_HD", "soon " .. grp, "WHISPER", pl);
+										end
+										if (player:match("-")) then
+											C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " next " .. grp, "RAID");
+										else
+											C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+										end
 										soaker = pl;
 										count = count + 1;
 										assignments[grp][count] = pl;
@@ -441,20 +503,32 @@ local function updateGroups()
 										if (nextStacks < lowestDebuff1) then
 											--better option player this player soaks later
 											lowestDebuff1 = -1;
-											C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+											if (player:match("-")) then
+												C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " next " .. grp, "RAID");
+											else
+												C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+											end
 											assignments[grp][2-count+#assignments[grp]+1] = player;
 											break;
 										end
 									end
 								elseif (count == 2 and not UnitIsUnit(player, pl)) then
-									C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+									if (player:match("-")) then
+										C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " next " .. grp, "RAID");
+									else
+										C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+									end
 									assignments[grp][#assignments[grp]+1] = player;
 									break;
 								end
 								-- best option player soak now
 							end
 							if ((count == 0 and lowestDebuff1 > -1 and lowestDebuff2 > -1) or (count == 1 and lowestDebuff1 > -1)) then
-								C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
+								if (player:match("-")) then
+										C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " " .. grp, "RAID");
+									else
+										C_ChatInfo.SendAddonMessage("IRT_HD", grp, "WHISPER", player);
+									end
 								count = count + 1;
 								assignments[grp][count] = player;
 							end
@@ -465,14 +539,22 @@ local function updateGroups()
 								if (printDebug) then
 									print(player .. " soaks next debuff instead as count is " .. count)
 								end
-								C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+								if (player:match("-")) then
+									C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " next " .. grp, "RAID");
+								else
+									C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+								end
 								assignments[grp][#assignments[grp]+1] = player;
 							end
 						else
 							if (printDebug) then
 								print(player .. " soaks next debuff instead as count is " .. count)
 							end
-							C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+							if (player:match("-")) then
+								C_ChatInfo.SendAddonMessage("IRT_CRHD", player .. " next " .. grp, "RAID");
+							else
+								C_ChatInfo.SendAddonMessage("IRT_HD", "next " .. grp, "WHISPER", player);
+							end
 							assignments[grp][#assignments[grp]+1] = player;
 						end
 					end
@@ -630,6 +712,41 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 				playerNotification(msg, 12);
 			end
+		elseif (prefix == "IRT_CRHD") then
+			local target, text, mark = strsplit(" ", msg);
+			if (UnitIsUnit(target, playerName)) then
+				if (text:match("soon")) then
+					local soakTime = time() + 12;
+					if (printDebug) then
+						print("recieved addon message soon preparing for 12s soak delay for mark " .. groupIcons[tostring(mark)])
+						print("starting ticker and showing popup")
+					end
+					IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. ", SOAK IN: |cFFFFFFFF12|r" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 1, L.BOSS_FILE);
+					C_Timer.NewTicker(1, function()
+						local timeLeft = math.floor(soakTime - time());
+						IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. ", SOAK IN: |cFFFFFFFF" .. timeLeft .. "|r" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 1, L.BOSS_FILE);
+						if (timeLeft <= 3) then
+							PlaySoundFile("Interface\\AddOns\\InfiniteRaidTools\\Sound\\CalendarNotification\\calnot"..timeLeft..".ogg", "Master");
+						end
+					end, 11);
+					if (printDebug) then
+						print("also starting 12s timer for player notification")
+					end
+					C_Timer.After(12, function()
+						playerNotification(mark, 12);
+					end);
+				elseif (text:match("next")) then
+					if (printDebug) then
+						print("recieved addon message next for mark " .. groupIcons[tostring(mark)])
+					end
+					IRT_PopupShow("\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t".." MOVE TO " .. groupIcons[mark] .. ", |cFFFF0000DO NOT SOAK|cFFFFFFFF" .. "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..mark..":30\124t", 24, L.BOSS_FILE);
+				else
+					if (printDebug) then
+						print("recieved addon message to soak starting player notification")
+					end
+					playerNotification(text, 12);
+				end
+			end
 		end
 	elseif (event == "ENCOUNTER_START" and IRT_HungeringDestroyerEnabled) then
 		local eID = ...;
@@ -641,6 +758,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (printDebug) then
 				print("hungering destroyer mythic engaged")
 			end
+			xrealmMode = false;
 			assignments = {};
 			inEncounter = true;
 			debuffed = {};
@@ -667,6 +785,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		debuffed = {};
 		hasAssigned = false;
 		hasDebuff = false;
+		xrealmMode = false;
 	end
 end);
 
