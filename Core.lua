@@ -17,6 +17,14 @@ local function handler(msg, editbox)
 	local arg = string.lower(msg);
 	if (arg ~= nil and arg == "vc") then
 		C_ChatInfo.SendAddonMessage("IRT_VC", "vc", "RAID");
+		if (not initCheck) then
+			initCheck = true;
+			C_Timer.After(2, function() 
+				IRT_FindMissingPlayers();
+				playersChecked = {};
+				initCheck = false;
+			end);
+		end
 	else
 		InterfaceOptionsFrame_OpenToCategory(IRT_GeneralModules);
 		InterfaceOptionsFrame_OpenToCategory(IRT_GeneralOptions);
@@ -32,6 +40,7 @@ f:RegisterEvent("ADDON_LOADED");
 f:RegisterEvent("PLAYER_LOGIN");
 f:RegisterEvent("GROUP_ROSTER_UPDATE");
 C_ChatInfo.RegisterAddonMessagePrefix("IRT_VC");
+C_ChatInfo.RegisterAddonMessagePrefix("IRT_CRVC");
 C_ChatInfo.RegisterAddonMessagePrefix("IRT_UPDATE");
 
 local function renameWarning()
@@ -75,7 +84,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "IRT_VC" and UnitName("player") ~= Ambiguate(sender, "short")) then
 			if (msg == "vc") then
-				C_ChatInfo.SendAddonMessage("IRT_VC", version, "WHISPER", sender);
+				local shortName = Ambiguate(sender, "short");
+				if (shortName:match("%-")) then
+					C_ChatInfo.SendAddonMessage("IRT_CRVC", sender .. " " .. version, "RAID");
+				else
+					C_ChatInfo.SendAddonMessage("IRT_VC", version, "WHISPER", sender);
+				end
 			--[[
 			elseif (msg:find("vco") and not recievedOutOfDateMessage) then
 			local head, tail, ver = msg:find("([^vco-].*)");
@@ -86,17 +100,18 @@ f:SetScript("OnEvent", function(self, event, ...)
 				end
 			end]]
 			else
-				if (not initCheck) then
-					initCheck = true;
-					C_Timer.After(2, function() 
-						IRT_FindMissingPlayers();
-						playersChecked = {};
-						initCheck = false;
-					end);
-				end
 				sender = Ambiguate(sender, "short");
 				playersChecked[#playersChecked+1] = sender;
 				print(sender .. "-" .. msg);
+			end
+		elseif (prefix == "IRT_CRVC" and UnitName("player") ~= Ambiguate(sender, "short")) then
+			local target, version = strsplit(" ", msg);
+			local shortName, serverName = UnitFullName("player");
+			local fullName = shortName .. "-" .. serverName;
+			if (UnitIsUnit(target, fullName)) then
+				sender = Ambiguate(sender, "short");
+				playersChecked[#playersChecked+1] = sender;
+				print(sender .. "-" .. version);
 			end
 		elseif (prefix == "IRT_UPDATE" and UnitName("player") ~= Ambiguate(sender, "short") and not recievedOutOfDateMessage) then
 			if (tonumber(msg) ~= nil) then
@@ -158,8 +173,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 end);
 function IRT_FindMissingPlayers()
 	for i = 1, GetNumGroupMembers() do
-		if (not IRT_Contains(playersChecked, UnitName("raid"..i)) and UnitName("raid"..i) ~= UnitName("player")) then
-			print(GetUnitName("raid"..i, true) .. "-not installed");
+		local raider = Ambiguate(GetUnitName("raid"..i, true), "short");
+		if (not IRT_Contains(playersChecked, raider) and UnitName("raid"..i) ~= UnitName("player")) then
+			print(GetUnitName("raid"..i, true) .. " - not installed");
 		end
 	end
 end
