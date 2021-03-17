@@ -1,6 +1,6 @@
 local L = IRTLocals;
 local f = CreateFrame("Frame");
-local inEncounter = true;
+local inEncounter = false;
 local playerName = GetUnitName("player");
 local leader = "";
 local hasAssigned = false;

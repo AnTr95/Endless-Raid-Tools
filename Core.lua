@@ -84,7 +84,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "IRT_VC" and UnitName("player") ~= Ambiguate(sender, "short")) then
 			if (msg == "vc") then
-				local shortName = Ambiguate(sender, "short");
+				local shortName = GetUnitName(sender, true);
 				if (shortName:match("%-")) then
 					C_ChatInfo.SendAddonMessage("IRT_CRVC", sender .. " " .. version, "RAID");
 				else
