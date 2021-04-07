@@ -422,17 +422,17 @@ local function onUpdate(self, elapsed)
 			local safe = false;
 			if (UnitIsConnected(pair) and UnitIsVisible(pair)) then
 				local name = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(pair))].colorStr, Ambiguate(pair, "short"));
-				if (not IsItemInRange(63427, pair)) then
+				if (not CheckInteractDistance(pair, 3)) then
 					if (plMark) then
-						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 8 yards|r\nYour soak: " .. groupIcons[plMark], 56);
+						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 10 yards|r\nYour soak: " .. groupIcons[plMark], 56);
 					else
-						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 8 yards|r", 56);
+						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFFFF0000WARNING|r " .. name .. "|r |cFFFF0000> 10 yards|r", 56);
 					end
 				else
 					if(plMark) then
-						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 8 yards|r\nYour soak: " .. groupIcons[plMark], 56);
+						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 10 yards|r\nYour soak: " .. groupIcons[plMark], 56);
 					else
-						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 8 yards|r", 56);
+						IRT_InfoBoxShow("|cFF00FFFFIRT:|r |cFFFFFFFFChain Link + Assignment:|r\n|cFF00FF00SAFE|r " .. name .. "|r |cFF00FF00< 10 yards|r", 56);
 					end
 				end
 			end
