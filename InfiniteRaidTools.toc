@@ -14,6 +14,7 @@
 ## SavedVariables: IRT_SludgefistEnabled
 ## SavedVariables: IRT_SenderReadyCheck
 ## SavedVariables: IRT_HungeringDestroyerPercent
+## SavedVariables: IRT_PainsmithRaznalEnabled
 ## SavedVariablesPerCharacter: IRT_PopupTextPosition
 ## SavedVariablesPerCharacter: IRT_ConsumableCheckEnabled
 ## SavedVariablesPerCharacter: IRT_CalendarNotificationEnabled
@@ -56,3 +57,4 @@ Modules\Sludgefist.lua
 Options\SludgefistOptions.lua
 Modules\StoneLegionGenerals.lua
 Options\StoneLegionGeneralsOptions.lua
+Modules\PainsmithRaznal.lua
