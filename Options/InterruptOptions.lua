@@ -96,7 +96,7 @@ infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
 infoBorder:SetPoint("TOP", 0, -85);
 
 local info = IRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -12)
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -4)
 info:SetSize(510, 200)
 info:SetText(L.OPTIONS_INTERRUPT_INFO)
 info:SetWordWrap(true)

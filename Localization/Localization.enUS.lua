@@ -83,8 +83,13 @@ L.OPTIONS_STONELEGIONGENERALS_TITLE = "Stone Legion Module";
 L.OPTIONS_STONELEGIONGENERALS_INFO = "|cFF00FFFFHeart Rend:|r Assigns and orders healers to dispel players with Heart Rend debuffs and ensures they do not get assigned to themselves to prevent them getting an extended duration. Once a healer has been dispelled, a countdown is shown to indicate when the next healer in the order can dispel to prevent overlapping debuffs. The healer also gets a popup when its their turn to dispel.\n\n|cFF00FFFFConfig:|r The infobox and the popup can be individually moved, resized and reset to default positions in the general options.";
 L.OPTIONS_STONELEGIONGENERALS_PREVIEW = "|cFFFFFFFFPreview of the infobox that appears during Heart Rend with healers assigned to a debuffed player each and the countdown that begins after someone been dispelled as well as the popup that shows for the healer when its their time to dispel.";
 
+L.OPTIONS_PAINSMITHRAZNAL_TITLE = "Painsmith Razlan Module";
+L.OPTIONS_PAINSMITHRAZNAL_INFO = "Painsmith Razlan Module";
+L.OPTIONS_PAINSMITHRAZNAL_PREVIEW = "Painsmith Razlan Module";
+L.OPTIONS_PAINSMITHRAZNAL_POSITION_TEXT = "Move Module";
+
 L.PAINSMITHRAZNAL_GUI_TITLE = "Infinite Raid Tools:\nPainsmith Raznal Module";
-L.PAINSMITHRAZNAL_GUI_SEND = "RL Share";
+L.PAINSMITHRAZNAL_GUI_SEND = "RL Force";
 L.PAINSMITHRAZNAL_GUI_PRINT = "Print";
 L.PAINSMITHRAZNAL_GUI_HIDE = "Hide";
 

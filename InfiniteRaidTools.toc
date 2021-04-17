@@ -28,6 +28,7 @@
 ## SavedVariablesPerCharacter: IRT_AutoOilPosition
 ## SavedVariablesPerCharacter: IRT_StoneLegionGeneralsEnabled
 ## SavedVariablesPerCharacter: IRT_HuntsmanAltimorPlayersPerLine
+## SavedVariablesPerCharacter: IRT_PainsmithRaznalPosition
 Localization\Localization.enUS.lua
 Core.lua
 Options\Options.lua
@@ -58,3 +59,4 @@ Options\SludgefistOptions.lua
 Modules\StoneLegionGenerals.lua
 Options\StoneLegionGeneralsOptions.lua
 Modules\PainsmithRaznal.lua
+Options\PainsmithRaznalOptions.lua
