@@ -9,20 +9,7 @@ local ticks = 0;
 local inEncounter = false;
 focus = nil;
 
-local rangeList = {
-	[4] = 90175,
-	[6] = 37727,
-	[8] = 8149,
-	[10] = 3, 
-	[11] = 2, 
-	[13] = 32321,
-	[18] = 6450,
-	[23] = 21519,
-	[30] = 1, 
-	[33] = 1180,
-	[43] = 34471,
-	[48] = 32698,
-};
+rangeList = {90175, 37727, 8149, 3, 2, 32321, 6450, 21519, 1, 1180, 33471, 32698};
 
 local meleeSpecIDs = {
 	[103] = true,
@@ -36,7 +23,7 @@ local rolePrio = {
 	[3] = "healer",
 };
 
-local assignments = {};
+assignments = {};
 
 --Player vars
 local currentStatus = nil;
@@ -64,7 +51,7 @@ f:RegisterEvent("CHAT_MSG_ADDON");
 
 C_ChatInfo.RegisterAddonMessagePrefix("IRT_NINE");
 
-local function initHealers()
+function initHealers()
 	for i = 1, GetNumGroupMembers() do
 		local raider = "raid" .. i;
 		if (UnitIsVisible(raider)) then
@@ -97,16 +84,18 @@ local function initRaid()
 	end
 end
 
-local function updateAssignments(safe)
+function updateAssignments(safe)
 	local text = "|cFF00FFFFIRT:|r";
 	for i = 1, #assignments do
 		local target = assignments[i];
 		local healer = IRT_Contains(healers, target);
 		local index = IRT_Contains(healers, assignments[i]);
-		if (UnitIsConnected(target)) then
+		if (target and UnitIsConnected(target)) then
+			target = Ambiguate(target, "short");
 			target = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(target))].colorStr, target);
 		end
-		if (UnitIsConnected(healer)) then
+		if (healer and UnitIsConnected(healer)) then
+			healer = Ambiguate(healer, "short");
 			healer = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(healer))].colorStr, healer);
 		end
 		if (safe) then
@@ -118,7 +107,7 @@ local function updateAssignments(safe)
 	IRT_InfoBoxShow(text, 60);
 end
 
-local function assignDispels()
+function assignDispels()
 	--check if healer is debuffed 
 	for k, v in pairs(healers) do
 		local healer = k;
@@ -165,25 +154,25 @@ f:SetScript("OnUpdate", function(self, elapsed)
 	if (ticks > 0.05 and focus and UnitIsUnit(focus, "player")) then
 		local safe = true;
 		local partner = false;
-		for range, check in pairs(rangeList) do
+		for range, check in ipairs(rangeList) do
 			partner = false;
 			safe = true;
 			for j = 1, GetNumGroupMembers() do
 				local raider = "raid" .. j;
-				if (UnitIsVisible(raider)) then
+				if (UnitIsVisible(raider) and not UnitIsUnit(raider, "player")) then
 					if (check == 1 or check == 2 or check == 3) then
 						if (CheckInteractDistance(raider, check)) then
 							if (IRT_Contains(debuffed, GetUnitName(raider, true))) then
-								partner = true;
+								partner = GetUnitName(raider);
 							else
 								safe = false;
 								break;
 							end
 						end
 					else
-						if (IsItemInRange(raider, check)) then
+						if (IsItemInRange(check, raider)) then
 							if (IRT_Contains(debuffed, GetUnitName(raider, true))) then
-								partner = true;
+								partner = GetUnitName(raider);
 							else
 								safe = false;
 								break;
@@ -192,13 +181,17 @@ f:SetScript("OnUpdate", function(self, elapsed)
 					end
 				end
 			end
-			if (safe and partner and not currentStatus) then
-				C_ChatInfo.SendAddonMessage("IRT_Nine", "safe", "RAID");
+			if (safe and partner) then
+				if (not currentStatus) then
+					currentStatus = true;
+					C_ChatInfo.SendAddonMessage("IRT_NINE", "safe", "RAID");
+				end
 				break;
 			end
 		end
-		if (currentStatus and (not safe or not partner)) then
-			C_ChatInfo.SendAddonMessage("IRT_Nine", "unsafe", "RAID");
+		if (currentStatus and (safe == false or safe == false)) then
+			currentStatus = false;
+			C_ChatInfo.SendAddonMessage("IRT_NINE", "unsafe", "RAID");
 		end
 		ticks = 0;
 	end
@@ -210,10 +203,11 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "CHAT_MSG_ADDON") then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "IRT_NINE") then
+			sender = Ambiguate(sender, "short");
 			if (msg == "safe") then
 				updateAssignments(true);
 				for healer, target in pairs(healers) do
-					if (UnitIsUnit(target, sender)) then
+					if (target and UnitIsUnit(target, sender)) then
 						if (UnitIsUnit(healer, "player")) then
 							if (UnitIsConnected(target)) then
 								target = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(target))].colorStr, target);
@@ -225,14 +219,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 			elseif (msg == "unsafe") then
 				updateAssignments(false);
 				for healer, target in pairs(healers) do
-					if (UnitIsUnit(target, sender)) then
+					if (target and UnitIsUnit(target, sender)) then
 						if (UnitIsUnit(healer, "player")) then
 							IRT_PopupHide(L.BOSS_FILE);
 						end
 					end
 				end
 			else
-				table.insert(raid[sender], msg);
+				raid[sender] = msg;
 			end
 		end
 	elseif (event == "UNIT_SPELLCAST_SUCCEEDED") then
@@ -265,15 +259,21 @@ f:SetScript("OnEvent", function(self, event, ...)
 			table.remove(assignments, 1);
 			debuffed[name] = nil;
 			if (#debuffed == 0) then
-				focus = nil;
+				--focus = nil;
 				IRT_InfoBoxHide();
 			else
-				focus = assignments[1];
+				--focus = assignments[1];
 			end
 		end
 	elseif (event == "ENCOUNTER_START") then
-		difficulty = select(3, GetInstanceInfo());
-		initHealers();
+		healers = {};
+		debuffed = {};
+		--initRaid();
+		--initHealers();
+		healers["Ant"] = false;
+		debuffed[1] = "Ant";
+		debuffed[2] = "Bahnglassi-KhazModan";
+		assignDispels();
 	elseif (event == "ENCOUNTER_END") then
 	end
 end);
