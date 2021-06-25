@@ -28,6 +28,7 @@
 ## SavedVariablesPerCharacter: IRT_StoneLegionGeneralsEnabled
 ## SavedVariablesPerCharacter: IRT_HuntsmanAltimorPlayersPerLine
 Localization\Localization.enUS.lua
+Localization\Localization.ruRU.lua
 Core.lua
 Options\Options.lua
 Options\GeneralOptions.lua
