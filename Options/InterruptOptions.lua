@@ -14,13 +14,26 @@ local raidDatabase = {
 		["Sire Denathrius"] = 2407,
 		["No boss"] = 1,
 	},
+	["Sanctum of Domination"] = {
+		["The Tarragrue"] = 2435,
+		["The Eye of the Jailer"] = 2442,
+		["The Nine"] = 2439, 
+		["Remnant of Ner'zhul"] = 2444,
+		["Soulrender Dormazain"] = 2445,
+		["Painsmith Raznal"] = 2443,
+		["Guardian of the First Ones"] = 2446,
+		["Fatescribe Roh-Kalo"] = 2447,
+		["Kel'Thuzad"] = 2440,
+		["Sylvannas Windrunner"] = 2441,
+	},
 	["Out of Raid"] = {
 		["Out of Raid"] = -1,
 	},
 };
 local raidLex = {
 	[1] = "Castle Nathria",
-	[2] = "Out of Raid",
+	[2] = "Sanctum of Domination",
+	[3] = "Out of Raid",
 };   
 local bossLex = {
 	["Castle Nathria"] = {
@@ -34,6 +47,19 @@ local bossLex = {
 		[8] = "Sludgefist",
 		[9] = "Stone Legion Generals",
 		[10] = "Sire Denathrius",
+		[11] = "No boss",
+	},
+	["Sanctum of Domination"] = {
+		[1] = "The Tarragrue",
+		[2] = "The Eye of the Jailer",
+		[3] = "The Nine",
+		[4] = "Remnant of Ner'zhul",
+		[5] = "Soulrender Dormazain",
+		[6] = "Painsmith Raznal",
+		[7] = "Guardian of the First Ones",
+		[8] = "Fatescribe Roh-Kalo",
+		[9] = "Kel'Thuzad",
+		[10] = "Sylvannas Windrunner",
 		[11] = "No boss",
 	},
 	["Out of Raid"] = {
@@ -70,7 +96,7 @@ infoBorder:SetTexCoord(0.11,0.89,0.24,0.76);
 infoBorder:SetPoint("TOP", 0, -85);
 
 local info = IRT_InterruptOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -12)
+info:SetPoint("TOPLEFT", infoBorder, "TOPLEFT", 10, -4)
 info:SetSize(510, 200)
 info:SetText(L.OPTIONS_INTERRUPT_INFO)
 info:SetWordWrap(true)

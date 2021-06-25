@@ -1,4 +1,4 @@
-## Interface: 90005
+## Interface: 90100
 ## Title: Infinite Raid Tools
 ## Version: 9.21
 ## Notes: Raid Tools
@@ -14,6 +14,7 @@
 ## SavedVariables: IRT_SludgefistEnabled
 ## SavedVariables: IRT_SenderReadyCheck
 ## SavedVariables: IRT_HungeringDestroyerPercent
+## SavedVariables: IRT_TheNineEnabled
 ## SavedVariablesPerCharacter: IRT_PopupTextPosition
 ## SavedVariablesPerCharacter: IRT_ConsumableCheckEnabled
 ## SavedVariablesPerCharacter: IRT_CalendarNotificationEnabled
@@ -28,7 +29,7 @@
 ## SavedVariablesPerCharacter: IRT_StoneLegionGeneralsEnabled
 ## SavedVariablesPerCharacter: IRT_HuntsmanAltimorPlayersPerLine
 Localization\Localization.enUS.lua
-Localization\Localization.ruRU.lua
+
 Core.lua
 Options\Options.lua
 Options\GeneralOptions.lua
@@ -57,3 +58,5 @@ Modules\Sludgefist.lua
 Options\SludgefistOptions.lua
 Modules\StoneLegionGenerals.lua
 Options\StoneLegionGeneralsOptions.lua
+Modules\TheNine.lua
+Options\TheNineOptions.lua

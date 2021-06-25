@@ -20,7 +20,6 @@ local UnitIsConnected = UnitIsConnected;
 
 f:RegisterEvent("ENCOUNTER_START");
 f:RegisterEvent("ENCOUNTER_END");
-f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 f:RegisterEvent("UNIT_AURA");
 f:RegisterEvent("PLAYER_LOGIN");
 

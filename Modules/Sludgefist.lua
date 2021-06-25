@@ -89,7 +89,7 @@ local function initRaid()
 		local raider = "raid" .. i;
 		local raiderName = GetUnitName(raider, true);
 		if (UnitIsVisible(raiderName)) then
-			local class = select(2, UnitClass(raiderName));
+			local class = select(1, UnitClass(raiderName));
 			local role = UnitGroupRolesAssigned(raiderName);
 			if (role == "TANK") then
 				if (printDebug) then
