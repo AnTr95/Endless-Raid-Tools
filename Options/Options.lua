@@ -44,6 +44,6 @@ IRT_SoDModules = CreateFrame("Frame", "IRT_SoDModulesFrame");
 IRT_SoDModules.name = "|cFFFFFF00Sanctum of Domination Modules|r";
 IRT_SoDModules.parent = "Infinite Raid Tools";
 IRT_SoDModules:SetScript("OnShow", function(IRT_SoDModules)
-	InterfaceOptionsFrame_OpenToCategory(IRT_PainsmithRaznalOptions);
+	InterfaceOptionsFrame_OpenToCategory(IRT_TheNineOptions);
 end);
 InterfaceOptions_AddCategory(IRT_SoDModules);
