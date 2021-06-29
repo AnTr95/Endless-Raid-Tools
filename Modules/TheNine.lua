@@ -2,14 +2,14 @@ local L = IRTLocals;
 local f = CreateFrame("Frame");
 
 --Addon vars
-debuffed = {};
-healers = {};
-raid = {};
+local debuffed = {};
+local healers = {};
+local raid = {};
 local ticks = 0;
 local inEncounter = false;
-focus = nil;
+local focus = nil;
 
-rangeList = {90175, 37727, 8149, 3, 2, 32321, 6450, 21519, 1, 1180, 33471, 32698};
+local rangeList = {90175, 37727, 8149, 3, 2, 32321, 6450, 21519, 1, 1180, 33471, 32698};
 
 local meleeSpecIDs = {
 	[103] = true,
@@ -23,7 +23,7 @@ local rolePrio = {
 	[3] = "healer",
 };
 
-assignments = {};
+local assignments = {};
 
 --Player vars
 local currentStatus = nil;
@@ -51,7 +51,7 @@ f:RegisterEvent("CHAT_MSG_ADDON");
 
 C_ChatInfo.RegisterAddonMessagePrefix("IRT_NINE");
 
-function initHealers()
+local function initHealers()
 	for i = 1, GetNumGroupMembers() do
 		local raider = "raid" .. i;
 		if (UnitIsVisible(raider)) then
@@ -84,7 +84,7 @@ local function initRaid()
 	end
 end
 
-function updateAssignments(safe)
+local function updateAssignments(safe)
 	local text = "|cFF00FFFFIRT:|r";
 	for i = 1, #assignments do
 		local target = assignments[i];
@@ -107,7 +107,7 @@ function updateAssignments(safe)
 	IRT_InfoBoxShow(text, 60);
 end
 
-function assignDispels()
+local function assignDispels()
 	--check if healer is debuffed 
 	for k, v in pairs(healers) do
 		local healer = k;
@@ -207,10 +207,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (msg == "safe") then
 				updateAssignments(true);
 				for healer, target in pairs(healers) do
-					if (target and UnitIsUnit(target, sender)) then
-						if (UnitIsUnit(healer, "player")) then
+					if (target and UnitIsUnit(Ambiguate(target, "short"), sender)) then
+						if (UnitIsUnit(Ambiguate(healer, "short"), "player")) then
 							if (UnitIsConnected(target)) then
-								target = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(target))].colorStr, target);
+								target = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(target))].colorStr, Ambiguate(target, "short"));
 							end
 							IRT_PopupShow("\124cFF00FF00Dispel\124r " .. target);
 						end
@@ -277,6 +277,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_END") then
 	end
 end);
+
+function TN_Test2()
+	IRT_InfoBoxShow("\124cFF00FFFFIRT:\n\124r\124cFFFFFFFF1. \124cFF00FF00SAFE \124r\124cFFF48CBAhealer1\124r -> \124cFF3FC7EB debuffedPlayer1\n\124r\124cFFFFFFFF2. \124cFFFF0000UNSAFE \124r\124cFFFF7C0Ahealer2\124r -> \124cFFAAD372 debuffedPlayer2\n\124cFFFFFFFF2. \124cFFFF0000UNSAFE \124r\124cFF0070DDAhealer3\124r -> \124cFF8788EE debuffedPlayer3\n", 10)
+end
 
 function TN_Test()
 	raid = {

@@ -86,51 +86,13 @@ enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
 
 local moveToStarTexture = IRT_TheNineOptions:CreateTexture(nil, "BACKGROUND");
-moveToStarTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\MoveToStar.tga");
-moveToStarTexture:SetPoint("TOPLEFT", positionToggleButton, "TOP", 30, -65);
-moveToStarTexture:SetSize(164, 16);
-moveToStarTexture:SetTexCoord(0,0.64,0,1);
-
-local yellStarDebuff = IRT_TheNineOptions:CreateTexture(nil, "BACKGROUND");
-yellStarDebuff:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\YellStarDebuff.tga");
-yellStarDebuff:SetPoint("TOPLEFT", moveToStarTexture, "TOP", -25, -25);
-yellStarDebuff:SetSize(80, 105);
-yellStarDebuff:SetTexCoord(0,0.81,0,1);
-
-local soakStarTexture = IRT_TheNineOptions:CreateTexture(nil, "BACKGROUND");
-soakStarTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\SoakStar.tga");
-soakStarTexture:SetPoint("TOPLEFT", positionToggleButton, "TOP", 295, -65);
-soakStarTexture:SetSize(110, 16);
-soakStarTexture:SetTexCoord(0,0.86,0,1);
-
-local yellStarTexture = IRT_TheNineOptions:CreateTexture(nil, "BACKGROUND");
-yellStarTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\YellStar.tga");
-yellStarTexture:SetPoint("TOPLEFT", soakStarTexture, "TOP", -20, -25);
-yellStarTexture:SetSize(51, 94);
-yellStarTexture:SetTexCoord(0,0.8,0,0.73);
-
-local starTexture1 = IRT_TheNineOptions:CreateTexture(nil, "BACKGROUND");
-starTexture1:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_1");
-starTexture1:SetPoint("TOPLEFT", soakStarTexture, "TOPLEFT", -20, 2);
-starTexture1:SetSize(20, 20);
-
-local starTexture2 = IRT_TheNineOptions:CreateTexture(nil, "BACKGROUND");
-starTexture2:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_1");
-starTexture2:SetPoint("TOPLEFT", soakStarTexture, "TOPRIGHT", 2, 2);
-starTexture2:SetSize(20, 20);
-
-local starTexture3 = IRT_TheNineOptions:CreateTexture(nil, "BACKGROUND");
-starTexture3:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_1");
-starTexture3:SetPoint("TOPLEFT", moveToStarTexture, "TOPLEFT", -20, 1);
-starTexture3:SetSize(20, 20);
-
-local starTexture4 = IRT_TheNineOptions:CreateTexture(nil, "BACKGROUND");
-starTexture4:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_1");
-starTexture4:SetPoint("TOPLEFT", moveToStarTexture, "TOPRIGHT", 1, 1);
-starTexture4:SetSize(20, 20);
+moveToStarTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\TheNine.tga");
+moveToStarTexture:SetPoint("TOPLEFT", enabledButton, "TOP", 105, -65);
+moveToStarTexture:SetSize(239, 93);
+moveToStarTexture:SetTexCoord(0,0.94,0,0.73);
 
 local previewText = IRT_TheNineOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
-previewText:SetPoint("TOP", positionToggleButton, "TOP", 225, -24);
+previewText:SetPoint("TOP", enabledButton, "TOP", 225, -24);
 previewText:SetText(L.OPTIONS_THENINE_PREVIEW);
 previewText:SetJustifyH("CENTER");
 previewText:SetJustifyV("TOP");

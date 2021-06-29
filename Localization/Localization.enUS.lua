@@ -84,8 +84,8 @@ L.OPTIONS_STONELEGIONGENERALS_INFO = "|cFF00FFFFHeart Rend:|r Assigns and orders
 L.OPTIONS_STONELEGIONGENERALS_PREVIEW = "|cFFFFFFFFPreview of the infobox that appears during Heart Rend with healers assigned to a debuffed player each and the countdown that begins after someone been dispelled as well as the popup that shows for the healer when its their time to dispel.";
 
 L.OPTIONS_THENINE_TITLE = "The Nine Module";
-L.OPTIONS_THENINE_INFO = "The Nine Module";
-L.OPTIONS_THENINE_PREVIEW = "The Nine";
+L.OPTIONS_THENINE_INFO = "Assigns healers to dispel Fragments of Destiny, always assigning them to themselves if possible. If the player is only nearby other players with Fragments of Destiny the healer will get a popup telling them to dispel. There is also an infobox that lets everyone know at anytime if players are safe or unsafe to dispel. Players will always be dispelled in the order that appears in the infobox prioritizing melee first then ranged and lastly healers.";
+L.OPTIONS_THENINE_PREVIEW = "Here is a preview of the infobox showing it is safe to dispel their target.";
 
 L.BONUSROLL_INFO = "Pick bosses to coin";
 
