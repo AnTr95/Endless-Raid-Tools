@@ -151,7 +151,7 @@ end
 
 f:SetScript("OnUpdate", function(self, elapsed)
 	ticks = ticks + elapsed;
-	if (ticks > 0.05 and focus and UnitIsUnit(focus, "player")) then
+	if (ticks > 0.05 and focus and UnitIsUnit(focus, "player") and inEncounter) then
 		local safe = true;
 		local partner = false;
 		for range, check in ipairs(rangeList) do
@@ -200,7 +200,7 @@ end);
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		if (IRT_TheNineEnabled == nil) then IRT_TheNineEnabled = true; end
-	elseif (event == "CHAT_MSG_ADDON") then
+	elseif (event == "CHAT_MSG_ADDON" and inEncounter) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "IRT_NINE") then
 			sender = Ambiguate(sender, "short");
@@ -229,7 +229,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				raid[sender] = msg;
 			end
 		end
-	elseif (event == "UNIT_SPELLCAST_SUCCEEDED") then
+	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and inEncounter) then
 		unitTarget, castGUID, spellID = ...;
 		if (spellID == 350542) then
 			C_Timer.After(0.3, function() 
@@ -266,15 +266,15 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 		end
 	elseif (event == "ENCOUNTER_START") then
-		healers = {};
-		debuffed = {};
-		--initRaid();
-		--initHealers();
-		healers["Ant"] = false;
-		debuffed[1] = "Ant";
-		debuffed[2] = "Bahnglassi-KhazModan";
-		assignDispels();
-	elseif (event == "ENCOUNTER_END") then
+		local eID = ...;
+		if (eID == 3439) then
+			healers = {};
+			debuffed = {};
+			initRaid();
+			initHealers();
+			inEncounter = true;
+		end
+	elseif (event == "ENCOUNTER_END" and inEncounter) then
 	end
 end);
 
