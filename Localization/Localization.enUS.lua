@@ -55,8 +55,11 @@ L.OPTIONS_CONSUMABLECHECK_PREVIEW = "|cFFFFFFFFPreview of consumable check from 
 L.OPTIONS_CONSUMABLECHECK_PREVIEW_BARTEXT_BUFF = "|T2057568:16|t|cFF00FF00132min|r |T463543:16|t|cFF00FF0057min|r |T3528447:16|t|cFF00FF002hrs|r |T136000:16|t|TInterface\\addons\\InfiniteRaidTools\\Res\\check:16|t |T134078:16|t|TInterface\\addons\\InfiniteRaidTools\\Res\\cross:16|t |T135932:16|t|cFF00FF0020/20|r";
 L.OPTIONS_CONSUMABLECHECK_PREVIEW_BARTEXT_NOBUFF = "|T2057568:16|t|cFF00FF00132min|r |T463543:16|t|cFF00FF0057min|r |T3528447:16|t|cFF00FF002hrs|r |T136000:16|t|TInterface\\addons\\InfiniteRaidTools\\Res\\check:16|t |T134078:16|t|TInterface\\addons\\InfiniteRaidTools\\Res\\cross:16|t";
 
-
 L.OPTIONS_CONSUMABLECHECK_AUTOBUTTONS_TEXT = "Show kit/oil buttons";
+
+L.OPTIONS_RELEASE_TITLE ="Release Module";
+L.OPTIONS_RELEASE_INFO = "Stops you from accidentally releasing inside of raids. Your release button will be hidden unless you hold down SHIFT.";
+L.OPTIONS_RELEASE_PREVIEW = "|cFFFFFFFFPreview of the release button being hidden.";
 
 L.OPTIONS_HUNGERINGDESTROYER_TITLE = "Hungering Dest. Module";
 L.OPTIONS_HUNGERINGDESTROYER_INFO = "|cFF00FFFFGluttonous Miasma|r: Evenly distributes players to Star, Circle, Diamond and Triangle world marks, initially based of each players group and keeps players evenly distributed with 5 players per mark with 1 player affected by |cFF00FFFFGluttonous Miasma|r in each group. 2 players per mark will get assigned to soak 12 seconds of |cFF00FFFFGluttonous Miasma|r each from the player targeted with |cFF00FFFFGluttonous Miasma|r in their group and will yell their marker and informs them in which order they will soak. The other 2 players will soak the next person that gets affected by |cFF00FFFFGluttonous Miasma|r and gets assigned to their current group, except in the case that several players in the group gets affected by it, in which case groups will continue to dynamically update to always ensure an even distribution of players and guaranteeing that there is always 5 players per mark and 2 players that are ready to soak |cFF00FFFFGluttonous Miasma|r per mark. Everyone gets a popup instructing them where to go and whether to soak or not and when to soak. The player affected by |cFF00FFFFGluttonous Miasma|r and the players currently soaking will also yell their mark.\n\n|cFF00FFFFConfig:|r The popup can be individually moved, resized and reset to default position in the general options.";
@@ -88,6 +91,8 @@ L.OPTIONS_THENINE_INFO = "Assigns healers to dispel Fragments of Destiny, always
 L.OPTIONS_THENINE_PREVIEW = "Here is a preview of the infobox showing it is safe to dispel their target.";
 
 L.BONUSROLL_INFO = "Pick bosses to coin";
+
+L.RELEASE_STATICPOPUP = "Hold shift to show the release button.";
 
 L.INTERRUPT_NEXT = "|cFF00FF00Interrupt Next!";
 L.INTERRUPT_NEXT2 = "|cFFFFFFFF Next!";
