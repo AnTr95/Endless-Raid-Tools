@@ -11,7 +11,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		if (IRT_ReleaseEnabled == nil) then IRT_ReleaseEnabled = true; end
 	elseif (event == "PLAYER_DEAD" and IRT_ReleaseEnabled) then
-		if ((GetMinimapZoneText() == "Cinderwall" or GetMinimapZoneText() == "Sanctum of Domination" or GetMinimapZoneText() == "Castle Nathria")) then
+		if ((GetMinimapZoneText() == "Valley of Strength" or GetMinimapZoneText() == "Sanctum of Domination" or GetMinimapZoneText() == "Castle Nathria")) then
 			StaticPopup1Text:SetPoint("TOP", 0, -10);
 			if (text == nil) then
 				local font, size, flag = StaticPopup1Text:GetFont();
@@ -40,6 +40,6 @@ end);
 StaticPopup1Button1:HookScript("OnClick", function(self)
 	if (text and text:IsShown()) then
 		text:Hide();
-		StaticPopup1Text:SetPoint("TOP", 0, -18);
+		StaticPopup1Text:SetPoint("TOP", 0, -16);
 	end
 end);
