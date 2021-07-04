@@ -6,12 +6,11 @@ f:RegisterEvent("MODIFIER_STATE_CHANGED");
 
 local text = nil;
 
-
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		if (IRT_ReleaseEnabled == nil) then IRT_ReleaseEnabled = true; end
 	elseif (event == "PLAYER_DEAD" and IRT_ReleaseEnabled) then
-		if ((GetMinimapZoneText() == "Valley of Strength" or GetMinimapZoneText() == "Sanctum of Domination" or GetMinimapZoneText() == "Castle Nathria")) then
+		if (GetZoneText() == "Sanctum of Domination" or GetZoneText() == "Castle Nathria") then
 			StaticPopup1Text:SetPoint("TOP", 0, -10);
 			if (text == nil) then
 				local font, size, flag = StaticPopup1Text:GetFont();
@@ -23,9 +22,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 				f:SetFrameStrata("TOOLTIP");
 				text:SetFont(font, 8, "");
 			end
+			text:Show();
 			StaticPopup1Button1:Hide();
 		end
-	elseif (event == "MODIFIER_STATE_CHANGED" and IRT_ReleaseEnabled and StaticPopup1:IsShown() and StaticPopup1Text:GetText():match("release")) then
+	elseif (event == "MODIFIER_STATE_CHANGED" and IRT_ReleaseEnabled and (GetZoneText() == "Sanctum of Domination" or GetZoneText() == "Castle Nathria") and StaticPopup1:IsShown() and StaticPopup1Text:GetText():match("elease")) then
 		local button, pressed = ...;
 		if (button == "LSHIFT") then
 			if (pressed == 1) then
