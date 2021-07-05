@@ -200,7 +200,7 @@ end);
 f:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		if (IRT_TheNineEnabled == nil) then IRT_TheNineEnabled = true; end
-	elseif (event == "CHAT_MSG_ADDON" and inEncounter) then
+	elseif (event == "CHAT_MSG_ADDON" and inEncounter and IRT_TheNineEnabled) then
 		local prefix, msg, channel, sender = ...;
 		if (prefix == "IRT_NINE") then
 			sender = Ambiguate(sender, "short");
@@ -212,7 +212,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 							if (UnitIsConnected(target)) then
 								target = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(target))].colorStr, Ambiguate(target, "short"));
 							end
-							IRT_PopupShow("\124cFF00FF00Dispel\124r " .. target);
+							IRT_PopupShow("\124cFF00FF00Dispel\124r " .. target, 60, L.BOSS_FILE);
 						end
 					end
 				end
@@ -229,14 +229,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 				raid[sender] = msg;
 			end
 		end
-	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and inEncounter) then
+	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and inEncounter and IRT_TheNineEnabled) then
 		unitTarget, castGUID, spellID = ...;
 		if (spellID == 350542) then
 			C_Timer.After(0.3, function() 
 				assignDispels();
 			end);
 		end
-	elseif (event == "UNIT_AURA") then
+	elseif (event == "UNIT_AURA" and inEncounter and IRT_TheNineEnabled) then
 		local unit = ...;
 		local name = GetUnitName(unit, true);
 		if (IRT_UnitDebuff(unit, GetSpellInfo(350542))) then
@@ -265,16 +265,27 @@ f:SetScript("OnEvent", function(self, event, ...)
 				--focus = assignments[1];
 			end
 		end
-	elseif (event == "ENCOUNTER_START") then
+	elseif (event == "ENCOUNTER_START" and IRT_TheNineEnabled) then
 		local eID = ...;
 		if (eID == 3439) then
-			healers = {};
 			debuffed = {};
+			healers = {};
+			raid = {};
+			focus = nil;
+			assignments = {};
+			currentStatus = nil;
 			initRaid();
 			initHealers();
 			inEncounter = true;
 		end
-	elseif (event == "ENCOUNTER_END" and inEncounter) then
+	elseif (event == "ENCOUNTER_END" and inEncounter and IRT_TheNineEnabled) then
+		debuffed = {};
+		healers = {};
+		raid = {};
+		inEncounter = false;
+		focus = nil;
+		assignments = {};
+		currentStatus = nil;
 	end
 end);
 
