@@ -77,6 +77,7 @@ function IRT_InfoBoxHide()
 	if (timer) then
 		timer:Cancel();
 	end
+	text:SetText("");
 	f:Hide();
 end
 
