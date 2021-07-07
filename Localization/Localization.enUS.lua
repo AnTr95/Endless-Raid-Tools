@@ -90,7 +90,7 @@ L.OPTIONS_THENINE_TITLE = "The Nine Module";
 L.OPTIONS_THENINE_INFO = "Assigns healers to dispel |cFF00FFFFFragments of Destiny|r, always assigning them to themselves if possible. If the player is only nearby other players with |cFF00FFFFFragments of Destiny|r the healer will get a popup telling them to dispel. There is also an infobox that lets everyone know at anytime if players are safe or unsafe to dispel. Players will always be dispelled in the order that appears in the infobox prioritizing melee first then ranged and lastly healers. Config: The infobox can be moved and reset to default position in the general options.";
 L.OPTIONS_THENINE_PREVIEW = "Here is a preview of the infobox showing it is safe to dispel their target.";
 
-L.OPTIONS_FATESCRIBEROHKALO_TITLE = "Fatescribe Roh-Kalo Module";
+L.OPTIONS_FATESCRIBEROHKALO_TITLE = "[WIP] Fatescribe Roh-Kalo Module";
 L.OPTIONS_FATESCRIBEROHKALO_INFO = "Assigns 2 players with |cFF00FFFFRunic Affinity|r to each of the MOST OUTER/2nd MOST OUTER/MIDDLE/2nd MOST INNER/INNER ring depending on the raid difficulty and group size. If there are more player debuffed than needed for the rings they will be assigned backup. Everyone can see each others assignment in the infobox and each player assigned will get a popup with their assignment and yell their assignment.\n\n|cFF00FFFFConfig:|r The infobox and the popup can be individually moved, resized and reset to default positions in the general options.";
 L.OPTIONS_FATESCRIBEROHKALO_PREVIEW = "Here is a preview of the infobox showing who is designed to which ring and who is lead.";
 
