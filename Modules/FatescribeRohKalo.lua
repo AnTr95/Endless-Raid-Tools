@@ -220,4 +220,3 @@ f:SetScript("OnEvent", function(self, event, ...)
 end);
 
 --Infobox Main, Support
---

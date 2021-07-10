@@ -94,7 +94,7 @@ L.OPTIONS_REMNANTOFNERZHUL_TITLE = "Remnant of Ner'zhul Module";
 L.OPTIONS_REMNANTOFNERZHUL_INFO = "|cFFFF0000Important!|r Make sure you are not using any other addons for marking Malevolence.\n\n|cFF00FFFFMalevolence:|r Marks players debuffed with Malevolence star, circle and diamond (mythic). Because the ranged group is more likely to be towards the edge of the room already it always assigns the star marker to ranged first to reduce the distance needed to walk for the first dispel by going through the highest raid index to the lowest. Raid index is the position they are in the raid frames, the group 1 player 1 is the lowest index.";
 L.OPTIONS_REMNANTOFNERZHUL_PREVIEW = "";
 
-L.OPTIONS_FATESCRIBEROHKALO_TITLE = "[WIP] Fatescribe Roh-Kalo Module";
+L.OPTIONS_FATESCRIBEROHKALO_TITLE = "Fatescribe Roh-Kalo Module";
 L.OPTIONS_FATESCRIBEROHKALO_INFO = "Assigns 2 players with |cFF00FFFFRunic Affinity|r to each of the MOST OUTER/2nd MOST OUTER/MIDDLE/2nd MOST INNER/INNER ring depending on the raid difficulty and group size. If there are more player debuffed than needed for the rings they will be assigned backup. Everyone can see each others assignment in the infobox and each player assigned will get a popup with their assignment and yell their assignment.\n\n|cFF00FFFFConfig:|r The infobox and the popup can be individually moved, resized and reset to default positions in the general options.";
 L.OPTIONS_FATESCRIBEROHKALO_PREVIEW = "Here is a preview of the infobox showing who is designed to which ring and who is lead.";
 

@@ -8,6 +8,7 @@ local raid = {};
 local ticks = 0;
 local inEncounter = false;
 local focus = nil;
+local difficulty = 0;
 
 local rangeList = {90175, 37727, 8149, 3, 2, 32321, 6450, 21519, 1, 1180, 33471, 32698};
 
@@ -149,7 +150,6 @@ end
 
 local function assignDispels()
 	--check if healer is debuffed 
-	assignments = {};
 	for k, v in pairs(healers) do
 		local healer = k;
 		if (IRT_Contains(debuffed, healer)) then
@@ -289,9 +289,32 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (UnitIsUnit(unit, "player")) then
 					currentStatus = false;
 				end
-				C_Timer.After(0.3, function() 
-					assignDispels();
-				end);
+				if (next(assignments)) then
+					assignments[#assignments+1] = name;
+					for i = 1, #debuffed do
+						if (not IRT_Contains(healers, debuffed[i])) then
+							for k, v in pairs(healers) do
+								if (v == false) then
+									if (printdebug) then
+										print(k .. " got assigned " .. debuffed[i]);
+									end
+									healers[k] = debuffed[i];
+									break;
+								end
+							end
+						end
+					end
+				else
+					if (difficulty == 16) then
+						if (#debuffed == 3) then 
+							assignDispels();
+						end
+					else
+						if (#debuffed == 4) then 
+							assignDispels();
+						end
+					end
+				end
 			end
 		elseif (IRT_Contains(debuffed, name)) then
 			if (printdebug) then
@@ -328,6 +351,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (printdebug) then
 				print("in encounter");
 			end
+			difficulty = select(3, GetInstanceInfo());
 			debuffed = {};
 			healers = {};
 			raid = {};

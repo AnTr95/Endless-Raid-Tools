@@ -41,7 +41,7 @@ mythicTexture:SetPoint("TOPLEFT", heroicTexture, "TOPLEFT", 20, 0);
 
 local bossTexture = IRT_FatescribeRohKaloOptions:CreateTexture(nil,"BACKGROUND");
 bossTexture:SetTexture(4071427);
-bossTexture:SetWidth(72);
+bossTexture:SetWidth(65);
 bossTexture:SetHeight(68);
 bossTexture:SetTexCoord(0.1,1,0,0.8);
 bossTexture:SetPoint("TOPLEFT", 32, -45);
@@ -85,11 +85,17 @@ local enabledText = IRT_FatescribeRohKaloOptions:CreateFontString(nil, "ARTWORK"
 enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
 
-local moveToStarTexture = IRT_FatescribeRohKaloOptions:CreateTexture(nil, "BACKGROUND");
-moveToStarTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\FatescribeRohKalo.tga");
-moveToStarTexture:SetPoint("TOPLEFT", enabledButton, "TOP", 105, -65);
-moveToStarTexture:SetSize(239, 93);
-moveToStarTexture:SetTexCoord(0,0.94,0,0.73);
+local moveToInnerTexture = IRT_FatescribeRohKaloOptions:CreateTexture(nil, "BACKGROUND");
+moveToInnerTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\MoveToInner.tga");
+moveToInnerTexture:SetPoint("TOPLEFT", enabledButton, "TOP", 135, -50);
+moveToInnerTexture:SetSize(128, 10);
+moveToInnerTexture:SetTexCoord(0,1,0,0.6);
+
+local infoBoxTexture = IRT_FatescribeRohKaloOptions:CreateTexture(nil, "BACKGROUND");
+infoBoxTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\FatescribeRohKalo.tga");
+infoBoxTexture:SetPoint("TOP", moveToInnerTexture, "TOP", 0, -20);
+infoBoxTexture:SetSize(128, 128);
+infoBoxTexture:SetTexCoord(0,1,0,1);
 
 local previewText = IRT_FatescribeRohKaloOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
 previewText:SetPoint("TOP", enabledButton, "TOP", 225, -24);

@@ -41,10 +41,10 @@ mythicTexture:SetPoint("TOPLEFT", heroicTexture, "TOPLEFT", 20, 0);
 
 local bossTexture = IRT_RemnantOfNerzhulOptions:CreateTexture(nil,"BACKGROUND");
 bossTexture:SetTexture(4071439);
-bossTexture:SetWidth(72);
+bossTexture:SetWidth(60);
 bossTexture:SetHeight(68);
-bossTexture:SetTexCoord(0.1,1,0,0.8);
-bossTexture:SetPoint("TOPLEFT", 32, -45);
+bossTexture:SetTexCoord(0.1,0.6,0,0.8);
+bossTexture:SetPoint("TOPLEFT", 28, -45);
 
 local bossBorder = IRT_RemnantOfNerzhulOptions:CreateTexture(nil,"BORDER");
 bossBorder:SetTexture("Interface\\MINIMAP\\UI-MINIMAP-BORDER.PNG");
@@ -84,21 +84,6 @@ end);
 local enabledText = IRT_RemnantOfNerzhulOptions:CreateFontString(nil, "ARTWORK", "GameFontHighlight");
 enabledText:SetPoint("TOPLEFT", enabledButton, "TOPLEFT", 30, -7);
 enabledText:SetText(L.OPTIONS_ENABLED);
-
-local moveToStarTexture = IRT_RemnantOfNerzhulOptions:CreateTexture(nil, "BACKGROUND");
-moveToStarTexture:SetTexture("Interface\\addons\\InfiniteRaidTools\\Res\\RemnantOfNerzhul.tga");
-moveToStarTexture:SetPoint("TOPLEFT", enabledButton, "TOP", 105, -65);
-moveToStarTexture:SetSize(239, 93);
-moveToStarTexture:SetTexCoord(0,0.94,0,0.73);
-
-local previewText = IRT_RemnantOfNerzhulOptions:CreateFontString(nil, "ARTWORK", "GameFontNormal");
-previewText:SetPoint("TOP", enabledButton, "TOP", 225, -24);
-previewText:SetText(L.OPTIONS_REMNANTOFNERZHUL_PREVIEW);
-previewText:SetJustifyH("CENTER");
-previewText:SetJustifyV("TOP");
-previewText:SetSize(570,25);
-previewText:SetWordWrap(true);
-
 
 IRT_RemnantOfNerzhulOptions:SetScript("OnShow", function(self)
 	enabledButton:SetChecked(IRT_RemnantOfNerzhulEnabled);
