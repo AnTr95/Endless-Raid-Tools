@@ -41,10 +41,10 @@ mythicTexture:SetPoint("TOPLEFT", heroicTexture, "TOPLEFT", 20, 0);
 
 local bossTexture = IRT_TheNineOptions:CreateTexture(nil,"BACKGROUND");
 bossTexture:SetTexture("Interface\\ENCOUNTERJOURNAL\\UI-EJ-BOSS-The Nine.PNG");
-bossTexture:SetWidth(62);
+bossTexture:SetWidth(48);
 bossTexture:SetHeight(68);
-bossTexture:SetTexCoord(0.1,0.7,0,0.7);
-bossTexture:SetPoint("TOPLEFT", 28, -45);
+bossTexture:SetTexCoord(0.35,0.65,0,0.75);
+bossTexture:SetPoint("TOPLEFT", 30, -43);
 
 local bossBorder = IRT_TheNineOptions:CreateTexture(nil,"BORDER");
 bossBorder:SetTexture("Interface\\MINIMAP\\UI-MINIMAP-BORDER.PNG");

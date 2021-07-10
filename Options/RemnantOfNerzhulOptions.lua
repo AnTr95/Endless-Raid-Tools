@@ -41,10 +41,10 @@ mythicTexture:SetPoint("TOPLEFT", heroicTexture, "TOPLEFT", 20, 0);
 
 local bossTexture = IRT_RemnantOfNerzhulOptions:CreateTexture(nil,"BACKGROUND");
 bossTexture:SetTexture(4071439);
-bossTexture:SetWidth(60);
+bossTexture:SetWidth(48);
 bossTexture:SetHeight(68);
-bossTexture:SetTexCoord(0.1,0.6,0,0.8);
-bossTexture:SetPoint("TOPLEFT", 28, -45);
+bossTexture:SetTexCoord(0.35,0.65,0,0.75);
+bossTexture:SetPoint("TOPLEFT", 30, -43);
 
 local bossBorder = IRT_RemnantOfNerzhulOptions:CreateTexture(nil,"BORDER");
 bossBorder:SetTexture("Interface\\MINIMAP\\UI-MINIMAP-BORDER.PNG");
