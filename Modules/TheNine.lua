@@ -30,7 +30,7 @@ local currentStatus = nil;
 local playerName = GetUnitName("player", true);
 
 --debug
-local printdebug = true;
+local printdebug = false;
 
 --Cache
 local IRT_UnitDebuff = IRT_UnitDebuff;
@@ -51,7 +51,18 @@ f:RegisterEvent("CHAT_MSG_ADDON");
 
 C_ChatInfo.RegisterAddonMessagePrefix("IRT_NINE");
 
+function IRT_TN_Debug()
+	if (printdebug) then
+		printdebug = false;
+	else
+		printdebug = true;
+	end
+end
+
 local function initHealers()
+	if (printdebug) then
+		print("healers assigned")
+	end
 	for i = 1, GetNumGroupMembers() do
 		local raider = "raid" .. i;
 		if (UnitIsVisible(raider)) then
@@ -59,12 +70,29 @@ local function initHealers()
 			if (role == "HEALER") then
 				local raiderName = GetUnitName(raider, true);
 				healers[raiderName] = false;
+				if (printdebug) then
+					print(raiderName .. " is a healer");
+				end
 			end
 		end
 	end
 end
 
 local function initRaid()
+	--problem if ppl dont have it activated?
+	if (printdebug) then
+		print("raid initiated")
+	end
+	for i = 1, GetNumGroupMembers() do
+		local raider = "raid" .. i;
+		if (UnitIsVisible(raider)) then
+			local raiderName = GetUnitName(raider, true);
+			if (printdebug) then
+				print(raiderName .. " is auto melee");
+			end
+			raid[raiderName] = "melee";
+		end
+	end
 	local role = UnitGroupRolesAssigned("player");
 	local class = select(2, UnitClass("player"));
 	local spec = GetSpecialization();
@@ -84,12 +112,24 @@ local function initRaid()
 	end
 end
 
+function IRT_TN_Force()
+	inEncounter = true;
+	initRaid();
+	initHealers();
+end
+
 local function updateAssignments(safe)
 	local text = "|cFF00FFFFIRT:|r";
+	if (printdebug) then
+		print("updating assignments");
+	end
 	for i = 1, #assignments do
 		local target = assignments[i];
 		local healer = IRT_Contains(healers, target);
 		local index = IRT_Contains(healers, assignments[i]);
+		if (printdebug) then
+			print(healer .. " is assigned to " .. target);
+		end
 		if (target and UnitIsConnected(target)) then
 			target = Ambiguate(target, "short");
 			target = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(target))].colorStr, target);
@@ -109,6 +149,7 @@ end
 
 local function assignDispels()
 	--check if healer is debuffed 
+	assignments = {};
 	for k, v in pairs(healers) do
 		local healer = k;
 		if (IRT_Contains(debuffed, healer)) then
@@ -230,7 +271,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 		end
 	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and inEncounter and IRT_TheNineEnabled) then
-		unitTarget, castGUID, spellID = ...;
+		local unitTarget, castGUID, spellID = ...;
 		if (spellID == 350542) then
 			C_Timer.After(0.3, function() 
 				assignDispels();
@@ -241,15 +282,27 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local name = GetUnitName(unit, true);
 		if (IRT_UnitDebuff(unit, GetSpellInfo(350542))) then
 			if (not IRT_Contains(debuffed, name)) then
+				if (printdebug) then
+					print(name .. " is debuffed")
+				end
 				debuffed[#debuffed+1] = name;
 				if (UnitIsUnit(unit, "player")) then
 					currentStatus = false;
 				end
+				C_Timer.After(0.3, function() 
+					assignDispels();
+				end);
 			end
 		elseif (IRT_Contains(debuffed, name)) then
+			if (printdebug) then
+				print(name .. " is no longer debuffed")
+			end
 			for k, v in pairs(healers) do
 				if (v == name) then
 					healers[k] = nil;
+					if (printdebug) then
+						print(k .. " is now freed up");
+					end
 					break;
 				end
 			end
@@ -257,17 +310,24 @@ f:SetScript("OnEvent", function(self, event, ...)
 				currentStatus = nil;
 			end
 			table.remove(assignments, 1);
-			debuffed[name] = nil;
+			debuffed[IRT_Contains(debuffed, name)] = nil;
 			if (#debuffed == 0) then
-				--focus = nil;
+				focus = nil;
 				IRT_InfoBoxHide();
 			else
-				--focus = assignments[1];
+				focus = assignments[1];
+				if (printdebug) then
+					print("focus is now on " .. focus);
+				end
 			end
 		end
 	elseif (event == "ENCOUNTER_START" and IRT_TheNineEnabled) then
 		local eID = ...;
-		if (eID == 3439) then
+		print(eID)
+		if (eID == 2429) then
+			if (printdebug) then
+				print("in encounter");
+			end
 			debuffed = {};
 			healers = {};
 			raid = {};

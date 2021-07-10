@@ -40,7 +40,7 @@ IRT_SetFlagIcon(mythicTexture, 12);
 mythicTexture:SetPoint("TOPLEFT", heroicTexture, "TOPLEFT", 20, 0);
 
 local bossTexture = IRT_FatescribeRohKaloOptions:CreateTexture(nil,"BACKGROUND");
-bossTexture:SetTexture("Interface\\ENCOUNTERJOURNAL\\UI-EJ-BOSS-FatescribeRoh-Kalo.PNG");
+bossTexture:SetTexture(4071427);
 bossTexture:SetWidth(72);
 bossTexture:SetHeight(68);
 bossTexture:SetTexCoord(0.1,1,0,0.8);

@@ -192,7 +192,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_START" and IRT_FatescribeRohKaloEnabled) then
 		local eID = ...;
 		difficulty = select(3, GetInstanceInfo());
-		if (eID == 2447 and (difficulty == 16 or difficulty == 15)) then
+		if (eID == 2431 and (difficulty == 16 or difficulty == 15)) then
 			if (difficulty == 16) then
 				raidSize = 20;
 			else

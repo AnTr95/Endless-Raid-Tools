@@ -17,6 +17,7 @@
 ## SavedVariables: IRT_TheNineEnabled
 ## SavedVariables: IRT_ReleaseEnabled
 ## SavedVariables: IRT_FatescribeRohKaloEnabled
+## SavedVariables: IRT_RemnantOfNerzhulEnabled
 ## SavedVariablesPerCharacter: IRT_PopupTextPosition
 ## SavedVariablesPerCharacter: IRT_ConsumableCheckEnabled
 ## SavedVariablesPerCharacter: IRT_CalendarNotificationEnabled
@@ -64,5 +65,7 @@ Modules\StoneLegionGenerals.lua
 Options\StoneLegionGeneralsOptions.lua
 Modules\TheNine.lua
 Options\TheNineOptions.lua
+Modules\RemnantOfNerzhul.lua
+Options\RemnantOfNerzhulOptions.lua
 Modules\FatescribeRohKalo.lua
 Options\FatescribeRohKaloOptions.lua
