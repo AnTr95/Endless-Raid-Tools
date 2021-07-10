@@ -9,6 +9,7 @@ local ticks = 0;
 local inEncounter = false;
 local focus = nil;
 local difficulty = 0;
+local isSafe = false;
 
 local rangeList = {90175, 37727, 8149, 3, 2, 32321, 6450, 21519, 1, 1180, 33471, 32698};
 
@@ -119,7 +120,7 @@ function IRT_TN_Force()
 	initHealers();
 end
 
-local function updateAssignments(safe)
+local function updateAssignments()
 	local text = "|cFF00FFFFIRT:|r";
 	if (printdebug) then
 		print("updating assignments");
@@ -139,7 +140,7 @@ local function updateAssignments(safe)
 			healer = Ambiguate(healer, "short");
 			healer = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(healer))].colorStr, healer);
 		end
-		if (safe) then
+		if (isSafe) then
 			text = text .. "\n|cFFFFFFFF" .. i .. ".|r |cFF00FF00SAFE|r " .. healer .. " -> " .. target;
 		else
 			text = text .. "\n|cFFFFFFFF" .. i .. ".|r |cFFFF0000UNSAFE|r " .. healer .. " -> " .. target;
@@ -172,10 +173,10 @@ local function assignDispels()
 			end
 		end
 	end
-	for i = 1, 3 do
-		for j = 1, #debuffed do
-			local player = debuffed[j];
-			if (raid[player] == rolePrio[i]) then
+	for prio, role in pairs(rolePrio) do
+		for i = 1, #debuffed do
+			local player = debuffed[i];
+			if (raid[player] == role) then
 				if (focus == nil) then
 					focus = player;
 				end
@@ -186,7 +187,8 @@ local function assignDispels()
 			end
 		end
 	end
-	updateAssignments(false);
+	isSafe = false;
+	updateAssignments();
 end
 
 
@@ -246,7 +248,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (prefix == "IRT_NINE") then
 			sender = Ambiguate(sender, "short");
 			if (msg == "safe") then
-				updateAssignments(true);
+				isSafe = true;
+				updateAssignments();
 				for healer, target in pairs(healers) do
 					if (target and UnitIsUnit(Ambiguate(target, "short"), sender)) then
 						if (UnitIsUnit(Ambiguate(healer, "short"), "player")) then
@@ -258,7 +261,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 					end
 				end
 			elseif (msg == "unsafe") then
-				updateAssignments(false);
+				isSafe = false;
+				updateAssignments();
 				for healer, target in pairs(healers) do
 					if (target and UnitIsUnit(target, sender)) then
 						if (UnitIsUnit(healer, "player")) then
@@ -269,13 +273,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 			else
 				raid[sender] = msg;
 			end
-		end
-	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and inEncounter and IRT_TheNineEnabled) then
-		local unitTarget, castGUID, spellID = ...;
-		if (spellID == 350542) then
-			C_Timer.After(0.3, function() 
-				assignDispels();
-			end);
 		end
 	elseif (event == "UNIT_AURA" and inEncounter and IRT_TheNineEnabled) then
 		local unit = ...;
@@ -304,13 +301,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 							end
 						end
 					end
+					updateAssignments();
 				else
 					if (difficulty == 16) then
-						if (#debuffed == 3) then 
+						if (#debuffed == 4) then 
 							assignDispels();
 						end
 					else
-						if (#debuffed == 4) then 
+						if (#debuffed == 3) then 
 							assignDispels();
 						end
 					end
@@ -332,21 +330,25 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (UnitIsUnit(unit, "player")) then
 				currentStatus = nil;
 			end
-			table.remove(assignments, 1);
-			debuffed[IRT_Contains(debuffed, name)] = nil;
-			if (#debuffed == 0) then
+			local contains = IRT_Contains(debuffed, name);
+			table.remove(assignments, contains);
+			debuffed[contains] = nil;
+			if (next(assignments)) then
+				if (contains == 1) then
+					isSafe = false;
+					updateAssignments();
+					focus = assignments[1];
+					if (printdebug) then
+						print("focus is now on " .. focus);
+					end
+				end
+			else
 				focus = nil;
 				IRT_InfoBoxHide();
-			else
-				focus = assignments[1];
-				if (printdebug) then
-					print("focus is now on " .. focus);
-				end
 			end
 		end
 	elseif (event == "ENCOUNTER_START" and IRT_TheNineEnabled) then
 		local eID = ...;
-		print(eID)
 		if (eID == 2429) then
 			if (printdebug) then
 				print("in encounter");
