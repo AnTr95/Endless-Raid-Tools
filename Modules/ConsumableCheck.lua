@@ -460,7 +460,7 @@ local function updateConsumables()
 					count = count + 1;
 				end
 			end
-			if (ReadyCheckFrame.backdrop and ReadyCheckFrame.backdrop.backdropInfo and ReadyCheckFrame.backdrop.backdropInfo.bgFile and ReadyCheckFrame.backdrop.backdropInfo.bgFile:match("ElvUI")) then
+			if (ReadyCheckFrame.backdropInfo and ReadyCheckFrame.backdropInfo.bgFile and ReadyCheckFrame.backdropInfo.bgFile:match("ElvUI")) then
 				ReadyCheckFrameText:SetSize(320, 40);
 				ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
 			else
@@ -473,7 +473,7 @@ local function updateConsumables()
 			--text3:SetText("\124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
 			--rcText:SetText("\124T" .. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitCount .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS) .. " \124T" .. buffIconIDs[class] .. ":16\124t" .. (count == total and (GREEN .. count .. "/" .. total) or (RED .. count .. "/" .. total)));
 		else
-			if (ReadyCheckFrame.backdrop and ReadyCheckFrame.backdrop.backdropInfo and ReadyCheckFrame.backdrop.backdropInfo.bgFile and ReadyCheckFrame.backdrop.backdropInfo.bgFile:match("ElvUI")) then
+			if (ReadyCheckFrame.backdropInfo and ReadyCheckFrame.backdropInfo.bgFile and ReadyCheckFrame.backdropInfo.bgFile:match("ElvUI")) then
 				ReadyCheckFrameText:SetSize(320, 40);
 				ReadyCheckFrameText:SetText(blizzText .. "\n\n\124T".. flaskIcon .. ":16\124t" .. flaskTime .. " \124T" .. oilIcon .. ":16\124t" .. oilCount .. oilTime .. " \124T" .. armorKitIcon .. ":16\124t" .. armorKitTime .. " \124T" .. foodIcon .. ":16\124t" .. (food and CHECK or CROSS) .. " \124T" .. runeIcon .. ":16\124t" .. (rune and CHECK or CROSS));
 			else
