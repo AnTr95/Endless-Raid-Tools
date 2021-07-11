@@ -282,20 +282,20 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (printdebug) then
 					print(name .. " is debuffed")
 				end
-				debuffed[#debuffed+1] = name;
+				table.insert(debuffed, name);
 				if (UnitIsUnit(unit, "player")) then
 					currentStatus = false;
 				end
 				if (next(assignments)) then
-					assignments[#assignments+1] = name;
-					for i = 1, #debuffed do
-						if (not IRT_Contains(healers, debuffed[i])) then
+					table.insert(assignments, name);
+					for index, pl in pairs(debuffed) do
+						if (not IRT_Contains(healers, pl)) then
 							for k, v in pairs(healers) do
 								if (v == false) then
 									if (printdebug) then
-										print(k .. " got assigned " .. debuffed[i]);
+										print(k .. " got assigned " .. pl);
 									end
-									healers[k] = debuffed[i];
+									healers[k] = pl;
 									break;
 								end
 							end
@@ -330,11 +330,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (UnitIsUnit(unit, "player")) then
 				currentStatus = nil;
 			end
-			local contains = IRT_Contains(debuffed, name);
-			table.remove(assignments, contains);
-			debuffed[contains] = nil;
+			local containsDebuffed = IRT_Contains(debuffed, name);
+			local containsAssignments = IRT_Contains(assignments, name);
+			table.remove(assignments, containsAssignments);
+			table.remove(debuffed, containsDebuffed);
 			if (next(assignments)) then
-				if (contains == 1) then
+				if (containsAssignments == 1) then
 					isSafe = false;
 					updateAssignments();
 					focus = assignments[1];
