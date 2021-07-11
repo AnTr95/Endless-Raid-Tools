@@ -320,7 +320,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 			for k, v in pairs(healers) do
 				if (v == name) then
-					healers[k] = nil;
+					healers[k] = false;
 					if (printdebug) then
 						print(k .. " is now freed up");
 					end
