@@ -132,22 +132,24 @@ local function updateAssignments()
 		if (printdebug) then
 			print(healer .. " is assigned to " .. target);
 		end
-		if (target and UnitIsConnected(target)) then
-			target = Ambiguate(target, "short");
-			target = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(target))].colorStr, target);
-		end
-		if (healer and UnitIsConnected(healer)) then
-			healer = Ambiguate(healer, "short");
-			healer = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(healer))].colorStr, healer);
-		end
-		if (i == 1) then
-			if (isSafe) then
-				text = text .. "\n|cFFFFFFFF" .. i .. ".|r |cFF00FF00SAFE|r " .. healer .. " -> " .. target;
+		if (healer) then
+			if (target and UnitIsConnected(target)) then
+				target = Ambiguate(target, "short");
+				target = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(target))].colorStr, target);
+			end
+			if (healer and UnitIsConnected(healer)) then
+				healer = Ambiguate(healer, "short");
+				healer = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(healer))].colorStr, healer);
+			end
+			if (i == 1) then
+				if (isSafe) then
+					text = text .. "\n|cFFFFFFFF" .. i .. ".|r |cFF00FF00SAFE|r " .. healer .. " -> " .. target;
+				else
+					text = text .. "\n|cFFFFFFFF" .. i .. ".|r |cFFFF0000UNSAFE|r " .. healer .. " -> " .. target;
+				end
 			else
 				text = text .. "\n|cFFFFFFFF" .. i .. ".|r |cFFFF0000UNSAFE|r " .. healer .. " -> " .. target;
 			end
-		else
-			text = text .. "\n|cFFFFFFFF" .. i .. ".|r |cFFFF0000UNSAFE|r " .. healer .. " -> " .. target;
 		end
 	end
 	IRT_InfoBoxShow(text, 60);
