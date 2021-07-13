@@ -140,8 +140,12 @@ local function updateAssignments()
 			healer = Ambiguate(healer, "short");
 			healer = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(healer))].colorStr, healer);
 		end
-		if (isSafe) then
-			text = text .. "\n|cFFFFFFFF" .. i .. ".|r |cFF00FF00SAFE|r " .. healer .. " -> " .. target;
+		if (i == 1) then
+			if (isSafe) then
+				text = text .. "\n|cFFFFFFFF" .. i .. ".|r |cFF00FF00SAFE|r " .. healer .. " -> " .. target;
+			else
+				text = text .. "\n|cFFFFFFFF" .. i .. ".|r |cFFFF0000UNSAFE|r " .. healer .. " -> " .. target;
+			end
 		else
 			text = text .. "\n|cFFFFFFFF" .. i .. ".|r |cFFFF0000UNSAFE|r " .. healer .. " -> " .. target;
 		end
@@ -183,7 +187,7 @@ local function assignDispels()
 				if (printdebug) then
 					print(player .. " got priority " .. #assignments+1);
 				end
-				assignments[#assignments+1] = player;
+				table.insert(assignments, player);
 			end
 		end
 	end

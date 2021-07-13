@@ -43,3 +43,10 @@ StaticPopup1Button1:HookScript("OnClick", function(self)
 		StaticPopup1Text:SetPoint("TOP", 0, -16);
 	end
 end);
+
+StaticPopup1:HookScript("OnHide", function(self)
+	if (text and text:IsShown()) then
+		text:Hide();
+		StaticPopup1Text:SetPoint("TOP", 0, -16);
+	end
+end);
