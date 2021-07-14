@@ -292,7 +292,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (UnitIsUnit(unit, "player")) then
 					currentStatus = false;
 				end
-				if (next(assignments)) then
+				if (#assignments > 1) then
 					table.insert(assignments, name);
 					for index, pl in pairs(debuffed) do
 						if (not IRT_Contains(healers, pl)) then
@@ -338,8 +338,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 			end
 			local containsDebuffed = IRT_Contains(debuffed, name);
 			local containsAssignments = IRT_Contains(assignments, name);
-			table.remove(assignments, containsAssignments);
-			table.remove(debuffed, containsDebuffed);
+			if (containsDebuffed) then
+				table.remove(debuffed, containsDebuffed);
+			end
+			if (containsAssignments) then
+				table.remove(assignments, containsAssignments);
+			end
 			if (next(assignments)) then
 				if (containsAssignments == 1) then
 					isSafe = false;
