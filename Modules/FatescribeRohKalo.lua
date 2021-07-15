@@ -9,28 +9,6 @@ local raidSize = nil;
 local ringConfig = {
 	[15] = {
 		[10] = {
-			[1] = "INNER",
-			[2] = "INNER",
-			[3] = "OUTER",
-			[4] = "OUTER",
-			[5] = "BACKUP",
-			[6] = "BACKUP",
-			[7] = "BACKUP",
-			[8] = "BACKUP",
-		},
-		[20] = {
-			[1] = "INNER",
-			[2] = "INNER",
-			[3] = "MIDDLE",
-			[4] = "MIDDLE",
-			[5] = "OUTER",
-			[6] = "OUTER",
-			[7] = "BACKUP",
-			[8] = "BACKUP",
-			[9] = "BACKUP",
-			[10] = "BACKUP",
-		},
-		[30] = {
 			[1] = "MOST INNER",
 			[2] = "MOST INNER",
 			[3] = "2nd MOST INNER",
@@ -43,6 +21,22 @@ local ringConfig = {
 			[10] = "BACKUP",
 			[11] = "BACKUP",
 			[12] = "BACKUP",
+		},
+		[20] = {
+			[1] = "MOST INNER",
+			[2] = "MOST INNER",
+			[3] = "2nd MOST INNER",
+			[4] = "2nd MOST INNER",
+			[5] = "MIDDLE",
+			[6] = "MIDDLE",
+			[7] = "2nd MOST OUTER",
+			[8] = "2nd MOST OUTER",
+			[9] = "MOST OUTER",
+			[10] = "MOST OUTER",
+			[11] = "BACKUP",
+			[12] = "BACKUP",
+			[13] = "BACKUP",
+			[14] = "BACKUP",
 		},
 	},
 	[16] = {
@@ -81,15 +75,19 @@ local function updateInfoBox(text, player)
 	if (UnitIsConnected(player)) then
 		player = string.format("\124c%s%s\124r", RAID_CLASS_COLORS[select(2, UnitClass(player))].colorStr, player);
 	end
-	if (text:match(":") == nil) then
-		text = "|cFFFFFFFF" .. text .. "|r";
+	local textToSend = "";
+	if (IRT_InfoBoxIsShown()) then
+		textToSend = IRT_InfoBoxGetText();
+	else
+		textToSend = "|cFF00FFFFIRT:|r";
 	end
 	if (text:match("BACKUP") == nil) then
-		if (IRT_InfoBoxIsShown()) then
-			IRT_InfoBoxShow(IRT_InfoBoxGetText() .. "\n" .. text .. " - " .. player, 60);
+		if (text:match(":") == nil) then
+			textToSend = textToSend .. "\n|cFFFFFFFF" .. text .. "|r - " .. player;
 		else
-			IRT_InfoBoxShow("|cFF00FFFFIRT:|r\n" .. text .. " - " .. player, 60);
+			textToSend = textToSend .. "\n" .. text .. " - " .. player;
 		end
+		IRT_InfoBoxShow(textToSend, 60);
 	end
 end
 
@@ -108,29 +106,31 @@ local function playerNotification(text)
 	end
 end
 
-local function assignRings()
-	if (raidSize >= 30) then
-		for i = 1, #debuffed do
-			if (i%2 == 1) then
-				C_ChatInfo.SendAddonMessage("IRT_FRH", "Lead: " .. ringConfig[difficulty][30][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
-			else
-				C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[difficulty][30][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+local function assignRings(phase)
+	if (phase == 1) then
+		if (raidSize >= 20) then
+			for i = 1, #debuffed do
+				if (i%2 == 1) then
+					C_ChatInfo.SendAddonMessage("IRT_FRH", "Lead: " .. ringConfig[difficulty][20][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+				else
+					C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[difficulty][20][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+				end
 			end
-		end
-	elseif (raidSize >= 20) then
-		for i = 1, #debuffed do
-			if (i%2 == 1) then
-				C_ChatInfo.SendAddonMessage("IRT_FRH", "Lead: " .. ringConfig[difficulty][20][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
-			else
-				C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[difficulty][20][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+		else
+			for i = 1, #debuffed do
+				if (i%2 == 1) then
+					C_ChatInfo.SendAddonMessage("IRT_FRH", "Lead: " .. ringConfig[difficulty][10][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+				else
+					C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[difficulty][10][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+				end
 			end
 		end
 	else
 		for i = 1, #debuffed do
 			if (i%2 == 1) then
-				C_ChatInfo.SendAddonMessage("IRT_FRH", "Lead: " .. ringConfig[difficulty][10][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+				C_ChatInfo.SendAddonMessage("IRT_FRH", "Lead: " .. ringConfig[15][10][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
 			else
-				C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[difficulty][10][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+				C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[15][10][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
 			end
 		end
 	end
@@ -156,12 +156,17 @@ f:SetScript("OnEvent", function(self, event, ...)
 		local target, castGUID, spellID = ...;
 		if (spellID == 351969) then
 			C_Timer.After(0.5, function()
-				assignRings();
+				assignRings(1);
 			end);
 		end
 	elseif (event == "UNIT_AURA" and IRT_FatescribeRohKaloEnabled and inEncounter) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
+		if (IRT_UnitBuff(unit, GetSpellInfo(353195))) then
+			C_Timer.After(0.5, function()
+				assignRings(2);
+			end);
+		end
 		if (IRT_UnitDebuff(unit, GetSpellInfo(354964))) then
 			if (UnitIsUnit(leader, playerName)) then
 				if (not IRT_Contains(debuffed, unitName)) then

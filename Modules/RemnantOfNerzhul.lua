@@ -27,8 +27,8 @@ C_ChatInfo.RegisterAddonMessagePrefix("IRT_RON");
 local function assignMarks()
 	local count = 1;
 	for i = GetNumGroupMembers(), 1, -1 do
-		local raider = "raid" ..i;
-		local raiderName = GetUnitName(raider, true);
+		local name = GetRaidRosterInfo(i);
+		local raiderName = GetUnitName(name, true);
 		--assign by group order
 		if (UnitIsVisible(raiderName) and IRT_Contains(debuffed, raiderName)) then
 			SetRaidTarget(raiderName, count);
