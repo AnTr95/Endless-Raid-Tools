@@ -102,7 +102,7 @@ local function initRaid()
 	if (role == "TANK") then
 		C_ChatInfo.SendAddonMessage("IRT_NINE", "tank", "RAID");
 	elseif (role == "HEALER") then
-		C_ChatInfo.SendAddonMessage("IRT_NINE", "tank", "RAID");
+		C_ChatInfo.SendAddonMessage("IRT_NINE", "healer", "RAID");
 	else
 		if (class == "MAGE" or class == "WARLOCK" or class == "PRIEST") then
 			C_ChatInfo.SendAddonMessage("IRT_NINE", "ranged", "RAID");

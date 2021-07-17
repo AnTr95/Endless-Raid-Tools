@@ -1,6 +1,6 @@
 ## Interface: 90100
 ## Title: Infinite Raid Tools
-## Version: 9.30
+## Version: 9.32
 ## Notes: Raid Tools
 ## Author: Ant-Kazzak
 ## SavedVariables: IRT_InterruptEnabled
