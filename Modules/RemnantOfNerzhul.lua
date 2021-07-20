@@ -9,7 +9,6 @@ local groupIcons = {
 	["2"] = "CIRCLE",
 	["3"] = "DIAMOND",
 };
-local difficulty = 0;
 
 local IRT_UnitDebuff = IRT_UnitDebuff;
 local IRT_Contains = IRT_Contains;
@@ -48,14 +47,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (IRT_UnitDebuff(unit, GetSpellInfo(350469))) then
 				if (not IRT_Contains(debuffed, unitName)) then
 					debuffed[#debuffed+1] = unitName;
-					if (difficulty == 16) then
-						if (#debuffed == 3) then
-							assignMarks();
-						end
-					else
-						if (#debuffed == 2) then
-							assignMarks();
-						end
+					if (#debuffed == 2) then
+						assignMarks();
 					end
 				end
 			else
@@ -79,7 +72,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "ENCOUNTER_START" and IRT_RemnantOfNerzhulEnabled) then
 		local eID = ...;
 		if (eID == 2432) then
-			difficulty = select(3, GetInstanceInfo());
 			inEncounter = true;
 			leader = IRT_GetRaidLeader();
 			debuffed = {};
