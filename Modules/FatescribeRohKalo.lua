@@ -95,14 +95,14 @@ local function playerNotification(text)
 	SendChatMessage(text, "YELL");
 	IRT_PopupShow(text, 30, L.BOSS_FILE);
 	if (text:match("BACKUP") == nil) then
-		timer = C_Timer.NewTicker(1.5, function()
+		timer = C_Timer.NewTicker(2, function()
 			if (UnitIsDead("player")) then
 				timer:Cancel();
 				timer = nil;
 			else
 				SendChatMessage(text, "YELL");
 			end
-		end, math.floor(19));
+		end, math.floor(14));
 	end
 end
 
@@ -146,7 +146,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				IRT_InfoBoxHide();
 			else
 				local text, player = strsplit(",", msg);
-				updateInfoBox(text, player);
+				--updateInfoBox(text, player);
 				if (UnitIsUnit(player, playerName)) then
 					playerNotification(text);
 				end
