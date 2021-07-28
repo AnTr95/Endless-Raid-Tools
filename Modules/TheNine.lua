@@ -10,8 +10,6 @@ local inEncounter = false;
 local focus = nil;
 local difficulty = 0;
 local isSafe = false;
-local hasAssigned = false;
-local leader = "";
 
 local rangeList = {90175, 37727, 8149, 3, 2, 32321, 6450, 21519, 1, 1180, 33471, 32698};
 
@@ -159,6 +157,7 @@ end
 
 local function assignDispels()
 	--check if healer is debuffed 
+	table.sort(debuffed);
 	for k, v in pairs(healers) do
 		local healer = k;
 		if (IRT_Contains(debuffed, healer)) then
@@ -187,7 +186,6 @@ local function assignDispels()
 			if (raid[player] == role) then
 				if (focus == nil) then
 					focus = player;
-					C_ChatInfo.SendAddonMessage("IRT_NINE", player .. " focus", "RAID");
 				end
 				if (printdebug) then
 					print(player .. " got priority " .. #assignments+1);
@@ -254,10 +252,9 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (IRT_TheNineEnabled == nil) then IRT_TheNineEnabled = true; end
 	elseif (event == "CHAT_MSG_ADDON" and inEncounter and IRT_TheNineEnabled) then
 		local prefix, msg, channel, sender = ...;
-		local text, arg = strsplit(" ", msg);
 		if (prefix == "IRT_NINE") then
 			sender = Ambiguate(sender, "short");
-			if (text == "safe") then
+			if (msg == "safe") then
 				isSafe = true;
 				updateAssignments();
 				for healer, target in pairs(healers) do
@@ -270,7 +267,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 						end
 					end
 				end
-			elseif (text == "unsafe") then
+			elseif (msg == "unsafe") then
 				isSafe = false;
 				updateAssignments();
 				for healer, target in pairs(healers) do
@@ -280,24 +277,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 						end
 					end
 				end
-			elseif(text == "healer" or text == "tank" or text == "melee" or text == "ranged") then
-				raid[sender] = text;
-			elseif (arg and arg == "focus" and UnitIsUnit(playerName, text)) then
-				focus = playerName;
-			elseif (text == "debuffed") then
-				local contains = IRT_Contains(debuffed, arg);
-				if (contains) then
-					table.remove(debuffed, contains);
-				else
-					table.insert(debuffed, arg);
-				end
-			elseif (text == "assignment") then
-				local contains = IRT_Contains(assignments, arg);
-				if (contains) then
-					table.remove(assignments, contains);
-				else
-					table.insert(assignments, arg);
-				end
+			else
+				raid[sender] = msg;
 			end
 		end
 	elseif (event == "UNIT_AURA" and inEncounter and IRT_TheNineEnabled) then
@@ -312,29 +293,30 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (UnitIsUnit(unit, "player")) then
 					currentStatus = false;
 				end
-				if (UnitIsUnit(unit, leader)) then
-					if (#assignments > 1) then
-						table.insert(assignments, name);
-						for index, pl in pairs(debuffed) do
-							if (not IRT_Contains(healers, pl)) then
-								for k, v in pairs(healers) do
-									if (v == false) then
-										if (printdebug) then
-											print(k .. " got assigned " .. pl);
-										end
-										healers[k] = pl;
-										break;
+				if (#assignments > 1) then
+					table.insert(assignments, name);
+					for index, pl in pairs(debuffed) do
+						if (not IRT_Contains(healers, pl)) then
+							for k, v in pairs(healers) do
+								if (v == false) then
+									if (printdebug) then
+										print(k .. " got assigned " .. pl);
 									end
+									healers[k] = pl;
+									break;
 								end
 							end
 						end
-						updateAssignments();
+					end
+					updateAssignments();
+				else
+					if (difficulty == 16) then
+						if (#debuffed == 4) then 
+							assignDispels();
+						end
 					else
-						if (not hasAssigned) then
-							hasAssigned = true;
-							C_Timer.After(0.5, function()
-								assignDispels();
-							end);
+						if (#debuffed == 3) then 
+							assignDispels();
 						end
 					end
 				end
@@ -343,41 +325,38 @@ f:SetScript("OnEvent", function(self, event, ...)
 			if (printdebug) then
 				print(name .. " is no longer debuffed")
 			end
+			for k, v in pairs(healers) do
+				if (v == name) then
+					healers[k] = false;
+					if (printdebug) then
+						print(k .. " is now freed up");
+					end
+					break;
+				end
+			end
 			if (UnitIsUnit(unit, "player")) then
 				currentStatus = nil;
 			end
-			if (UnitIsUnit(unit, leader)) then
-				for k, v in pairs(healers) do
-					if (v == name) then
-						healers[k] = false;
-						if (printdebug) then
-							print(k .. " is now freed up");
-						end
-						break;
+			local containsDebuffed = IRT_Contains(debuffed, name);
+			local containsAssignments = IRT_Contains(assignments, name);
+			if (containsDebuffed) then
+				table.remove(debuffed, containsDebuffed);
+			end
+			if (containsAssignments) then
+				table.remove(assignments, containsAssignments);
+			end
+			if (next(assignments)) then
+				if (containsAssignments == 1) then
+					isSafe = false;
+					updateAssignments();
+					focus = assignments[1];
+					if (printdebug) then
+						print("focus is now on " .. focus);
 					end
 				end
-				local containsDebuffed = IRT_Contains(debuffed, name);
-				local containsAssignments = IRT_Contains(assignments, name);
-				if (containsDebuffed) then
-					table.remove(debuffed, containsDebuffed);
-				end
-				if (containsAssignments) then
-					table.remove(assignments, containsAssignments);
-				end
-				if (next(assignments)) then
-					if (containsAssignments == 1) then
-						isSafe = false;
-						updateAssignments();
-						focus = assignments[1];
-						if (printdebug) then
-							print("focus is now on " .. focus);
-						end
-					end
-				else
-					focus = nil;
-					IRT_InfoBoxHide();
-					hasAssigned = false;
-				end
+			else
+				focus = nil;
+				IRT_InfoBoxHide();
 			end
 		end
 	elseif (event == "ENCOUNTER_START" and IRT_TheNineEnabled) then
@@ -387,7 +366,6 @@ f:SetScript("OnEvent", function(self, event, ...)
 				print("in encounter");
 			end
 			difficulty = select(3, GetInstanceInfo());
-			leader = IRT_GetRaidLeader();
 			debuffed = {};
 			healers = {};
 			raid = {};

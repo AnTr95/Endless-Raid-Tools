@@ -6,7 +6,22 @@ local inEncounter = false;
 local leader = "";
 local difficulty = nil;
 local raidSize = nil;
+local unassigned = true;
 local ringConfig = {
+	[0] = {
+		[1] = "MOST INNER",
+		[2] = "MOST INNER",
+		[3] = "MOST OUTER",
+		[4] = "MOST OUTER",
+		[5] = "BACKUP",
+		[6] = "BACKUP",
+		[7] = "BACKUP",
+		[8] = "BACKUP",
+		[9] = "BACKUP",
+		[10] = "BACKUP",
+		[11] = "BACKUP",
+		[12] = "BACKUP",
+	},
 	[15] = {
 		[10] = {
 			[1] = "MOST INNER",
@@ -128,9 +143,9 @@ local function assignRings(phase)
 	else
 		for i = 1, #debuffed do
 			if (i%2 == 1) then
-				C_ChatInfo.SendAddonMessage("IRT_FRH", "Lead: " .. ringConfig[15][10][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+				C_ChatInfo.SendAddonMessage("IRT_FRH", "Lead: " .. ringConfig[0][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
 			else
-				C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[15][10][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+				C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[0][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
 			end
 		end
 	end
@@ -144,9 +159,12 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if (prefix == "IRT_FRH") then
 			if (msg == "hide") then
 				IRT_InfoBoxHide();
+				IRT_InfoBoxUpdate("");
 			else
 				local text, player = strsplit(",", msg);
-				--updateInfoBox(text, player);
+				if (UnitIsUnit(leader, playerName)) then
+					updateInfoBox(text, player);
+				end
 				if (UnitIsUnit(player, playerName)) then
 					playerNotification(text);
 				end
@@ -154,7 +172,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif (event == "UNIT_SPELLCAST_SUCCEEDED" and IRT_FatescribeRohKaloEnabled and inEncounter) then
 		local target, castGUID, spellID = ...;
-		if (spellID == 351969) then
+		if (spellID == 351969 and unassigned) then
+			unassigned = false;
 			C_Timer.After(0.5, function()
 				assignRings(1);
 			end);
@@ -162,10 +181,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 	elseif (event == "UNIT_AURA" and IRT_FatescribeRohKaloEnabled and inEncounter) then
 		local unit = ...;
 		local unitName = GetUnitName(unit, true);
-		if (IRT_UnitBuff(unit, GetSpellInfo(353195))) then
-			C_Timer.After(0.5, function()
-				assignRings(2);
-			end);
+		if (IRT_UnitBuff(unit, GetSpellInfo(353195)) and UnitIsUnit(leader, playerName)) then
+			if (unassigned) then
+				unassigned = false;
+				C_Timer.After(0.5, function()
+					assignRings(2);
+				end);
+			end
 		end
 		if (IRT_UnitDebuff(unit, GetSpellInfo(354964))) then
 			if (UnitIsUnit(leader, playerName)) then
@@ -181,6 +203,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				if (IRT_Contains(debuffed, unitName)) then
 					debuffed[IRT_Contains(debuffed, unitName)] = nil;
 					if (#debuffed == 0) then
+						unassigned = true;
 						C_ChatInfo.SendAddonMessage("IRT_FRH", "hide", "RAID");
 					end
 				end
@@ -206,6 +229,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			leader = IRT_GetRaidLeader();
 			debuffed = {};
 			inEncounter = true;
+			unassigned = true;
 			timer = nil;
 		end
 	elseif (event == "ENCOUNTER_END" and IRT_FatescribeRohKaloEnabled and inEncounter) then
@@ -214,6 +238,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		difficulty = nil;
 		raidSize = nil;
 		leader = "";
+		unassigned = true;
 		if (timer) then
 			timer:Cancel();
 			timer = nil;
