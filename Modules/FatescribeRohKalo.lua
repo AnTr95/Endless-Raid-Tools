@@ -7,6 +7,7 @@ local leader = "";
 local difficulty = nil;
 local raidSize = nil;
 local unassigned = true;
+local marks = {"STAR", "CIRCLE", "DIAMOND", "TRIANGLE", "MOON", "SQUARE"};
 local ringConfig = {
 	[0] = {
 		[1] = "MOST INNER",
@@ -55,20 +56,38 @@ local ringConfig = {
 		},
 	},
 	[16] = {
-		[20] = {
-			[1] = "MOST INNER",
-			[2] = "MOST INNER",
-			[3] = "2nd MOST INNER",
-			[4] = "2nd MOST INNER",
-			[5] = "2nd MOST OUTER",
-			[6] = "2nd MOST OUTER",
-			[7] = "MOST OUTER",
-			[8] = "MOST OUTER",
-			[9] = "MIDDLE",
-			[10] = "MIDDLE",
+		[0] = {
+			[1] = "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:30\124t GO TO STAR \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:30\124t",
+			[2] = "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_2:30\124t GO TO CIRCLE \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_2:30\124t",
+			[3] = "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_3:30\124t GO TO DIAMOND \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_3:30\124t",
+			[4] = "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_4:30\124t GO TO TRIANGLE \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_4:30\124t",
+			[5] = "BACKUP",
+			[6] = "BACKUP",
+			[7] = "BACKUP",
+			[8] = "BACKUP",
+			[9] = "BACKUP",
+			[10] = "BACKUP",
 			[11] = "BACKUP",
 			[12] = "BACKUP",
-		}
+			[13] = "BACKUP",
+			[14] = "BACKUP",
+		},
+		[20] = {
+			[1] = "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:30\124t GO TO STAR \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:30\124t",
+			[2] = "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_2:30\124t GO TO CIRCLE \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_2:30\124t",
+			[3] = "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_3:30\124t GO TO DIAMOND \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_3:30\124t",
+			[4] = "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_4:30\124t GO TO TRIANGLE \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_4:30\124t",
+			[5] = "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_5:30\124t GO TO MOON \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_5:30\124t",
+			[6] = "\124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_6:30\124t GO TO SQUARE \124TInterface\\TargetingFrame\\UI-RaidTargetingIcon_6:30\124t",
+			[7] = "BACKUP",
+			[8] = "BACKUP",
+			[9] = "BACKUP",
+			[10] = "BACKUP",
+			[11] = "BACKUP",
+			[12] = "BACKUP",
+			[13] = "BACKUP",
+			[14] = "BACKUP",
+		},
 	},
 };
 
@@ -110,6 +129,15 @@ local function playerNotification(text)
 	SendChatMessage(text, "YELL");
 	IRT_PopupShow(text, 30, L.BOSS_FILE);
 	if (text:match("BACKUP") == nil) then
+		if (difficulty == 16) then
+			local textSplit = strsplit("", text);
+			for k, v in pairs(textSplit) do
+				if (IRT_Contains(marks, v)) then
+					text = v;
+					PlaySoundFile("Interface\\AddOns\\InfiniteRaidTools\\Sound\\"..v..".ogg", "Master");
+				end
+			end
+		end
 		timer = C_Timer.NewTicker(2, function()
 			if (UnitIsDead("player")) then
 				timer:Cancel();
@@ -117,36 +145,46 @@ local function playerNotification(text)
 			else
 				SendChatMessage(text, "YELL");
 			end
-		end, math.floor(14));
+		end, math.floor(10));
 	end
 end
 
 local function assignRings(phase)
-	if (phase == 1) then
-		if (raidSize >= 20) then
-			for i = 1, #debuffed do
-				if (i%2 == 1) then
-					C_ChatInfo.SendAddonMessage("IRT_FRH", "Lead: " .. ringConfig[difficulty][20][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
-				else
-					C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[difficulty][20][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+	if (difficulty == 15) then
+		if (phase == 1) then
+			if (raidSize >= 20) then
+				for i = 1, #debuffed do
+					if (i%2 == 1) then
+						C_ChatInfo.SendAddonMessage("IRT_FRH", "Lead: " .. ringConfig[difficulty][20][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+					else
+						C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[difficulty][20][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+					end
+				end
+			else
+				for i = 1, #debuffed do
+					if (i%2 == 1) then
+						C_ChatInfo.SendAddonMessage("IRT_FRH", "Lead: " .. ringConfig[difficulty][10][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+					else
+						C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[difficulty][10][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+					end
 				end
 			end
 		else
 			for i = 1, #debuffed do
 				if (i%2 == 1) then
-					C_ChatInfo.SendAddonMessage("IRT_FRH", "Lead: " .. ringConfig[difficulty][10][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+					C_ChatInfo.SendAddonMessage("IRT_FRH", "Lead: " .. ringConfig[0][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
 				else
-					C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[difficulty][10][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+					C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[0][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
 				end
 			end
 		end
-	else
-		for i = 1, #debuffed do
-			if (i%2 == 1) then
-				C_ChatInfo.SendAddonMessage("IRT_FRH", "Lead: " .. ringConfig[0][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
-			else
-				C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[0][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
+	elseif (difficulty == 16) then
+		if (phase == 1) then
+			for i = 1, #debuffed do
+				C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[difficulty][20][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
 			end
+		else
+			C_ChatInfo.SendAddonMessage("IRT_FRH", ringConfig[difficulty][0][i] .. "," .. Ambiguate(debuffed[i], "short"), "RAID");
 		end
 	end
 end
@@ -162,9 +200,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				IRT_InfoBoxUpdate("");
 			else
 				local text, player = strsplit(",", msg);
-				if (UnitIsUnit(leader, playerName)) then
-					updateInfoBox(text, player);
-				end
+				updateInfoBox(text, player);
 				if (UnitIsUnit(player, playerName)) then
 					playerNotification(text);
 				end
