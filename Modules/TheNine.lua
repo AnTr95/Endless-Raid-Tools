@@ -384,6 +384,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		focus = nil;
 		assignments = {};
 		currentStatus = nil;
+		IRT_InfoBoxHide();
 	end
 end);
 
